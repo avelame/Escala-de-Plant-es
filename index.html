@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Escala de Plantões</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    line-height: 1.6;
+    padding: 15px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  .container {
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 30px);
+  }
+  
+  header {
+    background: linear-gradient(135deg, #1a5276 0%, #2c3e50 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  
+  h1 {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  
+  .subtitle {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    opacity: 0.9;
+  }
+  
+  .controls {
+    padding: 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eaeaea;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+    color: white;
+  }
+  
+  .btn-success {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+  }
+  
+  .btn-danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+  }
+  
+  .btn-warning {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    color: white;
+  }
+  
+  .btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 15px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    font-size: clamp(0.8rem, 2vw, 1rem);
+  }
+  
+  .legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  
+  .huse-day {
+    background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+  }
+  
+  .huse-night {
+    background: linear-gradient(135deg, #1a5276 0%, #2c3e50 100%);
+  }
+  
+  .hrp-day {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  }
+  
+  .hrp-night {
+    background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+  }
+  
+  .conflito {
+    background: linear-gradient(135deg, #e74c3c 0%, #e67e22 100%);
+  }
+  
+  .content {
+    padding: 15px;
+    overflow: auto;
+    flex: 1;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background: white;
+    max-height: 100%;
+  }
+  
+  .editable-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    background: white;
+    min-width: 800px;
+  }
+  
+  .editable-table thead tr {
+    background: linear-gradient(135deg, #1a5276 0%, #2c3e50 100%);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .editable-table th {
+    padding: 12px 8px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid #1a5276;
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+    white-space: nowrap;
+  }
+  
+  .editable-table tbody tr {
+    border-bottom: 1px solid #eaeaea;
+    transition: background-color 0.2s;
+  }
+  
+  .editable-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  .editable-table tbody tr:hover {
+    background-color: #e8f4fc;
+  }
+  
+  .editable-table td {
+    padding: 10px 6px;
+    text-align: center;
+    border: 1px solid #eaeaea;
+    transition: all 0.2s;
+    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+    white-space: nowrap;
+  }
+  
+  .editable-table .hospital-name {
+    text-align: left;
+    padding-left: 12px;
+    font-weight: 600;
+    background: #f1f8ff;
+    width: 140px;
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+    position: sticky;
+    left: 0;
+    z-index: 5;
+  }
+  
+  .plantao-cell {
+    border-radius: 6px;
+    padding: 6px 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 32px;
+    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+  }
+  
+  .plantao-cell:hover {
+    transform: scale(1.05);
+  }
+  
+  .plantao {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+  }
+  
+  .conflito-cell {
+    background: linear-gradient(135deg, #e74c3c 0%, #e67e22 100%);
+    color: white;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 8px rgba(231, 76, 60, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+    }
+  }
+  
+  .empty-cell {
+    background: #f8f9fa;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 6px 4px;
+    transition: all 0.2s;
+    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+  }
+  
+  .empty-cell:hover {
+    background: #e9ecef;
+    transform: scale(1.05);
+  }
+  
+  .footer {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-top: 1px solid #eaeaea;
+    color: #6c757d;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    flex-shrink: 0;
+  }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .modal h2 {
+    margin-bottom: 15px;
+    color: #1a5276;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  
+  .form-control:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  }
+  
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background: #2ecc71;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateX(150%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+    max-width: 300px;
+    font-size: clamp(0.8rem, 2vw, 1rem);
+  }
+  
+  .notification.show {
+    transform: translateX(0);
+  }
+  
+  .notification.error {
+    background: #e74c3c;
+  }
+  
+  .loading {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1002;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+  }
+  
+  .loading.show {
+    display: flex;
+  }
+  
+  .spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Melhorias para telas muito pequenas */
+  @media (max-width: 576px) {
+    body {
+      padding: 10px;
+    }
+    
+    .container {
+      height: calc(100vh - 20px);
+      border-radius: 8px;
+    }
+    
+    header {
+      padding: 15px 10px;
+    }
+    
+    .controls {
+      padding: 10px;
+      gap: 8px;
+    }
+    
+    .btn {
+      min-width: 120px;
+      padding: 8px 10px;
+    }
+    
+    .legend {
+      margin: 10px;
+      padding: 10px;
+      gap: 8px;
+    }
+    
+    .content {
+      padding: 10px;
+    }
+    
+    .modal-content {
+      padding: 20px;
+    }
+    
+    .notification {
+      top: 10px;
+      right: 10px;
+      left: 10px;
+      max-width: none;
+      transform: translateY(-100px);
+    }
+    
+    .notification.show {
+      transform: translateY(0);
+    }
+  }
+  
+  /* Melhorias para telas grandes */
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 1400px;
+    }
+    
+    .editable-table {
+      min-width: 1000px;
+    }
+  }
+  
+  /* Ajustes para orientação paisagem em dispositivos móveis */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .container {
+      height: auto;
+      min-height: 100vh;
+    }
+    
+    header, .controls, .legend {
+      flex-shrink: 0;
+    }
+    
+    .content {
+      flex: 1;
+      min-height: 300px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-calendar-alt"></i> Gerador de Escala de Plantões</h1>
+      <p class="subtitle">Gerencie e exporte suas escalas de plantão</p>
+    </header>
+    
+    <div class="controls">
+      <button class="btn btn-primary" id="add-day">
+        <i class="fas fa-plus"></i> Adicionar Dia
+      </button>
+      <button class="btn btn-warning" id="save-data">
+        <i class="fas fa-save"></i> Salvar Dados
+      </button>
+      <button class="btn btn-info" id="load-data">
+        <i class="fas fa-folder-open"></i> Carregar Dados
+      </button>
+      <button class="btn btn-danger" id="reset-data">
+        <i class="fas fa-redo"></i> Redefinir Dados
+      </button>
+      <button class="btn btn-success" id="export-pdf">
+        <i class="fas fa-file-pdf"></i> Exportar para PDF
+      </button>
+    </div>
+    
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color huse-day"></div>
+        <span>HUSE Diurno</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color huse-night"></div>
+        <span>HUSE Noturno</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color hrp-day"></div>
+        <span>HRP Diurno</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color hrp-night"></div>
+        <span>HRP Noturno</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color conflito"></div>
+        <span>Conflito de Horários</span>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="table-container">
+        <table class="editable-table" id="escala-table">
+          <thead>
+            <tr id="table-header">
+              <!-- Cabeçalho será gerado dinamicamente -->
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- Conteúdo será gerado dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>Escala de Plantões - Sistema de Gerenciamento | Desenvolvido para facilitar o controle de escalas</p>
+    </div>
+  </div>
+  
+  <!-- Modal para adicionar dia -->
+  <div class="modal" id="add-day-modal">
+    <div class="modal-content">
+      <h2><i class="fas fa-calendar-plus"></i> Adicionar Novo Dia</h2>
+      <div class="form-group">
+        <label for="new-day">Dia do Mês:</label>
+        <input type="number" id="new-day" class="form-control" min="1" max="31" placeholder="Digite o dia (1-31)">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-danger" id="cancel-add-day">Cancelar</button>
+        <button class="btn btn-success" id="confirm-add-day">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificação -->
+  <div class="notification" id="notification"></div>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Gerando PDF...</p>
+  </div>
+
+  <script>
+    // Dados iniciais das escalas - Ordenados corretamente
+    let escalas = {
+      "HUSE Diurno": [23],
+      "HUSE Noturno": [3, 9, 11, 12, 15, 18, 20, 21, 24, 27, 28, 30],
+      "HRP Diurno": [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
+      "HRP Noturno": [1, 5, 7, 13, 17, 19, 25, 29, 31]
+    };
+
+    // Dias do mês para exibir
+    let diasDoMes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+    
+    // Chave para armazenamento local
+    const STORAGE_KEY = 'escala_plantoes_data';
+    
+    // Função para mostrar notificação
+    function mostrarNotificacao(mensagem, isError = false) {
+      const notification = document.getElementById('notification');
+      notification.textContent = mensagem;
+      notification.className = `notification ${isError ? 'error' : ''}`;
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Função para mostrar/ocultar loading
+    function mostrarLoading(mostrar) {
+      const loading = document.getElementById('loading');
+      if (mostrar) {
+        loading.classList.add('show');
+      } else {
+        loading.classList.remove('show');
+      }
+    }
+    
+    // Função para salvar dados no localStorage
+    function salvarDados() {
+      try {
+        const dadosParaSalvar = {
+          escalas: escalas,
+          diasDoMes: diasDoMes,
+          dataSalvamento: new Date().toISOString()
+        };
+        
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dadosParaSalvar));
+        mostrarNotificacao('Dados salvos com sucesso!');
+        console.log('Dados salvos:', dadosParaSalvar);
+      } catch (error) {
+        console.error('Erro ao salvar dados:', error);
+        mostrarNotificacao('Erro ao salvar dados!', true);
+      }
+    }
+    
+    // Função para carregar dados do localStorage
+    function carregarDados() {
+      try {
+        const dadosSalvos = localStorage.getItem(STORAGE_KEY);
+        
+        if (dadosSalvos) {
+          const dados = JSON.parse(dadosSalvos);
+          escalas = dados.escalas || escalas;
+          diasDoMes = dados.diasDoMes || diasDoMes;
+          
+          criarTabela();
+          mostrarNotificacao('Dados carregados com sucesso!');
+          console.log('Dados carregados:', dados);
+        } else {
+          mostrarNotificacao('Nenhum dado salvo encontrado!', true);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        mostrarNotificacao('Erro ao carregar dados!', true);
+      }
+    }
+    
+    // Função para detectar conflitos
+    function detectarConflitos() {
+      const conflitos = {};
+      
+      diasDoMes.forEach(dia => {
+        const plantoesNoDia = [];
+        
+        Object.keys(escalas).forEach(hospital => {
+          if (escalas[hospital].includes(dia)) {
+            plantoesNoDia.push(hospital);
+          }
+        });
+        
+        if (plantoesNoDia.length > 1) {
+          conflitos[dia] = plantoesNoDia;
+        }
+      });
+      
+      return conflitos;
+    }
+    
+    // Função para criar a tabela
+    function criarTabela() {
+      const tabelaHead = document.querySelector('#table-header');
+      const tabelaBody = document.querySelector('#table-body');
+      const conflitos = detectarConflitos();
+      
+      // Limpar conteúdo existente
+      tabelaHead.innerHTML = '<th>Hospitais & Dias</th>';
+      tabelaBody.innerHTML = '';
+      
+      // Adicionar cabeçalhos dos dias
+      diasDoMes.forEach(dia => {
+        const th = document.createElement('th');
+        th.textContent = dia;
+        th.setAttribute('data-day', dia);
+        tabelaHead.appendChild(th);
+      });
+      
+      // Adicionar linhas para cada hospital (na ordem correta)
+      const hospitaisOrdenados = ["HUSE Diurno", "HUSE Noturno", "HRP Diurno", "HRP Noturno"];
+      
+      hospitaisOrdenados.forEach(hospital => {
+        const tr = document.createElement('tr');
+        const tdNome = document.createElement('td');
+        tdNome.className = 'hospital-name';
+        tdNome.textContent = hospital;
+        tr.appendChild(tdNome);
+        
+        // Adicionar células para cada dia
+        diasDoMes.forEach(dia => {
+          const td = document.createElement('td');
+          td.setAttribute('data-hospital', hospital);
+          td.setAttribute('data-day', dia);
+          
+          if (escalas[hospital].includes(dia)) {
+            const div = document.createElement('div');
+            
+            // Verificar se há conflito neste dia
+            if (conflitos[dia] && conflitos[dia].includes(hospital)) {
+              div.className = 'plantao-cell conflito-cell';
+              div.textContent = 'S';
+              div.title = 'Conflito de horário!';
+            } else {
+              div.className = 'plantao-cell plantao';
+              div.textContent = 'S';
+              div.title = 'Plantão confirmado';
+            }
+            
+            // Adicionar evento de clique para remover plantão
+            div.addEventListener('click', () => {
+              togglePlantao(hospital, dia);
+            });
+            
+            td.appendChild(div);
+          } else {
+            const div = document.createElement('div');
+            div.className = 'empty-cell';
+            div.textContent = '-';
+            div.title = 'Clique para adicionar plantão';
+            
+            // Adicionar evento de clique para adicionar plantão
+            div.addEventListener('click', () => {
+              togglePlantao(hospital, dia);
+            });
+            
+            td.appendChild(div);
+          }
+          
+          tr.appendChild(td);
+        });
+        
+        tabelaBody.appendChild(tr);
+      });
+    }
+    
+    // Função para adicionar/remover plantão
+    function togglePlantao(hospital, dia) {
+      const index = escalas[hospital].indexOf(dia);
+      
+      if (index === -1) {
+        // Adicionar plantão
+        escalas[hospital].push(dia);
+        escalas[hospital].sort((a, b) => a - b);
+      } else {
+        // Remover plantão
+        escalas[hospital].splice(index, 1);
+      }
+      
+      // Atualizar a tabela
+      criarTabela();
+    }
+    
+    // Função para adicionar novo dia
+    function adicionarDia(novoDia) {
+      if (novoDia < 1 || novoDia > 31) {
+        alert('Por favor, digite um dia válido (1-31)');
+        return;
+      }
+      
+      if (diasDoMes.includes(novoDia)) {
+        alert('Este dia já existe na escala!');
+        return;
+      }
+      
+      diasDoMes.push(novoDia);
+      diasDoMes.sort((a, b) => a - b);
+      criarTabela();
+    }
+    
+    // Função para redefinir dados
+    function redefinirDados() {
+      if (confirm('Tem certeza que deseja redefinir todos os dados para os valores padrão?')) {
+        escalas = {
+          "HUSE Diurno": [23],
+          "HUSE Noturno": [3, 9, 11, 12, 15, 18, 20, 21, 24, 27, 28, 30],
+          "HRP Diurno": [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
+          "HRP Noturno": [1, 5, 7, 13, 17, 19, 25, 29, 31]
+        };
+        
+        diasDoMes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+        criarTabela();
+        mostrarNotificacao('Dados redefinidos com sucesso!');
+      }
+    }
+    
+    // Função para exportar para PDF
+    function exportarParaPDF() {
+      mostrarLoading(true);
+      
+      // Pequeno delay para garantir que o loading seja mostrado
+      setTimeout(() => {
+        try {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF('l', 'mm', 'a4');
+          const tabela = document.getElementById('escala-table');
+          
+          // Adicionar título
+          doc.setFontSize(20);
+          doc.setTextColor(26, 82, 118);
+          doc.text('Escala de Plantões - Novembro 2025', 20, 20);
+          
+          // Adicionar data de geração
+          doc.setFontSize(10);
+          doc.setTextColor(100, 100, 100);
+          doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}`, 20, 30);
+          
+          // Converter a tabela para imagem usando html2canvas
+          html2canvas(tabela, {
+            scale: 2, // Maior qualidade
+            useCORS: true,
+            logging: false
+          }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 270; // Largura máxima para A4 landscape
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            
+            // Adicionar a imagem da tabela ao PDF
+            doc.addImage(imgData, 'PNG', 15, 40, imgWidth, imgHeight);
+            
+            // Adicionar legenda organizada
+            const legendaY = 40 + imgHeight + 15;
+            
+            // Título da legenda
+            doc.setFontSize(14);
+            doc.setTextColor(26, 82, 118);
+            doc.text('LEGENDA', 20, legendaY);
+            
+            // Container da legenda
+            doc.setDrawColor(200, 200, 200);
+            doc.setFillColor(250, 250, 250);
+            doc.rect(18, legendaY + 5, 260, 35, 'FD');
+            
+            // Itens da legenda em duas colunas
+            const legendaItems = [
+              { text: 'HUSE Diurno', color: [52, 152, 219] },
+              { text: 'HUSE Noturno', color: [26, 82, 118] },
+              { text: 'HRP Diurno', color: [231, 76, 60] },
+              { text: 'HRP Noturno', color: [142, 68, 173] },
+              { text: 'Conflito de Horários', color: [231, 126, 34] }
+            ];
+            
+            // Primeira coluna
+            let xPos = 25;
+            let yPos = legendaY + 15;
+            
+            legendaItems.forEach((item, index) => {
+              if (index === 2) {
+                // Segunda coluna
+                xPos = 150;
+                yPos = legendaY + 15;
+              }
+              
+              // Quadrado colorido
+              doc.setFillColor(...item.color);
+              doc.rect(xPos, yPos, 6, 6, 'F');
+              
+              // Texto
+              doc.setFontSize(11);
+              doc.setTextColor(0, 0, 0);
+              doc.text(item.text, xPos + 10, yPos + 4.5);
+              
+              yPos += 10;
+            });
+            
+            // Adicionar informações adicionais
+            const infoY = legendaY + 45;
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            
+            const informacoes = [
+              '• Plantões noturnos: 19h às 7h do dia seguinte',
+              '• Plantões diurnos: 7h às 19h',
+              '• Símbolo "S" indica plantão confirmado',
+              '• Células em vermelho indicam conflito de horários',
+              '• Em caso de conflito, contactar a chefia imediatamente'
+            ];
+            
+            informacoes.forEach((info, index) => {
+              doc.text(info, 20, infoY + (index * 5));
+            });
+            
+            // Adicionar rodapé
+            const pageHeight = doc.internal.pageSize.height;
+            doc.setFontSize(9);
+            doc.setTextColor(150, 150, 150);
+            doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
+                    20, pageHeight - 10);
+            
+            // Salvar o PDF
+            doc.save('Escala_Plantões_Novembro.pdf');
+            
+            mostrarLoading(false);
+            mostrarNotificacao('PDF exportado com sucesso!');
+          }).catch(error => {
+            console.error('Erro ao gerar PDF:', error);
+            mostrarLoading(false);
+            mostrarNotificacao('Erro ao gerar PDF!', true);
+          });
+          
+        } catch (error) {
+          console.error('Erro ao exportar para PDF:', error);
+          mostrarLoading(false);
+          mostrarNotificacao('Erro ao exportar para PDF!', true);
+        }
+      }, 100);
+    }
+    
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      // Tentar carregar dados salvos ao iniciar
+      carregarDados();
+      
+      // Criar a tabela inicial
+      criarTabela();
+      
+      // Configurar eventos dos botões
+      document.getElementById('add-day').addEventListener('click', () => {
+        document.getElementById('add-day-modal').style.display = 'flex';
+        document.getElementById('new-day').focus();
+      });
+      
+      document.getElementById('cancel-add-day').addEventListener('click', () => {
+        document.getElementById('add-day-modal').style.display = 'none';
+        document.getElementById('new-day').value = '';
+      });
+      
+      document.getElementById('confirm-add-day').addEventListener('click', () => {
+        const novoDia = parseInt(document.getElementById('new-day').value);
+        if (!isNaN(novoDia)) {
+          adicionarDia(novoDia);
+          document.getElementById('add-day-modal').style.display = 'none';
+          document.getElementById('new-day').value = '';
+        } else {
+          alert('Por favor, digite um número válido');
+        }
+      });
+      
+      document.getElementById('save-data').addEventListener('click', salvarDados);
+      document.getElementById('load-data').addEventListener('click', carregarDados);
+      document.getElementById('reset-data').addEventListener('click', redefinirDados);
+      document.getElementById('export-pdf').addEventListener('click', exportarParaPDF);
+      
+      // Fechar modal ao clicar fora
+      document.getElementById('add-day-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'add-day-modal') {
+          document.getElementById('add-day-modal').style.display = 'none';
+          document.getElementById('new-day').value = '';
+        }
+      });
+      
+      // Permitir Enter para confirmar adição de dia
+      document.getElementById('new-day').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('confirm-add-day').click();
+        }
+      });
+      
+      // Salvar automaticamente quando a página for fechada
+      window.addEventListener('beforeunload', salvarDados);
+    });
+  </script>
+  
+  <!-- Adicionar Font Awesome para ícones -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
