@@ -6,6 +6,7 @@
 <title>Gerador de Escala de Plantões</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   * {
     box-sizing: border-box;
@@ -52,6 +53,23 @@
   .subtitle {
     font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     opacity: 0.9;
+  }
+  
+  .month-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .month-selector select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: white;
+    font-size: 1rem;
   }
   
   .controls {
@@ -159,10 +177,21 @@
     background: linear-gradient(135deg, #e74c3c 0%, #e67e22 100%);
   }
   
+  .sem-intervalo {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  }
+  
+  .alerta-carro {
+    background: linear-gradient(135deg, #ffd93d 0%, #ff9a3d 100%);
+  }
+  
   .content {
     padding: 15px;
     overflow: auto;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
   
   .table-container {
@@ -196,6 +225,7 @@
     border: 1px solid #1a5276;
     font-size: clamp(0.75rem, 1.5vw, 0.9rem);
     white-space: nowrap;
+    position: relative;
   }
   
   .editable-table tbody tr {
@@ -218,6 +248,7 @@
     transition: all 0.2s;
     font-size: clamp(0.7rem, 1.5vw, 0.8rem);
     white-space: nowrap;
+    position: relative;
   }
   
   .editable-table .hospital-name {
@@ -240,6 +271,7 @@
     transition: all 0.2s;
     min-width: 32px;
     font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+    position: relative;
   }
   
   .plantao-cell:hover {
@@ -257,6 +289,19 @@
     animation: pulse 2s infinite;
   }
   
+  .sem-intervalo-cell {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    animation: pulse-red 1.5s infinite;
+  }
+  
+  .alerta-carro-cell {
+    background: linear-gradient(135deg, #ffd93d 0%, #ff9a3d 100%);
+    color: #333;
+    font-weight: bold;
+    animation: bounce 2s infinite;
+  }
+  
   @keyframes pulse {
     0% {
       box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
@@ -266,6 +311,27 @@
     }
     100% {
       box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+    }
+  }
+  
+  @keyframes pulse-red {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 8px rgba(255, 107, 107, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
     }
   }
   
@@ -282,6 +348,124 @@
   .empty-cell:hover {
     background: #e9ecef;
     transform: scale(1.05);
+  }
+  
+  .weekend {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #6c757d;
+  }
+  
+  .sunday {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #6c757d;
+  }
+  
+  .folga-cell {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #2e7d32;
+    font-style: italic;
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 6px 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+  }
+  
+  .folga-cell:hover {
+    background: linear-gradient(135deg, #dcedc8 0%, #c5e1a5 100%);
+    transform: scale(1.05);
+  }
+  
+  .day-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  
+  .day-number {
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+  
+  .day-name {
+    font-size: 0.8em;
+    opacity: 0.9;
+  }
+  
+  .carro-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 0.9em;
+    animation: drive 3s infinite;
+    z-index: 2;
+  }
+  
+  @keyframes drive {
+    0%, 100% {
+      transform: translateX(0) rotate(0deg);
+    }
+    25% {
+      transform: translateX(3px) rotate(5deg);
+    }
+    50% {
+      transform: translateX(0) rotate(0deg);
+    }
+    75% {
+      transform: translateX(-3px) rotate(-5deg);
+    }
+  }
+  
+  .observations-section {
+    margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .observations-header {
+    background: linear-gradient(135deg, #1a5276 0%, #2c3e50 100%);
+    color: white;
+    padding: 12px 15px;
+    font-weight: 600;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+  }
+  
+  .observations-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .observations-table th {
+    background: #f1f8ff;
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid #eaeaea;
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+  }
+  
+  .observations-table td {
+    padding: 8px;
+    border: 1px solid #eaeaea;
+    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+  }
+  
+  .observations-table input, .observations-table select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+  }
+  
+  .observations-table input:focus, .observations-table select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
   }
   
   .footer {
@@ -301,7 +485,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -312,15 +496,26 @@
     background: white;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     max-width: 500px;
     width: 100%;
+    border: 3px solid #ff6b6b;
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
   }
   
   .modal h2 {
     margin-bottom: 15px;
-    color: #1a5276;
+    color: #e74c3c;
     font-size: clamp(1.2rem, 3vw, 1.5rem);
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   
   .form-group {
@@ -377,6 +572,23 @@
   
   .notification.error {
     background: #e74c3c;
+  }
+  
+  .notification.warning {
+    background: #f39c12;
+    animation: pulse-notification 2s infinite;
+  }
+  
+  @keyframes pulse-notification {
+    0% {
+      box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(243, 156, 18, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(243, 156, 18, 0);
+    }
   }
   
   .loading {
@@ -463,6 +675,12 @@
     .notification.show {
       transform: translateY(0);
     }
+    
+    .carro-indicator {
+      font-size: 0.7em;
+      top: -3px;
+      right: -3px;
+    }
   }
   
   /* Melhorias para telas grandes */
@@ -499,13 +717,29 @@
     <header>
       <h1><i class="fas fa-calendar-alt"></i> Gerador de Escala de Plantões</h1>
       <p class="subtitle">Gerencie e exporte suas escalas de plantão</p>
+      <div class="month-selector">
+        <select id="month-select">
+          <option value="0">Janeiro</option>
+          <option value="1">Fevereiro</option>
+          <option value="2">Março</option>
+          <option value="3">Abril</option>
+          <option value="4">Maio</option>
+          <option value="5">Junho</option>
+          <option value="6">Julho</option>
+          <option value="7">Agosto</option>
+          <option value="8">Setembro</option>
+          <option value="9">Outubro</option>
+          <option value="10">Novembro</option>
+          <option value="11">Dezembro</option>
+        </select>
+        <select id="year-select">
+          <!-- Os anos serão preenchidos dinamicamente -->
+        </select>
+      </div>
     </header>
     
     <div class="controls">
-      <button class="btn btn-primary" id="add-day">
-        <i class="fas fa-plus"></i> Adicionar Dia
-      </button>
-      <button class="btn btn-warning" id="save-data">
+      <button class="btn btn-primary" id="save-data">
         <i class="fas fa-save"></i> Salvar Dados
       </button>
       <button class="btn btn-info" id="load-data">
@@ -540,6 +774,18 @@
         <div class="legend-color conflito"></div>
         <span>Conflito de Horários</span>
       </div>
+      <div class="legend-item">
+        <div class="legend-color sem-intervalo"></div>
+        <span>Sem Intervalo</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color alerta-carro"></div>
+        <span>🚗 Deslocamento</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);"></div>
+        <span>Folga</span>
+      </div>
     </div>
     
     <div class="content">
@@ -555,24 +801,46 @@
           </tbody>
         </table>
       </div>
+      
+      <div class="observations-section">
+        <div class="observations-header">
+          <i class="fas fa-clipboard-list"></i> Registro de Trocas e Observações
+        </div>
+        <div class="table-container">
+          <table class="observations-table" id="observations-table">
+            <thead>
+              <tr>
+                <th>Hospitais</th>
+                <th>DATA</th>
+                <th>DATA TROCA</th>
+                <th>Nome</th>
+                <th>OBS:</th>
+              </tr>
+            </thead>
+            <tbody id="observations-body">
+              <!-- Linhas serão adicionadas dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
     
     <div class="footer">
       <p>Escala de Plantões - Sistema de Gerenciamento | Desenvolvido para facilitar o controle de escalas</p>
     </div>
   </div>
-  
-  <!-- Modal para adicionar dia -->
-  <div class="modal" id="add-day-modal">
+
+  <!-- Modal de Alerta de Sem Intervalo -->
+  <div class="modal" id="no-interval-modal">
     <div class="modal-content">
-      <h2><i class="fas fa-calendar-plus"></i> Adicionar Novo Dia</h2>
-      <div class="form-group">
-        <label for="new-day">Dia do Mês:</label>
-        <input type="number" id="new-day" class="form-control" min="1" max="31" placeholder="Digite o dia (1-31)">
+      <h2><i class="fas fa-exclamation-triangle fa-beat"></i> ALERTA: DESLOCAMENTO ENTRE HOSPITAIS</h2>
+      <div id="no-interval-message" style="padding: 10px; background: #ffebee; border-radius: 8px; border-left: 4px solid #ff6b6b;">
+        <!-- Mensagem será preenchida dinamicamente -->
       </div>
       <div class="modal-actions">
-        <button class="btn btn-danger" id="cancel-add-day">Cancelar</button>
-        <button class="btn btn-success" id="confirm-add-day">Adicionar</button>
+        <button class="btn btn-warning" id="confirm-no-interval" style="flex: 1;">
+          <i class="fas fa-car-side"></i> Entendi - Deslocamento Necessário
+        </button>
       </div>
     </div>
   </div>
@@ -595,22 +863,37 @@
       "HRP Noturno": []
     };
 
-    // Dias do mês para exibir (todos os dias de 1 a 31)
-    let diasDoMes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+    // Dados das observações
+    let observacoes = [];
+    
+    // Mês e ano atuais
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    
+    // Dias da semana em português
+    const diasDaSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
     
     // Chave para armazenamento local
     const STORAGE_KEY = 'escala_plantoes_data';
     
     // Função para mostrar notificação
-    function mostrarNotificacao(mensagem, isError = false) {
+    function mostrarNotificacao(mensagem, isError = false, isWarning = false) {
       const notification = document.getElementById('notification');
       notification.textContent = mensagem;
-      notification.className = `notification ${isError ? 'error' : ''}`;
+      
+      if (isError) {
+        notification.className = 'notification error';
+      } else if (isWarning) {
+        notification.className = 'notification warning';
+      } else {
+        notification.className = 'notification';
+      }
+      
       notification.classList.add('show');
       
       setTimeout(() => {
         notification.classList.remove('show');
-      }, 3000);
+      }, 5000);
     }
     
     // Função para mostrar/ocultar loading
@@ -628,7 +911,9 @@
       try {
         const dadosParaSalvar = {
           escalas: escalas,
-          diasDoMes: diasDoMes,
+          observacoes: observacoes,
+          currentMonth: currentMonth,
+          currentYear: currentYear,
           dataSalvamento: new Date().toISOString()
         };
         
@@ -649,9 +934,16 @@
         if (dadosSalvos) {
           const dados = JSON.parse(dadosSalvos);
           escalas = dados.escalas || escalas;
-          diasDoMes = dados.diasDoMes || diasDoMes;
+          observacoes = dados.observacoes || [];
+          currentMonth = dados.currentMonth || currentMonth;
+          currentYear = dados.currentYear || currentYear;
+          
+          // Atualizar seletores
+          document.getElementById('month-select').value = currentMonth;
+          document.getElementById('year-select').value = currentYear;
           
           criarTabela();
+          criarTabelaObservacoes();
           mostrarNotificacao('Dados carregados com sucesso!');
           console.log('Dados carregados:', dados);
         } else {
@@ -667,7 +959,10 @@
     function detectarConflitos() {
       const conflitos = {};
       
-      diasDoMes.forEach(dia => {
+      // Obter o número de dias no mês atual
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      
+      for (let dia = 1; dia <= daysInMonth; dia++) {
         const plantoesNoDia = [];
         
         Object.keys(escalas).forEach(hospital => {
@@ -679,9 +974,169 @@
         if (plantoesNoDia.length > 1) {
           conflitos[dia] = plantoesNoDia;
         }
-      });
+      }
       
       return conflitos;
+    }
+    
+    // Função para verificar plantões sem intervalo adequado
+    function verificarIntervalo(hospital, dia) {
+      // Obter o número de dias no mês atual
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      
+      // Verificar plantões consecutivos em hospitais diferentes
+      const problemas = [];
+      
+      // Verificar plantão no dia anterior
+      const diaAnterior = dia - 1;
+      if (diaAnterior >= 1) {
+        Object.keys(escalas).forEach(h => {
+          if (h !== hospital && escalas[h].includes(diaAnterior)) {
+            // Plantão em hospital diferente no dia anterior
+            problemas.push({
+              tipo: 'anterior',
+              hospitalAnterior: h,
+              diaAnterior: diaAnterior,
+              hospitalAtual: hospital,
+              diaAtual: dia
+            });
+          }
+        });
+      }
+      
+      // Verificar plantão no mesmo dia em hospital diferente
+      Object.keys(escalas).forEach(h => {
+        if (h !== hospital && escalas[h].includes(dia)) {
+          // Plantão em hospital diferente no mesmo dia
+          problemas.push({
+            tipo: 'mesmo_dia',
+            hospital1: hospital,
+            hospital2: h,
+            dia: dia
+          });
+        }
+      });
+      
+      // Verificar plantão no dia seguinte
+      const diaSeguinte = dia + 1;
+      if (diaSeguinte <= daysInMonth) {
+        Object.keys(escalas).forEach(h => {
+          if (h !== hospital && escalas[h].includes(diaSeguinte)) {
+            // Plantão em hospital diferente no dia seguinte
+            problemas.push({
+              tipo: 'seguinte',
+              hospitalAtual: hospital,
+              diaAtual: dia,
+              hospitalSeguinte: h,
+              diaSeguinte: diaSeguinte
+            });
+          }
+        });
+      }
+      
+      // Se houver problemas, mostrar alerta
+      if (problemas.length > 0) {
+        mostrarAlertaSemIntervalo(problemas);
+        return problemas;
+      }
+      
+      return [];
+    }
+    
+    // Função para mostrar alerta de sem intervalo
+    function mostrarAlertaSemIntervalo(problemas) {
+      const modal = document.getElementById('no-interval-modal');
+      const message = document.getElementById('no-interval-message');
+      
+      let mensagemHTML = '<p style="margin-bottom: 15px; font-weight: 600; color: #e74c3c;">🚗 ATENÇÃO: DESLOCAMENTO ENTRE HOSPITAIS DETECTADO!</p>';
+      
+      problemas.forEach(problema => {
+        if (problema.tipo === 'anterior') {
+          mensagemHTML += `
+            <div style="margin-bottom: 10px; padding: 8px; background: #ffcdd2; border-radius: 5px;">
+              <p><strong>Deslocamento Necessário:</strong></p>
+              <p>• ${problema.hospitalAnterior} (dia ${problema.diaAnterior}) → ${problema.hospitalAtual} (dia ${problema.diaAtual})</p>
+              <p style="font-size: 0.9em; color: #c62828;"><i class="fas fa-car-side"></i> Você precisará se deslocar entre hospitais</p>
+            </div>
+          `;
+        } else if (problema.tipo === 'mesmo_dia') {
+          mensagemHTML += `
+            <div style="margin-bottom: 10px; padding: 8px; background: #ffcdd2; border-radius: 5px;">
+              <p><strong>Dois Plantões no Mesmo Dia:</strong></p>
+              <p>• ${problema.hospital1} e ${problema.hospital2} (dia ${problema.dia})</p>
+              <p style="font-size: 0.9em; color: #c62828;"><i class="fas fa-exclamation-circle"></i> Conflito de horários no mesmo dia</p>
+            </div>
+          `;
+        } else if (problema.tipo === 'seguinte') {
+          mensagemHTML += `
+            <div style="margin-bottom: 10px; padding: 8px; background: #ffcdd2; border-radius: 5px;">
+              <p><strong>Deslocamento Necessário:</strong></p>
+              <p>• ${problema.hospitalAtual} (dia ${problema.diaAtual}) → ${problema.hospitalSeguinte} (dia ${problema.diaSeguinte})</p>
+              <p style="font-size: 0.9em; color: #c62828;"><i class="fas fa-car-side"></i> Você precisará se deslocar entre hospitais</p>
+            </div>
+          `;
+        }
+      });
+      
+      mensagemHTML += `
+        <div style="margin-top: 15px; padding: 10px; background: #fff3e0; border-radius: 5px; border-left: 4px solid #ff9800;">
+          <p style="font-weight: 600;"><i class="fas fa-info-circle"></i> RECOMENDAÇÕES:</p>
+          <p style="font-size: 0.9em;">• Considere o tempo de deslocamento entre hospitais</p>
+          <p style="font-size: 0.9em;">• Mínimo de 12 horas de intervalo entre plantões</p>
+          <p style="font-size: 0.9em;">• Planeje seu transporte com antecedência</p>
+          <p style="font-size: 0.9em;">• Considere sua segurança e bem-estar</p>
+        </div>
+      `;
+      
+      message.innerHTML = mensagemHTML;
+      modal.style.display = 'flex';
+      
+      // Mostrar também uma notificação
+      mostrarNotificacao('🚗 Alerta: Deslocamento entre hospitais necessário!', false, true);
+    }
+    
+    // Função para obter dias com alertas de deslocamento
+    function obterDiasComAlerta() {
+      const diasComAlerta = new Set();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      
+      for (let dia = 1; dia <= daysInMonth; dia++) {
+        // Verificar todos os hospitais para este dia
+        Object.keys(escalas).forEach(hospital => {
+          if (escalas[hospital].includes(dia)) {
+            // Verificar se há plantão em hospital diferente no dia anterior
+            const diaAnterior = dia - 1;
+            if (diaAnterior >= 1) {
+              Object.keys(escalas).forEach(h => {
+                if (h !== hospital && escalas[h].includes(diaAnterior)) {
+                  diasComAlerta.add(dia);
+                  diasComAlerta.add(diaAnterior);
+                }
+              });
+            }
+            
+            // Verificar se há plantão em hospital diferente no mesmo dia
+            Object.keys(escalas).forEach(h => {
+              if (h !== hospital && escalas[h].includes(dia)) {
+                diasComAlerta.add(dia);
+              }
+            });
+            
+            // Verificar se há plantão em hospital diferente no dia seguinte
+            const diaSeguinte = dia + 1;
+            if (diaSeguinte <= daysInMonth) {
+              Object.keys(escalas).forEach(h => {
+                if (h !== hospital && escalas[h].includes(diaSeguinte)) {
+                  diasComAlerta.add(dia);
+                  diasComAlerta.add(diaSeguinte);
+                }
+              });
+            }
+          }
+        });
+      }
+      
+      return Array.from(diasComAlerta);
     }
     
     // Função para criar a tabela
@@ -689,18 +1144,54 @@
       const tabelaHead = document.querySelector('#table-header');
       const tabelaBody = document.querySelector('#table-body');
       const conflitos = detectarConflitos();
+      const diasComAlerta = obterDiasComAlerta();
       
       // Limpar conteúdo existente
       tabelaHead.innerHTML = '<th>Hospitais & Dias</th>';
       tabelaBody.innerHTML = '';
       
-      // Adicionar cabeçalhos dos dias
-      diasDoMes.forEach(dia => {
+      // Obter o número de dias no mês atual
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      
+      // Adicionar cabeçalhos dos dias com dia da semana
+      for (let dia = 1; dia <= daysInMonth; dia++) {
+        const data = new Date(currentYear, currentMonth, dia);
+        const diaSemana = data.getDay(); // 0 = Domingo, 1 = Segunda, etc.
+        
         const th = document.createElement('th');
-        th.textContent = dia;
+        
+        // Aplicar cores suaves para sábado e domingo
+        if (diaSemana === 0 || diaSemana === 6) { // Domingo ou Sábado
+          th.className = diaSemana === 0 ? 'sunday' : 'weekend';
+        }
+        
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'day-header';
+        
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'day-number';
+        dayNumber.textContent = dia;
+        
+        const dayName = document.createElement('div');
+        dayName.className = 'day-name';
+        dayName.textContent = diasDaSemana[diaSemana];
+        
+        // Adicionar símbolo de carro se o dia tiver alerta
+        if (diasComAlerta.includes(dia)) {
+          const carroIndicator = document.createElement('div');
+          carroIndicator.className = 'carro-indicator';
+          carroIndicator.textContent = '🚗';
+          carroIndicator.title = 'Deslocamento entre hospitais necessário';
+          dayHeader.appendChild(carroIndicator);
+        }
+        
+        dayHeader.appendChild(dayNumber);
+        dayHeader.appendChild(dayName);
+        th.appendChild(dayHeader);
+        
         th.setAttribute('data-day', dia);
         tabelaHead.appendChild(th);
-      });
+      }
       
       // Adicionar linhas para cada hospital (na ordem correta)
       const hospitaisOrdenados = ["HUSE Diurno", "HUSE Noturno", "HRP Diurno", "HRP Noturno"];
@@ -713,8 +1204,17 @@
         tr.appendChild(tdNome);
         
         // Adicionar células para cada dia
-        diasDoMes.forEach(dia => {
+        for (let dia = 1; dia <= daysInMonth; dia++) {
+          const data = new Date(currentYear, currentMonth, dia);
+          const diaSemana = data.getDay();
+          
           const td = document.createElement('td');
+          
+          // Aplicar cores suaves para sábado e domingo
+          if (diaSemana === 0 || diaSemana === 6) { // Domingo ou Sábado
+            td.className = diaSemana === 0 ? 'sunday' : 'weekend';
+          }
+          
           td.setAttribute('data-hospital', hospital);
           td.setAttribute('data-day', dia);
           
@@ -726,7 +1226,14 @@
               div.className = 'plantao-cell conflito-cell';
               div.textContent = 'S';
               div.title = 'Conflito de horário!';
-            } else {
+            } 
+            // Verificar se é um dia com alerta de deslocamento
+            else if (diasComAlerta.includes(dia)) {
+              div.className = 'plantao-cell alerta-carro-cell';
+              div.textContent = 'S 🚗';
+              div.title = 'Plantão com deslocamento entre hospitais';
+            }
+            else {
               div.className = 'plantao-cell plantao';
               div.textContent = 'S';
               div.title = 'Plantão confirmado';
@@ -740,9 +1247,9 @@
             td.appendChild(div);
           } else {
             const div = document.createElement('div');
-            div.className = 'empty-cell';
-            div.textContent = '-';
-            div.title = 'Clique para adicionar plantão';
+            div.className = 'folga-cell';
+            div.textContent = 'Folga';
+            div.title = 'Dia de folga - Clique para adicionar plantão';
             
             // Adicionar evento de clique para adicionar plantão
             div.addEventListener('click', () => {
@@ -753,7 +1260,7 @@
           }
           
           tr.appendChild(td);
-        });
+        }
         
         tabelaBody.appendChild(tr);
       });
@@ -767,29 +1274,15 @@
         // Adicionar plantão
         escalas[hospital].push(dia);
         escalas[hospital].sort((a, b) => a - b);
+        
+        // Verificar se há problemas de intervalo
+        verificarIntervalo(hospital, dia);
       } else {
         // Remover plantão
         escalas[hospital].splice(index, 1);
       }
       
       // Atualizar a tabela
-      criarTabela();
-    }
-    
-    // Função para adicionar novo dia
-    function adicionarDia(novoDia) {
-      if (novoDia < 1 || novoDia > 31) {
-        alert('Por favor, digite um dia válido (1-31)');
-        return;
-      }
-      
-      if (diasDoMes.includes(novoDia)) {
-        alert('Este dia já existe na escala!');
-        return;
-      }
-      
-      diasDoMes.push(novoDia);
-      diasDoMes.sort((a, b) => a - b);
       criarTabela();
     }
     
@@ -803,10 +1296,224 @@
           "HRP Noturno": []
         };
         
-        diasDoMes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+        observacoes = [];
         criarTabela();
+        criarTabelaObservacoes();
         mostrarNotificacao('Dados redefinidos com sucesso!');
       }
+    }
+    
+    // Função para criar a tabela de observações
+    function criarTabelaObservacoes() {
+      const tabelaBody = document.getElementById('observations-body');
+      
+      // Limpar tabela
+      tabelaBody.innerHTML = '';
+      
+      // Adicionar linha vazia se não houver observações
+      if (observacoes.length === 0) {
+        adicionarLinhaObservacao();
+        return;
+      }
+      
+      // Adicionar linhas existentes
+      observacoes.forEach((obs, index) => {
+        const tr = document.createElement('tr');
+        
+        // Hospital
+        const tdHospital = document.createElement('td');
+        const selectHospital = document.createElement('select');
+        selectHospital.innerHTML = `
+          <option value="">Selecione</option>
+          <option value="HUSE Diurno">HUSE Diurno</option>
+          <option value="HUSE Noturno">HUSE Noturno</option>
+          <option value="HRP Diurno">HRP Diurno</option>
+          <option value="HRP Noturno">HRP Noturno</option>
+        `;
+        selectHospital.value = obs.hospital || '';
+        selectHospital.addEventListener('change', (e) => {
+          observacoes[index].hospital = e.target.value;
+          salvarDados();
+        });
+        tdHospital.appendChild(selectHospital);
+        tr.appendChild(tdHospital);
+        
+        // Data
+        const tdData = document.createElement('td');
+        const inputData = document.createElement('input');
+        inputData.type = 'date';
+        inputData.value = obs.data || '';
+        inputData.addEventListener('change', (e) => {
+          observacoes[index].data = e.target.value;
+          salvarDados();
+        });
+        tdData.appendChild(inputData);
+        tr.appendChild(tdData);
+        
+        // Data Troca
+        const tdDataTroca = document.createElement('td');
+        const inputDataTroca = document.createElement('input');
+        inputDataTroca.type = 'date';
+        inputDataTroca.value = obs.dataTroca || '';
+        inputDataTroca.addEventListener('change', (e) => {
+          observacoes[index].dataTroca = e.target.value;
+          salvarDados();
+        });
+        tdDataTroca.appendChild(inputDataTroca);
+        tr.appendChild(tdDataTroca);
+        
+        // Nome
+        const tdNome = document.createElement('td');
+        const inputNome = document.createElement('input');
+        inputNome.type = 'text';
+        inputNome.value = obs.nome || '';
+        inputNome.placeholder = 'Digite o nome';
+        inputNome.addEventListener('change', (e) => {
+          observacoes[index].nome = e.target.value;
+          salvarDados();
+        });
+        tdNome.appendChild(inputNome);
+        tr.appendChild(tdNome);
+        
+        // Observação
+        const tdObs = document.createElement('td');
+        const inputObs = document.createElement('input');
+        inputObs.type = 'text';
+        inputObs.value = obs.observacao || '';
+        inputObs.placeholder = 'Digite uma observação';
+        inputObs.addEventListener('change', (e) => {
+          observacoes[index].observacao = e.target.value;
+          salvarDados();
+        });
+        tdObs.appendChild(inputObs);
+        tr.appendChild(tdObs);
+        
+        tabelaBody.appendChild(tr);
+      });
+      
+      // Adicionar linha vazia no final
+      adicionarLinhaObservacao();
+    }
+    
+    // Função para adicionar uma nova linha de observação
+    function adicionarLinhaObservacao() {
+      const tabelaBody = document.getElementById('observations-body');
+      const tr = document.createElement('tr');
+      
+      // Hospital
+      const tdHospital = document.createElement('td');
+      const selectHospital = document.createElement('select');
+      selectHospital.innerHTML = `
+        <option value="">Selecione</option>
+        <option value="HUSE Diurno">HUSE Diurno</option>
+        <option value="HUSE Noturno">HUSE Noturno</option>
+        <option value="HRP Diurno">HRP Diurno</option>
+        <option value="HRP Noturno">HRP Noturno</option>
+      `;
+      selectHospital.addEventListener('change', (e) => {
+        if (e.target.value) {
+          // Adicionar nova observação
+          observacoes.push({
+            hospital: e.target.value,
+            data: '',
+            dataTroca: '',
+            nome: '',
+            observacao: ''
+          });
+          salvarDados();
+          criarTabelaObservacoes();
+        }
+      });
+      tdHospital.appendChild(selectHospital);
+      tr.appendChild(tdHospital);
+      
+      // Data
+      const tdData = document.createElement('td');
+      const inputData = document.createElement('input');
+      inputData.type = 'date';
+      inputData.addEventListener('change', (e) => {
+        if (e.target.value) {
+          // Adicionar nova observação
+          observacoes.push({
+            hospital: '',
+            data: e.target.value,
+            dataTroca: '',
+            nome: '',
+            observacao: ''
+          });
+          salvarDados();
+          criarTabelaObservacoes();
+        }
+      });
+      tdData.appendChild(inputData);
+      tr.appendChild(tdData);
+      
+      // Data Troca
+      const tdDataTroca = document.createElement('td');
+      const inputDataTroca = document.createElement('input');
+      inputDataTroca.type = 'date';
+      inputDataTroca.addEventListener('change', (e) => {
+        if (e.target.value) {
+          // Adicionar nova observação
+          observacoes.push({
+            hospital: '',
+            data: '',
+            dataTroca: e.target.value,
+            nome: '',
+            observacao: ''
+          });
+          salvarDados();
+          criarTabelaObservacoes();
+        }
+      });
+      tdDataTroca.appendChild(inputDataTroca);
+      tr.appendChild(tdDataTroca);
+      
+      // Nome
+      const tdNome = document.createElement('td');
+      const inputNome = document.createElement('input');
+      inputNome.type = 'text';
+      inputNome.placeholder = 'Digite o nome';
+      inputNome.addEventListener('change', (e) => {
+        if (e.target.value) {
+          // Adicionar nova observação
+          observacoes.push({
+            hospital: '',
+            data: '',
+            dataTroca: '',
+            nome: e.target.value,
+            observacao: ''
+          });
+          salvarDados();
+          criarTabelaObservacoes();
+        }
+      });
+      tdNome.appendChild(inputNome);
+      tr.appendChild(tdNome);
+      
+      // Observação
+      const tdObs = document.createElement('td');
+      const inputObs = document.createElement('input');
+      inputObs.type = 'text';
+      inputObs.placeholder = 'Digite uma observação';
+      inputObs.addEventListener('change', (e) => {
+        if (e.target.value) {
+          // Adicionar nova observação
+          observacoes.push({
+            hospital: '',
+            data: '',
+            dataTroca: '',
+            nome: '',
+            observacao: e.target.value
+          });
+          salvarDados();
+          criarTabelaObservacoes();
+        }
+      });
+      tdObs.appendChild(inputObs);
+      tr.appendChild(tdObs);
+      
+      tabelaBody.appendChild(tr);
     }
     
     // Função para exportar para PDF
@@ -819,11 +1526,19 @@
           const { jsPDF } = window.jspdf;
           const doc = new jsPDF('l', 'mm', 'a4');
           const tabela = document.getElementById('escala-table');
+          const tabelaObservacoes = document.getElementById('observations-table');
+          
+          // Obter nome do mês
+          const monthNames = [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+          ];
+          const monthName = monthNames[currentMonth];
           
           // Adicionar título
           doc.setFontSize(20);
           doc.setTextColor(26, 82, 118);
-          doc.text('Escala de Plantões - Novembro 2025', 20, 20);
+          doc.text(`Escala de Plantões - ${monthName} ${currentYear}`, 20, 20);
           
           // Adicionar data de geração
           doc.setFontSize(10);
@@ -862,7 +1577,10 @@
               { text: 'HUSE Noturno', color: [26, 82, 118] },
               { text: 'HRP Diurno', color: [231, 76, 60] },
               { text: 'HRP Noturno', color: [142, 68, 173] },
-              { text: 'Conflito de Horários', color: [231, 126, 34] }
+              { text: 'Conflito de Horários', color: [231, 126, 34] },
+              { text: 'Sem Intervalo', color: [255, 107, 107] },
+              { text: 'Deslocamento 🚗', color: [255, 217, 61] },
+              { text: 'Folga', color: [200, 230, 201] }
             ];
             
             // Primeira coluna
@@ -870,7 +1588,7 @@
             let yPos = legendaY + 15;
             
             legendaItems.forEach((item, index) => {
-              if (index === 2) {
+              if (index === 4) {
                 // Segunda coluna
                 xPos = 150;
                 yPos = legendaY + 15;
@@ -897,7 +1615,10 @@
               '• Plantões noturnos: 19h às 7h do dia seguinte',
               '• Plantões diurnos: 7h às 19h',
               '• Símbolo "S" indica plantão confirmado',
+              '• "Folga" indica dia sem plantão',
+              '• 🚗 indica deslocamento entre hospitais necessário',
               '• Células em vermelho indicam conflito de horários',
+              '• Intervalo mínimo recomendado: 12 horas',
               '• Em caso de conflito, contactar a chefia imediatamente'
             ];
             
@@ -905,18 +1626,55 @@
               doc.text(info, 20, infoY + (index * 5));
             });
             
-            // Adicionar rodapé
-            const pageHeight = doc.internal.pageSize.height;
-            doc.setFontSize(9);
-            doc.setTextColor(150, 150, 150);
-            doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
-                    20, pageHeight - 10);
-            
-            // Salvar o PDF
-            doc.save('Escala_Plantões_Novembro.pdf');
-            
-            mostrarLoading(false);
-            mostrarNotificacao('PDF exportado com sucesso!');
+            // Adicionar tabela de observações se houver dados
+            if (observacoes.length > 0) {
+              const obsY = infoY + 45;
+              
+              // Título da tabela de observações
+              doc.setFontSize(14);
+              doc.setTextColor(26, 82, 118);
+              doc.text('REGISTRO DE TROCAS E OBSERVAÇÕES', 20, obsY);
+              
+              // Converter a tabela de observações para imagem
+              html2canvas(tabelaObservacoes, {
+                scale: 2,
+                useCORS: true,
+                logging: false
+              }).then(canvasObs => {
+                const imgDataObs = canvasObs.toDataURL('image/png');
+                const imgWidthObs = 270;
+                const imgHeightObs = (canvasObs.height * imgWidthObs) / canvasObs.width;
+                
+                // Adicionar a imagem da tabela de observações ao PDF
+                doc.addImage(imgDataObs, 'PNG', 15, obsY + 10, imgWidthObs, imgHeightObs);
+                
+                // Adicionar rodapé
+                const pageHeight = doc.internal.pageSize.height;
+                doc.setFontSize(9);
+                doc.setTextColor(150, 150, 150);
+                doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
+                        20, pageHeight - 10);
+                
+                // Salvar o PDF
+                doc.save(`Escala_Plantões_${monthName}_${currentYear}.pdf`);
+                
+                mostrarLoading(false);
+                mostrarNotificacao('PDF exportado com sucesso!');
+              });
+            } else {
+              // Adicionar rodapé
+              const pageHeight = doc.internal.pageSize.height;
+              doc.setFontSize(9);
+              doc.setTextColor(150, 150, 150);
+              doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
+                      20, pageHeight - 10);
+              
+              // Salvar o PDF
+              doc.save(`Escala_Plantões_${monthName}_${currentYear}.pdf`);
+              
+              mostrarLoading(false);
+              mostrarNotificacao('PDF exportado com sucesso!');
+            }
           }).catch(error => {
             console.error('Erro ao gerar PDF:', error);
             mostrarLoading(false);
@@ -931,53 +1689,64 @@
       }, 100);
     }
     
+    // Função para preencher o seletor de anos
+    function preencherAnos() {
+      const yearSelect = document.getElementById('year-select');
+      const currentYear = new Date().getFullYear();
+      
+      // Adicionar anos de 2020 a 2030
+      for (let year = 2020; year <= 2030; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+      }
+      
+      // Definir ano atual como selecionado
+      yearSelect.value = currentYear;
+    }
+    
     // Inicialização
     document.addEventListener('DOMContentLoaded', function() {
+      // Preencher seletor de anos
+      preencherAnos();
+      
+      // Definir mês atual como selecionado
+      document.getElementById('month-select').value = currentMonth;
+      
       // Tentar carregar dados salvos ao iniciar
       carregarDados();
       
       // Criar a tabela inicial
       criarTabela();
+      criarTabelaObservacoes();
       
       // Configurar eventos dos botões
-      document.getElementById('add-day').addEventListener('click', () => {
-        document.getElementById('add-day-modal').style.display = 'flex';
-        document.getElementById('new-day').focus();
-      });
-      
-      document.getElementById('cancel-add-day').addEventListener('click', () => {
-        document.getElementById('add-day-modal').style.display = 'none';
-        document.getElementById('new-day').value = '';
-      });
-      
-      document.getElementById('confirm-add-day').addEventListener('click', () => {
-        const novoDia = parseInt(document.getElementById('new-day').value);
-        if (!isNaN(novoDia)) {
-          adicionarDia(novoDia);
-          document.getElementById('add-day-modal').style.display = 'none';
-          document.getElementById('new-day').value = '';
-        } else {
-          alert('Por favor, digite um número válido');
-        }
-      });
-      
       document.getElementById('save-data').addEventListener('click', salvarDados);
       document.getElementById('load-data').addEventListener('click', carregarDados);
       document.getElementById('reset-data').addEventListener('click', redefinirDados);
       document.getElementById('export-pdf').addEventListener('click', exportarParaPDF);
       
-      // Fechar modal ao clicar fora
-      document.getElementById('add-day-modal').addEventListener('click', (e) => {
-        if (e.target.id === 'add-day-modal') {
-          document.getElementById('add-day-modal').style.display = 'none';
-          document.getElementById('new-day').value = '';
-        }
+      // Configurar eventos dos seletores de mês e ano
+      document.getElementById('month-select').addEventListener('change', (e) => {
+        currentMonth = parseInt(e.target.value);
+        criarTabela();
       });
       
-      // Permitir Enter para confirmar adição de dia
-      document.getElementById('new-day').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          document.getElementById('confirm-add-day').click();
+      document.getElementById('year-select').addEventListener('change', (e) => {
+        currentYear = parseInt(e.target.value);
+        criarTabela();
+      });
+      
+      // Configurar evento para fechar modal de alerta
+      document.getElementById('confirm-no-interval').addEventListener('click', () => {
+        document.getElementById('no-interval-modal').style.display = 'none';
+      });
+      
+      // Fechar modal ao clicar fora
+      document.getElementById('no-interval-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'no-interval-modal') {
+          document.getElementById('no-interval-modal').style.display = 'none';
         }
       });
       
@@ -985,8 +1754,5 @@
       window.addEventListener('beforeunload', salvarDados);
     });
   </script>
-  
-  <!-- Adicionar Font Awesome para ícones -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
