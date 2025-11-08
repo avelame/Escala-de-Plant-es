@@ -177,10 +177,6 @@
     background: linear-gradient(135deg, #e74c3c 0%, #e67e22 100%);
   }
   
-  .sem-intervalo {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-  }
-  
   .alerta-carro {
     background: linear-gradient(135deg, #ffd93d 0%, #ff9a3d 100%);
   }
@@ -289,12 +285,6 @@
     animation: pulse 2s infinite;
   }
   
-  .sem-intervalo-cell {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-    color: white;
-    animation: pulse-red 1.5s infinite;
-  }
-  
   .alerta-carro-cell {
     background: linear-gradient(135deg, #ffd93d 0%, #ff9a3d 100%);
     color: #333;
@@ -311,18 +301,6 @@
     }
     100% {
       box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
-    }
-  }
-  
-  @keyframes pulse-red {
-    0% {
-      box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
-    }
-    70% {
-      box-shadow: 0 0 0 8px rgba(255, 107, 107, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
     }
   }
   
@@ -478,78 +456,6 @@
     flex-shrink: 0;
   }
   
-  .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
-    width: 100%;
-    border: 3px solid #ff6b6b;
-    animation: shake 0.5s ease-in-out;
-  }
-  
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-  }
-  
-  .modal h2 {
-    margin-bottom: 15px;
-    color: #e74c3c;
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    font-size: clamp(0.9rem, 2vw, 1rem);
-  }
-  
-  .form-control {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-  }
-  
-  .form-control:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-  }
-  
-  .modal-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-  
   .notification {
     position: fixed;
     top: 20px;
@@ -576,19 +482,6 @@
   
   .notification.warning {
     background: #f39c12;
-    animation: pulse-notification 2s infinite;
-  }
-  
-  @keyframes pulse-notification {
-    0% {
-      box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(243, 156, 18, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(243, 156, 18, 0);
-    }
   }
   
   .loading {
@@ -658,22 +551,6 @@
     
     .content {
       padding: 10px;
-    }
-    
-    .modal-content {
-      padding: 20px;
-    }
-    
-    .notification {
-      top: 10px;
-      right: 10px;
-      left: 10px;
-      max-width: none;
-      transform: translateY(-100px);
-    }
-    
-    .notification.show {
-      transform: translateY(0);
     }
     
     .carro-indicator {
@@ -775,10 +652,6 @@
         <span>Conflito de Horários</span>
       </div>
       <div class="legend-item">
-        <div class="legend-color sem-intervalo"></div>
-        <span>Sem Intervalo</span>
-      </div>
-      <div class="legend-item">
         <div class="legend-color alerta-carro"></div>
         <span>🚗 Deslocamento</span>
       </div>
@@ -827,21 +700,6 @@
     
     <div class="footer">
       <p>Escala de Plantões - Sistema de Gerenciamento | Desenvolvido para facilitar o controle de escalas</p>
-    </div>
-  </div>
-
-  <!-- Modal de Alerta de Sem Intervalo -->
-  <div class="modal" id="no-interval-modal">
-    <div class="modal-content">
-      <h2><i class="fas fa-exclamation-triangle fa-beat"></i> ALERTA: DESLOCAMENTO ENTRE HOSPITAIS</h2>
-      <div id="no-interval-message" style="padding: 10px; background: #ffebee; border-radius: 8px; border-left: 4px solid #ff6b6b;">
-        <!-- Mensagem será preenchida dinamicamente -->
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-warning" id="confirm-no-interval" style="flex: 1;">
-          <i class="fas fa-car-side"></i> Entendi - Deslocamento Necessário
-        </button>
-      </div>
     </div>
   </div>
 
@@ -979,164 +837,57 @@
       return conflitos;
     }
     
-    // Função para verificar plantões sem intervalo adequado
-    function verificarIntervalo(hospital, dia) {
-      // Obter o número de dias no mês atual
+    // Função para obter dias com transição noturno → diurno e diurno → noturno no mesmo dia
+    function obterDiasComTransicaoDeslocamento() {
+      const diasComTransicao = new Set();
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       
-      // Verificar plantões consecutivos em hospitais diferentes
-      const problemas = [];
+      // Lista de plantões noturnos
+      const noturnos = ["HUSE Noturno", "HRP Noturno"];
+      // Lista de plantões diurnos
+      const diurnos = ["HUSE Diurno", "HRP Diurno"];
       
-      // Verificar plantão no dia anterior
-      const diaAnterior = dia - 1;
-      if (diaAnterior >= 1) {
-        Object.keys(escalas).forEach(h => {
-          if (h !== hospital && escalas[h].includes(diaAnterior)) {
-            // Plantão em hospital diferente no dia anterior
-            problemas.push({
-              tipo: 'anterior',
-              hospitalAnterior: h,
-              diaAnterior: diaAnterior,
-              hospitalAtual: hospital,
-              diaAtual: dia
-            });
-          }
-        });
-      }
-      
-      // Verificar plantão no mesmo dia em hospital diferente
-      Object.keys(escalas).forEach(h => {
-        if (h !== hospital && escalas[h].includes(dia)) {
-          // Plantão em hospital diferente no mesmo dia
-          problemas.push({
-            tipo: 'mesmo_dia',
-            hospital1: hospital,
-            hospital2: h,
-            dia: dia
-          });
-        }
-      });
-      
-      // Verificar plantão no dia seguinte
-      const diaSeguinte = dia + 1;
-      if (diaSeguinte <= daysInMonth) {
-        Object.keys(escalas).forEach(h => {
-          if (h !== hospital && escalas[h].includes(diaSeguinte)) {
-            // Plantão em hospital diferente no dia seguinte
-            problemas.push({
-              tipo: 'seguinte',
-              hospitalAtual: hospital,
-              diaAtual: dia,
-              hospitalSeguinte: h,
-              diaSeguinte: diaSeguinte
-            });
-          }
-        });
-      }
-      
-      // Se houver problemas, mostrar alerta
-      if (problemas.length > 0) {
-        mostrarAlertaSemIntervalo(problemas);
-        return problemas;
-      }
-      
-      return [];
-    }
-    
-    // Função para mostrar alerta de sem intervalo
-    function mostrarAlertaSemIntervalo(problemas) {
-      const modal = document.getElementById('no-interval-modal');
-      const message = document.getElementById('no-interval-message');
-      
-      let mensagemHTML = '<p style="margin-bottom: 15px; font-weight: 600; color: #e74c3c;">🚗 ATENÇÃO: DESLOCAMENTO ENTRE HOSPITAIS DETECTADO!</p>';
-      
-      problemas.forEach(problema => {
-        if (problema.tipo === 'anterior') {
-          mensagemHTML += `
-            <div style="margin-bottom: 10px; padding: 8px; background: #ffcdd2; border-radius: 5px;">
-              <p><strong>Deslocamento Necessário:</strong></p>
-              <p>• ${problema.hospitalAnterior} (dia ${problema.diaAnterior}) → ${problema.hospitalAtual} (dia ${problema.diaAtual})</p>
-              <p style="font-size: 0.9em; color: #c62828;"><i class="fas fa-car-side"></i> Você precisará se deslocar entre hospitais</p>
-            </div>
-          `;
-        } else if (problema.tipo === 'mesmo_dia') {
-          mensagemHTML += `
-            <div style="margin-bottom: 10px; padding: 8px; background: #ffcdd2; border-radius: 5px;">
-              <p><strong>Dois Plantões no Mesmo Dia:</strong></p>
-              <p>• ${problema.hospital1} e ${problema.hospital2} (dia ${problema.dia})</p>
-              <p style="font-size: 0.9em; color: #c62828;"><i class="fas fa-exclamation-circle"></i> Conflito de horários no mesmo dia</p>
-            </div>
-          `;
-        } else if (problema.tipo === 'seguinte') {
-          mensagemHTML += `
-            <div style="margin-bottom: 10px; padding: 8px; background: #ffcdd2; border-radius: 5px;">
-              <p><strong>Deslocamento Necessário:</strong></p>
-              <p>• ${problema.hospitalAtual} (dia ${problema.diaAtual}) → ${problema.hospitalSeguinte} (dia ${problema.diaSeguinte})</p>
-              <p style="font-size: 0.9em; color: #c62828;"><i class="fas fa-car-side"></i> Você precisará se deslocar entre hospitais</p>
-            </div>
-          `;
-        }
-      });
-      
-      mensagemHTML += `
-        <div style="margin-top: 15px; padding: 10px; background: #fff3e0; border-radius: 5px; border-left: 4px solid #ff9800;">
-          <p style="font-weight: 600;"><i class="fas fa-info-circle"></i> RECOMENDAÇÕES:</p>
-          <p style="font-size: 0.9em;">• Considere o tempo de deslocamento entre hospitais</p>
-          <p style="font-size: 0.9em;">• Mínimo de 12 horas de intervalo entre plantões</p>
-          <p style="font-size: 0.9em;">• Planeje seu transporte com antecedência</p>
-          <p style="font-size: 0.9em;">• Considere sua segurança e bem-estar</p>
-        </div>
-      `;
-      
-      message.innerHTML = mensagemHTML;
-      modal.style.display = 'flex';
-      
-      // Mostrar também uma notificação
-      mostrarNotificacao('🚗 Alerta: Deslocamento entre hospitais necessário!', false, true);
-    }
-    
-    // Função para obter dias com alertas de deslocamento
-    function obterDiasComAlerta() {
-      const diasComAlerta = new Set();
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      
+      // CASO 1: Noturno → Diurno (dia anterior → dia atual)
       for (let dia = 1; dia <= daysInMonth; dia++) {
-        // Verificar todos os hospitais para este dia
-        Object.keys(escalas).forEach(hospital => {
-          if (escalas[hospital].includes(dia)) {
-            // Verificar se há plantão em hospital diferente no dia anterior
-            const diaAnterior = dia - 1;
-            if (diaAnterior >= 1) {
-              Object.keys(escalas).forEach(h => {
-                if (h !== hospital && escalas[h].includes(diaAnterior)) {
-                  diasComAlerta.add(dia);
-                  diasComAlerta.add(diaAnterior);
-                }
-              });
-            }
-            
-            // Verificar se há plantão em hospital diferente no mesmo dia
-            Object.keys(escalas).forEach(h => {
-              if (h !== hospital && escalas[h].includes(dia)) {
-                diasComAlerta.add(dia);
-              }
-            });
-            
-            // Verificar se há plantão em hospital diferente no dia seguinte
-            const diaSeguinte = dia + 1;
-            if (diaSeguinte <= daysInMonth) {
-              Object.keys(escalas).forEach(h => {
-                if (h !== hospital && escalas[h].includes(diaSeguinte)) {
-                  diasComAlerta.add(dia);
-                  diasComAlerta.add(diaSeguinte);
-                }
-              });
-            }
+        const diaAnterior = dia - 1;
+        if (diaAnterior >= 1) {
+          // Verificar se há plantão noturno no dia anterior
+          const temNoturnoAnterior = noturnos.some(noturno => 
+            escalas[noturno].includes(diaAnterior)
+          );
+          
+          // Verificar se há plantão diurno no dia atual
+          const temDiurnoAtual = diurnos.some(diurno => 
+            escalas[diurno].includes(dia)
+          );
+          
+          // Se tiver noturno no dia anterior E diurno no dia atual, marca ambos os dias
+          if (temNoturnoAnterior && temDiurnoAtual) {
+            diasComTransicao.add(diaAnterior);
+            diasComTransicao.add(dia);
           }
-        });
+        }
       }
       
-      return Array.from(diasComAlerta);
+      // CASO 2: Diurno → Noturno no mesmo dia
+      for (let dia = 1; dia <= daysInMonth; dia++) {
+        // Verificar se há plantão diurno no dia
+        const temDiurno = diurnos.some(diurno => 
+          escalas[diurno].includes(dia)
+        );
+        
+        // Verificar se há plantão noturno no mesmo dia
+        const temNoturno = noturnos.some(noturno => 
+          escalas[noturno].includes(dia)
+        );
+        
+        // Se tiver diurno E noturno no mesmo dia, marca o dia
+        if (temDiurno && temNoturno) {
+          diasComTransicao.add(dia);
+        }
+      }
+      
+      return Array.from(diasComTransicao);
     }
     
     // Função para criar a tabela
@@ -1144,7 +895,7 @@
       const tabelaHead = document.querySelector('#table-header');
       const tabelaBody = document.querySelector('#table-body');
       const conflitos = detectarConflitos();
-      const diasComAlerta = obterDiasComAlerta();
+      const diasComTransicao = obterDiasComTransicaoDeslocamento();
       
       // Limpar conteúdo existente
       tabelaHead.innerHTML = '<th>Hospitais & Dias</th>';
@@ -1176,12 +927,12 @@
         dayName.className = 'day-name';
         dayName.textContent = diasDaSemana[diaSemana];
         
-        // Adicionar símbolo de carro se o dia tiver alerta
-        if (diasComAlerta.includes(dia)) {
+        // Adicionar símbolo de carro se o dia tiver transição que exige deslocamento
+        if (diasComTransicao.includes(dia)) {
           const carroIndicator = document.createElement('div');
           carroIndicator.className = 'carro-indicator';
           carroIndicator.textContent = '🚗';
-          carroIndicator.title = 'Deslocamento entre hospitais necessário';
+          carroIndicator.title = 'Deslocamento necessário entre hospitais';
           dayHeader.appendChild(carroIndicator);
         }
         
@@ -1227,11 +978,11 @@
               div.textContent = 'S';
               div.title = 'Conflito de horário!';
             } 
-            // Verificar se é um dia com alerta de deslocamento
-            else if (diasComAlerta.includes(dia)) {
+            // Verificar se é um dia com transição que exige deslocamento
+            else if (diasComTransicao.includes(dia)) {
               div.className = 'plantao-cell alerta-carro-cell';
               div.textContent = 'S 🚗';
-              div.title = 'Plantão com deslocamento entre hospitais';
+              div.title = 'Plantão com deslocamento necessário entre hospitais';
             }
             else {
               div.className = 'plantao-cell plantao';
@@ -1274,9 +1025,6 @@
         // Adicionar plantão
         escalas[hospital].push(dia);
         escalas[hospital].sort((a, b) => a - b);
-        
-        // Verificar se há problemas de intervalo
-        verificarIntervalo(hospital, dia);
       } else {
         // Remover plantão
         escalas[hospital].splice(index, 1);
@@ -1578,7 +1326,6 @@
               { text: 'HRP Diurno', color: [231, 76, 60] },
               { text: 'HRP Noturno', color: [142, 68, 173] },
               { text: 'Conflito de Horários', color: [231, 126, 34] },
-              { text: 'Sem Intervalo', color: [255, 107, 107] },
               { text: 'Deslocamento 🚗', color: [255, 217, 61] },
               { text: 'Folga', color: [200, 230, 201] }
             ];
@@ -1588,7 +1335,7 @@
             let yPos = legendaY + 15;
             
             legendaItems.forEach((item, index) => {
-              if (index === 4) {
+              if (index === 3) {
                 // Segunda coluna
                 xPos = 150;
                 yPos = legendaY + 15;
@@ -1616,9 +1363,9 @@
               '• Plantões diurnos: 7h às 19h',
               '• Símbolo "S" indica plantão confirmado',
               '• "Folga" indica dia sem plantão',
-              '• 🚗 indica deslocamento entre hospitais necessário',
+              '• 🚗 indica deslocamento necessário entre hospitais',
+              '• Inclui: Noturno → Diurno e Diurno → Noturno no mesmo dia',
               '• Células em vermelho indicam conflito de horários',
-              '• Intervalo mínimo recomendado: 12 horas',
               '• Em caso de conflito, contactar a chefia imediatamente'
             ];
             
@@ -1736,18 +1483,6 @@
       document.getElementById('year-select').addEventListener('change', (e) => {
         currentYear = parseInt(e.target.value);
         criarTabela();
-      });
-      
-      // Configurar evento para fechar modal de alerta
-      document.getElementById('confirm-no-interval').addEventListener('click', () => {
-        document.getElementById('no-interval-modal').style.display = 'none';
-      });
-      
-      // Fechar modal ao clicar fora
-      document.getElementById('no-interval-modal').addEventListener('click', (e) => {
-        if (e.target.id === 'no-interval-modal') {
-          document.getElementById('no-interval-modal').style.display = 'none';
-        }
       });
       
       // Salvar automaticamente quando a página for fechada
