@@ -42,6 +42,7 @@
     padding: 20px;
     text-align: center;
     flex-shrink: 0;
+    position: relative;
   }
   
   h1 {
@@ -70,6 +71,45 @@
     border: 1px solid #ddd;
     background: white;
     font-size: 1rem;
+  }
+
+  /* Contador Minimalista no Header */
+  .header-counter {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 80px;
+    transition: all 0.3s ease;
+  }
+
+  .header-counter:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+  }
+
+  .counter-label {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin-bottom: 2px;
+    font-weight: 500;
+  }
+
+  .counter-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .counter-subtitle {
+    font-size: 0.65rem;
+    opacity: 0.8;
+    margin-top: 1px;
   }
   
   .controls {
@@ -128,51 +168,6 @@
   .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .counters {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 10px 15px;
-    flex-wrap: wrap;
-  }
-  
-  .counter {
-    background: white;
-    border-radius: 10px;
-    padding: 12px 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 2px solid #e74c3c;
-    text-align: center;
-    min-width: 140px;
-    transition: all 0.3s ease;
-  }
-  
-  .counter:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  }
-  
-  .counter-title {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #7f8c8d;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .counter-value {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #e74c3c;
-  }
-  
-  .counter-subtitle {
-    font-size: 0.75rem;
-    color: #95a5a6;
-    margin-top: 3px;
   }
   
   .legend {
@@ -577,6 +572,14 @@
     header {
       padding: 15px 10px;
     }
+
+    .header-counter {
+      position: relative;
+      top: auto;
+      right: auto;
+      margin: 10px auto 0;
+      max-width: 120px;
+    }
     
     .controls {
       padding: 10px;
@@ -586,20 +589,6 @@
     .btn {
       min-width: 120px;
       padding: 8px 10px;
-    }
-    
-    .counters {
-      gap: 10px;
-      margin: 8px 10px;
-    }
-    
-    .counter {
-      min-width: 120px;
-      padding: 10px 15px;
-    }
-    
-    .counter-value {
-      font-size: 1.5rem;
     }
     
     .legend {
@@ -637,7 +626,7 @@
       min-height: 100vh;
     }
     
-    header, .controls, .counters, .legend {
+    header, .controls, .legend {
       flex-shrink: 0;
     }
     
@@ -653,6 +642,14 @@
     <header>
       <h1><i class="fas fa-calendar-alt"></i> Gerador de Escala de Plantões</h1>
       <p class="subtitle">Gerencie e exporte suas escalas de plantão</p>
+      
+      <!-- Contador Minimalista no Header -->
+      <div class="header-counter">
+        <div class="counter-label">TROCAS HRP</div>
+        <div class="counter-value" id="hrp-trocas-count">0</div>
+        <div class="counter-subtitle">este mês</div>
+      </div>
+      
       <div class="month-selector">
         <select id="month-select">
           <option value="0">Janeiro</option>
@@ -687,15 +684,6 @@
       <button class="btn btn-success" id="export-pdf">
         <i class="fas fa-file-pdf"></i> Exportar para PDF
       </button>
-    </div>
-
-    <!-- Contadores de Trocas -->
-    <div class="counters">
-      <div class="counter">
-        <div class="counter-title">Trocas HRP</div>
-        <div class="counter-value" id="hrp-trocas-count">0</div>
-        <div class="counter-subtitle">este mês</div>
-      </div>
     </div>
     
     <div class="legend">
@@ -1341,6 +1329,7 @@
           const doc = new jsPDF('l', 'mm', 'a4');
           const tabela = document.getElementById('escala-table');
           const tabelaObservacoes = document.getElementById('observations-table');
+          const trocasHRP = contarTrocasHRP();
           
           const monthNames = [
             "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -1348,7 +1337,7 @@
           ];
           const monthName = monthNames[currentMonth];
           
-          // Adicionar título
+          // PÁGINA 1: ESCALA DE PLANTÕES
           doc.setFontSize(20);
           doc.setTextColor(26, 82, 118);
           doc.text(`Escala de Plantões - ${monthName} ${currentYear}`, 20, 20);
@@ -1368,48 +1357,15 @@
             const imgWidth = 270;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             
+            // Adicionar a imagem da tabela ao PDF
             doc.addImage(imgData, 'PNG', 15, 40, imgWidth, imgHeight);
             
-            const legendaY = 40 + imgHeight + 15;
-            
-            doc.setFontSize(14);
+            // Adicionar informações básicas (sem legenda detalhada)
+            const infoY = 40 + imgHeight + 15;
+            doc.setFontSize(12);
             doc.setTextColor(26, 82, 118);
-            doc.text('LEGENDA', 20, legendaY);
+            doc.text('INFORMAÇÕES:', 20, infoY);
             
-            doc.setDrawColor(200, 200, 200);
-            doc.setFillColor(250, 250, 250);
-            doc.rect(18, legendaY + 5, 260, 35, 'FD');
-            
-            const legendaItems = [
-              { text: 'HUSE Diurno', color: [52, 152, 219] },
-              { text: 'HUSE Noturno', color: [26, 82, 118] },
-              { text: 'HRP Diurno', color: [231, 76, 60] },
-              { text: 'HRP Noturno', color: [142, 68, 173] },
-              { text: 'Conflito de Horários', color: [231, 126, 34] },
-              { text: 'Deslocamento 🚗', color: [255, 217, 61] },
-              { text: 'Folga', color: [200, 230, 201] }
-            ];
-            
-            let xPos = 25;
-            let yPos = legendaY + 15;
-            
-            legendaItems.forEach((item, index) => {
-              if (index === 3) {
-                xPos = 150;
-                yPos = legendaY + 15;
-              }
-              
-              doc.setFillColor(...item.color);
-              doc.rect(xPos, yPos, 6, 6, 'F');
-              
-              doc.setFontSize(11);
-              doc.setTextColor(0, 0, 0);
-              doc.text(item.text, xPos + 10, yPos + 4.5);
-              
-              yPos += 10;
-            });
-            
-            const infoY = legendaY + 45;
             doc.setFontSize(10);
             doc.setTextColor(100, 100, 100);
             
@@ -1419,51 +1375,125 @@
               '• Símbolo "S" indica plantão confirmado',
               '• "Folga" indica dia sem plantão',
               '• 🚗 indica deslocamento necessário entre hospitais',
-              '• Inclui: Noturno → Diurno e Diurno → Noturno no mesmo dia',
-              '• Células em vermelho indicam conflito de horários',
-              '• Em caso de conflito, contactar a chefia imediatamente'
+              '• Células em vermelho indicam conflito de horários'
             ];
             
             informacoes.forEach((info, index) => {
-              doc.text(info, 20, infoY + (index * 5));
+              doc.text(info, 20, infoY + 10 + (index * 5));
             });
             
+            // Adicionar rodapé na primeira página
+            const pageHeight = doc.internal.pageSize.height;
+            doc.setFontSize(9);
+            doc.setTextColor(150, 150, 150);
+            doc.text('Página 1 de 2 - Escala de Plantões', 20, pageHeight - 10);
+            
+            // PÁGINA 2: TROCAS E OBSERVAÇÕES
+            doc.addPage();
+            
+            // Título da segunda página
+            doc.setFontSize(20);
+            doc.setTextColor(26, 82, 118);
+            doc.text(`Registro de Trocas e Observações - ${monthName} ${currentYear}`, 20, 20);
+            
+            // Adicionar contador de trocas HRP
+            doc.setFontSize(16);
+            doc.setTextColor(231, 76, 60);
+            doc.text(`Trocas no HRP este mês: ${trocasHRP}`, 20, 40);
+            
+            // Adicionar tabela de observações se houver dados
             if (observacoes.length > 0) {
-              const obsY = infoY + 45;
+              // Criar uma cópia da tabela de observações com fonte maior para exportação
+              const tabelaObservacoesClone = tabelaObservacoes.cloneNode(true);
               
-              doc.setFontSize(14);
-              doc.setTextColor(26, 82, 118);
-              doc.text('REGISTRO DE TROCAS E OBSERVAÇÕES', 20, obsY);
+              // Aumentar a fonte das células da tabela de observações
+              const todasAsCelulas = tabelaObservacoesClone.querySelectorAll('td, th');
+              todasAsCelulas.forEach(celula => {
+                celula.style.fontSize = '14px';
+                celula.style.padding = '12px 8px';
+              });
               
-              html2canvas(tabelaObservacoes, {
+              // Aumentar a fonte dos inputs e selects
+              const todosInputs = tabelaObservacoesClone.querySelectorAll('input, select');
+              todosInputs.forEach(input => {
+                input.style.fontSize = '14px';
+                input.style.padding = '8px';
+                input.style.height = 'auto';
+              });
+              
+              // Adicionar a tabela clonada temporariamente ao DOM para captura
+              tabelaObservacoesClone.style.position = 'absolute';
+              tabelaObservacoesClone.style.left = '-9999px';
+              tabelaObservacoesClone.style.top = '0';
+              tabelaObservacoesClone.style.width = tabelaObservacoes.offsetWidth + 'px';
+              document.body.appendChild(tabelaObservacoesClone);
+              
+              // Converter a tabela de observações com fonte maior para imagem
+              html2canvas(tabelaObservacoesClone, {
                 scale: 2,
                 useCORS: true,
-                logging: false
+                logging: false,
+                width: tabelaObservacoes.offsetWidth
               }).then(canvasObs => {
+                // Remover a tabela clonada do DOM
+                document.body.removeChild(tabelaObservacoesClone);
+                
                 const imgDataObs = canvasObs.toDataURL('image/png');
                 const imgWidthObs = 270;
                 const imgHeightObs = (canvasObs.height * imgWidthObs) / canvasObs.width;
                 
-                doc.addImage(imgDataObs, 'PNG', 15, obsY + 10, imgWidthObs, imgHeightObs);
+                // Adicionar a imagem da tabela de observações ao PDF
+                doc.addImage(imgDataObs, 'PNG', 15, 55, imgWidthObs, imgHeightObs);
                 
-                const pageHeight = doc.internal.pageSize.height;
+                // Adicionar informações sobre as trocas com fonte maior
+                const infoObsY = 55 + imgHeightObs + 15;
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text('• As trocas devem ser comunicadas com antecedência à chefia', 20, infoObsY);
+                doc.text('• Observações devem ser registradas para controle', 20, infoObsY + 8);
+                
+                // Adicionar rodapé na segunda página
+                const pageHeight2 = doc.internal.pageSize.height;
                 doc.setFontSize(9);
                 doc.setTextColor(150, 150, 150);
+                doc.text('Página 2 de 2 - Registro de Trocas e Observações', 20, pageHeight2 - 15);
                 doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
-                        20, pageHeight - 10);
+                        20, pageHeight2 - 8);
                 
+                // Salvar o PDF
                 doc.save(`Escala_Plantões_${monthName}_${currentYear}.pdf`);
                 
                 mostrarLoading(false);
                 mostrarNotificacao('PDF exportado com sucesso!');
+              }).catch(error => {
+                // Remover a tabela clonada em caso de erro
+                if (document.body.contains(tabelaObservacoesClone)) {
+                  document.body.removeChild(tabelaObservacoesClone);
+                }
+                console.error('Erro ao gerar tabela de observações:', error);
+                mostrarLoading(false);
+                mostrarNotificacao('Erro ao gerar PDF!', true);
               });
             } else {
-              const pageHeight = doc.internal.pageSize.height;
+              // Se não há observações, adicionar mensagem com fonte maior
+              doc.setFontSize(14);
+              doc.setTextColor(100, 100, 100);
+              doc.text('Nenhuma troca ou observação registrada para este mês.', 20, 60);
+              
+              // Adicionar informações sobre trocas
+              doc.setFontSize(12);
+              doc.text('• As trocas devem ser comunicadas com antecedência à chefia', 20, 80);
+              doc.text('• Observações devem ser registradas para controle', 20, 95);
+              
+              // Adicionar rodapé na segunda página
+              const pageHeight2 = doc.internal.pageSize.height;
               doc.setFontSize(9);
               doc.setTextColor(150, 150, 150);
+              doc.text('Página 2 de 2 - Registro de Trocas e Observações', 20, pageHeight2 - 15);
               doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
-                      20, pageHeight - 10);
+                      20, pageHeight2 - 8);
               
+              // Salvar o PDF
               doc.save(`Escala_Plantões_${monthName}_${currentYear}.pdf`);
               
               mostrarLoading(false);
