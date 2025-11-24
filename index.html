@@ -130,6 +130,51 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
   
+  .counters {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 15px;
+    flex-wrap: wrap;
+  }
+  
+  .counter {
+    background: white;
+    border-radius: 10px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e74c3c;
+    text-align: center;
+    min-width: 140px;
+    transition: all 0.3s ease;
+  }
+  
+  .counter:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .counter-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .counter-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #e74c3c;
+  }
+  
+  .counter-subtitle {
+    font-size: 0.75rem;
+    color: #95a5a6;
+    margin-top: 3px;
+  }
+  
   .legend {
     display: flex;
     flex-wrap: wrap;
@@ -543,6 +588,20 @@
       padding: 8px 10px;
     }
     
+    .counters {
+      gap: 10px;
+      margin: 8px 10px;
+    }
+    
+    .counter {
+      min-width: 120px;
+      padding: 10px 15px;
+    }
+    
+    .counter-value {
+      font-size: 1.5rem;
+    }
+    
     .legend {
       margin: 10px;
       padding: 10px;
@@ -578,7 +637,7 @@
       min-height: 100vh;
     }
     
-    header, .controls, .legend {
+    header, .controls, .counters, .legend {
       flex-shrink: 0;
     }
     
@@ -628,6 +687,15 @@
       <button class="btn btn-success" id="export-pdf">
         <i class="fas fa-file-pdf"></i> Exportar para PDF
       </button>
+    </div>
+
+    <!-- Contadores de Trocas -->
+    <div class="counters">
+      <div class="counter">
+        <div class="counter-title">Trocas HRP</div>
+        <div class="counter-value" id="hrp-trocas-count">0</div>
+        <div class="counter-subtitle">este mês</div>
+      </div>
     </div>
     
     <div class="legend">
@@ -713,7 +781,7 @@
   </div>
 
   <script>
-    // Dados iniciais das escalas - TODOS OS PLANTÕES VAZIOS
+    // Dados iniciais das escalas
     let escalas = {
       "HUSE Diurno": [],
       "HUSE Noturno": [],
@@ -731,8 +799,30 @@
     // Dias da semana em português
     const diasDaSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
     
-    // Chave para armazenamento local
-    const STORAGE_KEY = 'escala_plantoes_data';
+    // Chave para armazenamento local - INCLUI MÊS E ANO
+    function getStorageKey(month, year) {
+      return `escala_plantoes_data_${month}_${year}`;
+    }
+    
+    // Função para contar trocas no HRP
+    function contarTrocasHRP() {
+      let count = 0;
+      
+      // Contar observações que são do HRP (Diurno ou Noturno)
+      observacoes.forEach(obs => {
+        if (obs.hospital && (obs.hospital === 'HRP Diurno' || obs.hospital === 'HRP Noturno')) {
+          count++;
+        }
+      });
+      
+      return count;
+    }
+    
+    // Função para atualizar contadores
+    function atualizarContadores() {
+      const trocasHRP = contarTrocasHRP();
+      document.getElementById('hrp-trocas-count').textContent = trocasHRP;
+    }
     
     // Função para mostrar notificação
     function mostrarNotificacao(mensagem, isError = false, isWarning = false) {
@@ -770,14 +860,12 @@
         const dadosParaSalvar = {
           escalas: escalas,
           observacoes: observacoes,
-          currentMonth: currentMonth,
-          currentYear: currentYear,
           dataSalvamento: new Date().toISOString()
         };
         
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(dadosParaSalvar));
+        localStorage.setItem(getStorageKey(currentMonth, currentYear), JSON.stringify(dadosParaSalvar));
+        atualizarContadores();
         mostrarNotificacao('Dados salvos com sucesso!');
-        console.log('Dados salvos:', dadosParaSalvar);
       } catch (error) {
         console.error('Erro ao salvar dados:', error);
         mostrarNotificacao('Erro ao salvar dados!', true);
@@ -787,25 +875,35 @@
     // Função para carregar dados do localStorage
     function carregarDados() {
       try {
-        const dadosSalvos = localStorage.getItem(STORAGE_KEY);
+        const dadosSalvos = localStorage.getItem(getStorageKey(currentMonth, currentYear));
         
         if (dadosSalvos) {
           const dados = JSON.parse(dadosSalvos);
-          escalas = dados.escalas || escalas;
+          escalas = dados.escalas || {
+            "HUSE Diurno": [],
+            "HUSE Noturno": [],
+            "HRP Diurno": [],
+            "HRP Noturno": []
+          };
           observacoes = dados.observacoes || [];
-          currentMonth = dados.currentMonth || currentMonth;
-          currentYear = dados.currentYear || currentYear;
-          
-          // Atualizar seletores
-          document.getElementById('month-select').value = currentMonth;
-          document.getElementById('year-select').value = currentYear;
           
           criarTabela();
           criarTabelaObservacoes();
+          atualizarContadores();
           mostrarNotificacao('Dados carregados com sucesso!');
-          console.log('Dados carregados:', dados);
         } else {
-          mostrarNotificacao('Nenhum dado salvo encontrado!', true);
+          // Se não há dados salvos para este mês/ano, inicializar com arrays vazios
+          escalas = {
+            "HUSE Diurno": [],
+            "HUSE Noturno": [],
+            "HRP Diurno": [],
+            "HRP Noturno": []
+          };
+          observacoes = [];
+          criarTabela();
+          criarTabelaObservacoes();
+          atualizarContadores();
+          mostrarNotificacao('Nenhum dado salvo encontrado para este mês/ano!', true);
         }
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
@@ -816,8 +914,6 @@
     // Função para detectar conflitos
     function detectarConflitos() {
       const conflitos = {};
-      
-      // Obter o número de dias no mês atual
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       
       for (let dia = 1; dia <= daysInMonth; dia++) {
@@ -842,26 +938,21 @@
       const diasComTransicao = new Set();
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       
-      // Lista de plantões noturnos
       const noturnos = ["HUSE Noturno", "HRP Noturno"];
-      // Lista de plantões diurnos
       const diurnos = ["HUSE Diurno", "HRP Diurno"];
       
       // CASO 1: Noturno → Diurno (dia anterior → dia atual)
       for (let dia = 1; dia <= daysInMonth; dia++) {
         const diaAnterior = dia - 1;
         if (diaAnterior >= 1) {
-          // Verificar se há plantão noturno no dia anterior
           const temNoturnoAnterior = noturnos.some(noturno => 
             escalas[noturno].includes(diaAnterior)
           );
           
-          // Verificar se há plantão diurno no dia atual
           const temDiurnoAtual = diurnos.some(diurno => 
             escalas[diurno].includes(dia)
           );
           
-          // Se tiver noturno no dia anterior E diurno no dia atual, marca ambos os dias
           if (temNoturnoAnterior && temDiurnoAtual) {
             diasComTransicao.add(diaAnterior);
             diasComTransicao.add(dia);
@@ -871,17 +962,14 @@
       
       // CASO 2: Diurno → Noturno no mesmo dia
       for (let dia = 1; dia <= daysInMonth; dia++) {
-        // Verificar se há plantão diurno no dia
         const temDiurno = diurnos.some(diurno => 
           escalas[diurno].includes(dia)
         );
         
-        // Verificar se há plantão noturno no mesmo dia
         const temNoturno = noturnos.some(noturno => 
           escalas[noturno].includes(dia)
         );
         
-        // Se tiver diurno E noturno no mesmo dia, marca o dia
         if (temDiurno && temNoturno) {
           diasComTransicao.add(dia);
         }
@@ -904,15 +992,14 @@
       // Obter o número de dias no mês atual
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       
-      // Adicionar cabeçalhos dos dias com dia da semana
+      // Adicionar cabeçalhos dos dias
       for (let dia = 1; dia <= daysInMonth; dia++) {
         const data = new Date(currentYear, currentMonth, dia);
-        const diaSemana = data.getDay(); // 0 = Domingo, 1 = Segunda, etc.
+        const diaSemana = data.getDay();
         
         const th = document.createElement('th');
         
-        // Aplicar cores suaves para sábado e domingo
-        if (diaSemana === 0 || diaSemana === 6) { // Domingo ou Sábado
+        if (diaSemana === 0 || diaSemana === 6) {
           th.className = diaSemana === 0 ? 'sunday' : 'weekend';
         }
         
@@ -927,7 +1014,6 @@
         dayName.className = 'day-name';
         dayName.textContent = diasDaSemana[diaSemana];
         
-        // Adicionar símbolo de carro se o dia tiver transição que exige deslocamento
         if (diasComTransicao.includes(dia)) {
           const carroIndicator = document.createElement('div');
           carroIndicator.className = 'carro-indicator';
@@ -944,7 +1030,7 @@
         tabelaHead.appendChild(th);
       }
       
-      // Adicionar linhas para cada hospital (na ordem correta)
+      // Adicionar linhas para cada hospital
       const hospitaisOrdenados = ["HUSE Diurno", "HUSE Noturno", "HRP Diurno", "HRP Noturno"];
       
       hospitaisOrdenados.forEach(hospital => {
@@ -954,15 +1040,13 @@
         tdNome.textContent = hospital;
         tr.appendChild(tdNome);
         
-        // Adicionar células para cada dia
         for (let dia = 1; dia <= daysInMonth; dia++) {
           const data = new Date(currentYear, currentMonth, dia);
           const diaSemana = data.getDay();
           
           const td = document.createElement('td');
           
-          // Aplicar cores suaves para sábado e domingo
-          if (diaSemana === 0 || diaSemana === 6) { // Domingo ou Sábado
+          if (diaSemana === 0 || diaSemana === 6) {
             td.className = diaSemana === 0 ? 'sunday' : 'weekend';
           }
           
@@ -972,25 +1056,20 @@
           if (escalas[hospital].includes(dia)) {
             const div = document.createElement('div');
             
-            // Verificar se há conflito neste dia
             if (conflitos[dia] && conflitos[dia].includes(hospital)) {
               div.className = 'plantao-cell conflito-cell';
               div.textContent = 'S';
               div.title = 'Conflito de horário!';
-            } 
-            // Verificar se é um dia com transição que exige deslocamento
-            else if (diasComTransicao.includes(dia)) {
+            } else if (diasComTransicao.includes(dia)) {
               div.className = 'plantao-cell alerta-carro-cell';
               div.textContent = 'S 🚗';
               div.title = 'Plantão com deslocamento necessário entre hospitais';
-            }
-            else {
+            } else {
               div.className = 'plantao-cell plantao';
               div.textContent = 'S';
               div.title = 'Plantão confirmado';
             }
             
-            // Adicionar evento de clique para remover plantão
             div.addEventListener('click', () => {
               togglePlantao(hospital, dia);
             });
@@ -1002,7 +1081,6 @@
             div.textContent = 'Folga';
             div.title = 'Dia de folga - Clique para adicionar plantão';
             
-            // Adicionar evento de clique para adicionar plantão
             div.addEventListener('click', () => {
               togglePlantao(hospital, dia);
             });
@@ -1022,21 +1100,19 @@
       const index = escalas[hospital].indexOf(dia);
       
       if (index === -1) {
-        // Adicionar plantão
         escalas[hospital].push(dia);
         escalas[hospital].sort((a, b) => a - b);
       } else {
-        // Remover plantão
         escalas[hospital].splice(index, 1);
       }
       
-      // Atualizar a tabela
+      salvarDados();
       criarTabela();
     }
     
     // Função para redefinir dados
     function redefinirDados() {
-      if (confirm('Tem certeza que deseja redefinir todos os dados para os valores padrão?')) {
+      if (confirm('Tem certeza que deseja redefinir todos os dados para este mês/ano?')) {
         escalas = {
           "HUSE Diurno": [],
           "HUSE Noturno": [],
@@ -1047,6 +1123,7 @@
         observacoes = [];
         criarTabela();
         criarTabelaObservacoes();
+        salvarDados();
         mostrarNotificacao('Dados redefinidos com sucesso!');
       }
     }
@@ -1054,17 +1131,13 @@
     // Função para criar a tabela de observações
     function criarTabelaObservacoes() {
       const tabelaBody = document.getElementById('observations-body');
-      
-      // Limpar tabela
       tabelaBody.innerHTML = '';
       
-      // Adicionar linha vazia se não houver observações
       if (observacoes.length === 0) {
         adicionarLinhaObservacao();
         return;
       }
       
-      // Adicionar linhas existentes
       observacoes.forEach((obs, index) => {
         const tr = document.createElement('tr');
         
@@ -1139,7 +1212,6 @@
         tabelaBody.appendChild(tr);
       });
       
-      // Adicionar linha vazia no final
       adicionarLinhaObservacao();
     }
     
@@ -1160,7 +1232,6 @@
       `;
       selectHospital.addEventListener('change', (e) => {
         if (e.target.value) {
-          // Adicionar nova observação
           observacoes.push({
             hospital: e.target.value,
             data: '',
@@ -1181,7 +1252,6 @@
       inputData.type = 'date';
       inputData.addEventListener('change', (e) => {
         if (e.target.value) {
-          // Adicionar nova observação
           observacoes.push({
             hospital: '',
             data: e.target.value,
@@ -1202,7 +1272,6 @@
       inputDataTroca.type = 'date';
       inputDataTroca.addEventListener('change', (e) => {
         if (e.target.value) {
-          // Adicionar nova observação
           observacoes.push({
             hospital: '',
             data: '',
@@ -1224,7 +1293,6 @@
       inputNome.placeholder = 'Digite o nome';
       inputNome.addEventListener('change', (e) => {
         if (e.target.value) {
-          // Adicionar nova observação
           observacoes.push({
             hospital: '',
             data: '',
@@ -1246,7 +1314,6 @@
       inputObs.placeholder = 'Digite uma observação';
       inputObs.addEventListener('change', (e) => {
         if (e.target.value) {
-          // Adicionar nova observação
           observacoes.push({
             hospital: '',
             data: '',
@@ -1268,7 +1335,6 @@
     function exportarParaPDF() {
       mostrarLoading(true);
       
-      // Pequeno delay para garantir que o loading seja mostrado
       setTimeout(() => {
         try {
           const { jsPDF } = window.jspdf;
@@ -1276,7 +1342,6 @@
           const tabela = document.getElementById('escala-table');
           const tabelaObservacoes = document.getElementById('observations-table');
           
-          // Obter nome do mês
           const monthNames = [
             "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
             "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
@@ -1293,33 +1358,28 @@
           doc.setTextColor(100, 100, 100);
           doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}`, 20, 30);
           
-          // Converter a tabela para imagem usando html2canvas
+          // Converter a tabela para imagem
           html2canvas(tabela, {
-            scale: 2, // Maior qualidade
+            scale: 2,
             useCORS: true,
             logging: false
           }).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 270; // Largura máxima para A4 landscape
+            const imgWidth = 270;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             
-            // Adicionar a imagem da tabela ao PDF
             doc.addImage(imgData, 'PNG', 15, 40, imgWidth, imgHeight);
             
-            // Adicionar legenda organizada
             const legendaY = 40 + imgHeight + 15;
             
-            // Título da legenda
             doc.setFontSize(14);
             doc.setTextColor(26, 82, 118);
             doc.text('LEGENDA', 20, legendaY);
             
-            // Container da legenda
             doc.setDrawColor(200, 200, 200);
             doc.setFillColor(250, 250, 250);
             doc.rect(18, legendaY + 5, 260, 35, 'FD');
             
-            // Itens da legenda em duas colunas
             const legendaItems = [
               { text: 'HUSE Diurno', color: [52, 152, 219] },
               { text: 'HUSE Noturno', color: [26, 82, 118] },
@@ -1330,22 +1390,18 @@
               { text: 'Folga', color: [200, 230, 201] }
             ];
             
-            // Primeira coluna
             let xPos = 25;
             let yPos = legendaY + 15;
             
             legendaItems.forEach((item, index) => {
               if (index === 3) {
-                // Segunda coluna
                 xPos = 150;
                 yPos = legendaY + 15;
               }
               
-              // Quadrado colorido
               doc.setFillColor(...item.color);
               doc.rect(xPos, yPos, 6, 6, 'F');
               
-              // Texto
               doc.setFontSize(11);
               doc.setTextColor(0, 0, 0);
               doc.text(item.text, xPos + 10, yPos + 4.5);
@@ -1353,7 +1409,6 @@
               yPos += 10;
             });
             
-            // Adicionar informações adicionais
             const infoY = legendaY + 45;
             doc.setFontSize(10);
             doc.setTextColor(100, 100, 100);
@@ -1373,16 +1428,13 @@
               doc.text(info, 20, infoY + (index * 5));
             });
             
-            // Adicionar tabela de observações se houver dados
             if (observacoes.length > 0) {
               const obsY = infoY + 45;
               
-              // Título da tabela de observações
               doc.setFontSize(14);
               doc.setTextColor(26, 82, 118);
               doc.text('REGISTRO DE TROCAS E OBSERVAÇÕES', 20, obsY);
               
-              // Converter a tabela de observações para imagem
               html2canvas(tabelaObservacoes, {
                 scale: 2,
                 useCORS: true,
@@ -1392,31 +1444,26 @@
                 const imgWidthObs = 270;
                 const imgHeightObs = (canvasObs.height * imgWidthObs) / canvasObs.width;
                 
-                // Adicionar a imagem da tabela de observações ao PDF
                 doc.addImage(imgDataObs, 'PNG', 15, obsY + 10, imgWidthObs, imgHeightObs);
                 
-                // Adicionar rodapé
                 const pageHeight = doc.internal.pageSize.height;
                 doc.setFontSize(9);
                 doc.setTextColor(150, 150, 150);
                 doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
                         20, pageHeight - 10);
                 
-                // Salvar o PDF
                 doc.save(`Escala_Plantões_${monthName}_${currentYear}.pdf`);
                 
                 mostrarLoading(false);
                 mostrarNotificacao('PDF exportado com sucesso!');
               });
             } else {
-              // Adicionar rodapé
               const pageHeight = doc.internal.pageSize.height;
               doc.setFontSize(9);
               doc.setTextColor(150, 150, 150);
               doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
                       20, pageHeight - 10);
               
-              // Salvar o PDF
               doc.save(`Escala_Plantões_${monthName}_${currentYear}.pdf`);
               
               mostrarLoading(false);
@@ -1441,7 +1488,6 @@
       const yearSelect = document.getElementById('year-select');
       const currentYear = new Date().getFullYear();
       
-      // Adicionar anos de 2020 a 2030
       for (let year = 2020; year <= 2030; year++) {
         const option = document.createElement('option');
         option.value = year;
@@ -1449,43 +1495,32 @@
         yearSelect.appendChild(option);
       }
       
-      // Definir ano atual como selecionado
       yearSelect.value = currentYear;
     }
     
     // Inicialização
     document.addEventListener('DOMContentLoaded', function() {
-      // Preencher seletor de anos
       preencherAnos();
-      
-      // Definir mês atual como selecionado
       document.getElementById('month-select').value = currentMonth;
-      
-      // Tentar carregar dados salvos ao iniciar
       carregarDados();
-      
-      // Criar a tabela inicial
       criarTabela();
       criarTabelaObservacoes();
       
-      // Configurar eventos dos botões
       document.getElementById('save-data').addEventListener('click', salvarDados);
       document.getElementById('load-data').addEventListener('click', carregarDados);
       document.getElementById('reset-data').addEventListener('click', redefinirDados);
       document.getElementById('export-pdf').addEventListener('click', exportarParaPDF);
       
-      // Configurar eventos dos seletores de mês e ano
       document.getElementById('month-select').addEventListener('change', (e) => {
         currentMonth = parseInt(e.target.value);
-        criarTabela();
+        carregarDados();
       });
       
       document.getElementById('year-select').addEventListener('change', (e) => {
         currentYear = parseInt(e.target.value);
-        criarTabela();
+        carregarDados();
       });
       
-      // Salvar automaticamente quando a página for fechada
       window.addEventListener('beforeunload', salvarDados);
     });
   </script>
