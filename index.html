@@ -73,7 +73,6 @@
     font-size: 1rem;
   }
 
-  /* Contador Minimalista no Header */
   .header-counter {
     position: absolute;
     top: 15px;
@@ -165,9 +164,140 @@
     color: white;
   }
   
+  .btn-purple {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    color: white;
+  }
+  
   .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1003;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.show {
+    display: flex;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eaeaea;
+  }
+
+  .modal-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a5276;
+  }
+
+  .close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6c757d;
+    transition: color 0.3s ease;
+  }
+
+  .close-modal:hover {
+    color: #e74c3c;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .form-group select, .form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #eaeaea;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .form-group select:focus, .form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  .form-row {
+    display: flex;
+    gap: 15px;
+  }
+
+  .form-row .form-group {
+    flex: 1;
+  }
+
+  .data-fields {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #eaeaea;
+    margin-bottom: 15px;
+  }
+
+  .data-field-full {
+    display: flex;
+    gap: 10px;
+  }
+
+  .data-field-full .form-group {
+    flex: 1;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eaeaea;
+  }
+
+  .btn-cancel {
+    background: #6c757d;
+    color: white;
+  }
+
+  .btn-confirm {
+    background: #27ae60;
+    color: white;
   }
   
   .legend {
@@ -219,6 +349,11 @@
   
   .alerta-carro {
     background: linear-gradient(135deg, #ffd93d 0%, #ff9a3d 100%);
+  }
+
+  .troca-realizada {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    color: white;
   }
   
   .content {
@@ -558,7 +693,6 @@
     100% { transform: rotate(360deg); }
   }
   
-  /* Melhorias para telas muito pequenas */
   @media (max-width: 576px) {
     body {
       padding: 10px;
@@ -590,6 +724,21 @@
       min-width: 120px;
       padding: 8px 10px;
     }
+
+    .modal-content {
+      padding: 20px;
+      width: 95%;
+    }
+
+    .form-row {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .data-field-full {
+      flex-direction: column;
+      gap: 10px;
+    }
     
     .legend {
       margin: 10px;
@@ -608,7 +757,6 @@
     }
   }
   
-  /* Melhorias para telas grandes */
   @media (min-width: 1200px) {
     .container {
       max-width: 1400px;
@@ -619,7 +767,6 @@
     }
   }
   
-  /* Ajustes para orientação paisagem em dispositivos móveis */
   @media (max-height: 500px) and (orientation: landscape) {
     .container {
       height: auto;
@@ -643,7 +790,6 @@
       <h1><i class="fas fa-calendar-alt"></i> Gerador de Escala de Plantões</h1>
       <p class="subtitle">Gerencie e exporte suas escalas de plantão</p>
       
-      <!-- Contador Minimalista no Header -->
       <div class="header-counter">
         <div class="counter-label">TROCAS HRP</div>
         <div class="counter-value" id="hrp-trocas-count">0</div>
@@ -681,8 +827,14 @@
       <button class="btn btn-danger" id="reset-data">
         <i class="fas fa-redo"></i> Redefinir Dados
       </button>
+      <button class="btn btn-purple" id="gerar-trocas">
+        <i class="fas fa-lightbulb"></i> Gerar Possíveis Trocas
+      </button>
       <button class="btn btn-success" id="export-pdf">
         <i class="fas fa-file-pdf"></i> Exportar para PDF
+      </button>
+      <button class="btn btn-warning" id="nova-troca">
+        <i class="fas fa-exchange-alt"></i> Nova Troca
       </button>
     </div>
     
@@ -710,6 +862,10 @@
       <div class="legend-item">
         <div class="legend-color alerta-carro"></div>
         <span>🚗 Deslocamento</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color troca-realizada"></div>
+        <span>Troca Realizada</span>
       </div>
       <div class="legend-item">
         <div class="legend-color" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);"></div>
@@ -759,6 +915,115 @@
     </div>
   </div>
 
+  <!-- Modal de Troca -->
+  <div class="modal" id="troca-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-exchange-alt"></i> Registrar Troca de Plantão</h3>
+        <button class="close-modal" id="close-modal">&times;</button>
+      </div>
+      
+      <div class="data-fields">
+        <div class="data-field-full">
+          <div class="form-group">
+            <label for="origem-data">Data de Origem:</label>
+            <input type="date" id="origem-data">
+          </div>
+          
+          <div class="form-group">
+            <label for="origem-mes">Mês/Ano de Origem:</label>
+            <div class="form-row">
+              <select id="origem-mes">
+                <option value="0">Jan</option>
+                <option value="1">Fev</option>
+                <option value="2">Mar</option>
+                <option value="3">Abr</option>
+                <option value="4">Mai</option>
+                <option value="5">Jun</option>
+                <option value="6">Jul</option>
+                <option value="7">Ago</option>
+                <option value="8">Set</option>
+                <option value="9">Out</option>
+                <option value="10">Nov</option>
+                <option value="11">Dez</option>
+              </select>
+              <select id="origem-ano">
+                <!-- Preenchido dinamicamente -->
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="data-field-full">
+          <div class="form-group">
+            <label for="destino-data">Data de Destino:</label>
+            <input type="date" id="destino-data">
+          </div>
+          
+          <div class="form-group">
+            <label for="destino-mes">Mês/Ano de Destino:</label>
+            <div class="form-row">
+              <select id="destino-mes">
+                <option value="0">Jan</option>
+                <option value="1">Fev</option>
+                <option value="2">Mar</option>
+                <option value="3">Abr</option>
+                <option value="4">Mai</option>
+                <option value="5">Jun</option>
+                <option value="6">Jul</option>
+                <option value="7">Ago</option>
+                <option value="8">Set</option>
+                <option value="9">Out</option>
+                <option value="10">Nov</option>
+                <option value="11">Dez</option>
+              </select>
+              <select id="destino-ano">
+                <!-- Preenchido dinamicamente -->
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="origem-hospital">Plantão de Origem:</label>
+        <select id="origem-hospital">
+          <option value="">Selecione o plantão de origem</option>
+          <option value="HUSE Diurno">HUSE Diurno</option>
+          <option value="HUSE Noturno">HUSE Noturno</option>
+          <option value="HRP Diurno">HRP Diurno</option>
+          <option value="HRP Noturno">HRP Noturno</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="destino-hospital">Plantão de Destino:</label>
+        <select id="destino-hospital">
+          <option value="">Selecione o plantão de destino</option>
+          <option value="HUSE Diurno">HUSE Diurno</option>
+          <option value="HUSE Noturno">HUSE Noturno</option>
+          <option value="HRP Diurno">HRP Diurno</option>
+          <option value="HRP Noturno">HRP Noturno</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="nome-troca">Nome:</label>
+        <input type="text" id="nome-troca" placeholder="Digite seu nome">
+      </div>
+      
+      <div class="form-group">
+        <label for="obs-troca">Observação:</label>
+        <input type="text" id="obs-troca" placeholder="Digite uma observação (opcional)">
+      </div>
+      
+      <div class="modal-actions">
+        <button class="btn btn-cancel" id="cancelar-troca">Cancelar</button>
+        <button class="btn btn-confirm" id="confirmar-troca">Confirmar Troca</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Notificação -->
   <div class="notification" id="notification"></div>
 
@@ -769,15 +1034,8 @@
   </div>
 
   <script>
-    // Dados iniciais das escalas
-    let escalas = {
-      "HUSE Diurno": [],
-      "HUSE Noturno": [],
-      "HRP Diurno": [],
-      "HRP Noturno": []
-    };
-
-    // Dados das observações
+    // Dados iniciais das escalas (agora por mês/ano)
+    let allEscalas = {};
     let observacoes = [];
     
     // Mês e ano atuais
@@ -787,16 +1045,43 @@
     // Dias da semana em português
     const diasDaSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
     
-    // Chave para armazenamento local - INCLUI MÊS E ANO
-    function getStorageKey(month, year) {
-      return `escala_plantoes_data_${month}_${year}`;
+    // Chave para armazenamento local
+    function getStorageKey() {
+      return `escala_plantoes_data`;
+    }
+    
+    // Obter escalas do mês atual
+    function getCurrentEscalas() {
+      const key = `${currentYear}_${currentMonth}`;
+      if (!allEscalas[key]) {
+        allEscalas[key] = {
+          "HUSE Diurno": [],
+          "HUSE Noturno": [],
+          "HRP Diurno": [],
+          "HRP Noturno": []
+        };
+      }
+      return allEscalas[key];
+    }
+    
+    // Obter escalas de um mês específico
+    function getEscalas(month, year) {
+      const key = `${year}_${month}`;
+      if (!allEscalas[key]) {
+        allEscalas[key] = {
+          "HUSE Diurno": [],
+          "HUSE Noturno": [],
+          "HRP Diurno": [],
+          "HRP Noturno": []
+        };
+      }
+      return allEscalas[key];
     }
     
     // Função para contar trocas no HRP
     function contarTrocasHRP() {
       let count = 0;
       
-      // Contar observações que são do HRP (Diurno ou Noturno)
       observacoes.forEach(obs => {
         if (obs.hospital && (obs.hospital === 'HRP Diurno' || obs.hospital === 'HRP Noturno')) {
           count++;
@@ -846,12 +1131,12 @@
     function salvarDados() {
       try {
         const dadosParaSalvar = {
-          escalas: escalas,
+          allEscalas: allEscalas,
           observacoes: observacoes,
           dataSalvamento: new Date().toISOString()
         };
         
-        localStorage.setItem(getStorageKey(currentMonth, currentYear), JSON.stringify(dadosParaSalvar));
+        localStorage.setItem(getStorageKey(), JSON.stringify(dadosParaSalvar));
         atualizarContadores();
         mostrarNotificacao('Dados salvos com sucesso!');
       } catch (error) {
@@ -863,16 +1148,11 @@
     // Função para carregar dados do localStorage
     function carregarDados() {
       try {
-        const dadosSalvos = localStorage.getItem(getStorageKey(currentMonth, currentYear));
+        const dadosSalvos = localStorage.getItem(getStorageKey());
         
         if (dadosSalvos) {
           const dados = JSON.parse(dadosSalvos);
-          escalas = dados.escalas || {
-            "HUSE Diurno": [],
-            "HUSE Noturno": [],
-            "HRP Diurno": [],
-            "HRP Noturno": []
-          };
+          allEscalas = dados.allEscalas || {};
           observacoes = dados.observacoes || [];
           
           criarTabela();
@@ -880,18 +1160,12 @@
           atualizarContadores();
           mostrarNotificacao('Dados carregados com sucesso!');
         } else {
-          // Se não há dados salvos para este mês/ano, inicializar com arrays vazios
-          escalas = {
-            "HUSE Diurno": [],
-            "HUSE Noturno": [],
-            "HRP Diurno": [],
-            "HRP Noturno": []
-          };
+          allEscalas = {};
           observacoes = [];
           criarTabela();
           criarTabelaObservacoes();
           atualizarContadores();
-          mostrarNotificacao('Nenhum dado salvo encontrado para este mês/ano!', true);
+          mostrarNotificacao('Nenhum dado salvo encontrado!', true);
         }
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
@@ -901,6 +1175,7 @@
     
     // Função para detectar conflitos
     function detectarConflitos() {
+      const escalas = getCurrentEscalas();
       const conflitos = {};
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       
@@ -923,6 +1198,7 @@
     
     // Função para obter dias com transição noturno → diurno e diurno → noturno no mesmo dia
     function obterDiasComTransicaoDeslocamento() {
+      const escalas = getCurrentEscalas();
       const diasComTransicao = new Set();
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       
@@ -972,6 +1248,7 @@
       const tabelaBody = document.querySelector('#table-body');
       const conflitos = detectarConflitos();
       const diasComTransicao = obterDiasComTransicaoDeslocamento();
+      const escalas = getCurrentEscalas();
       
       // Limpar conteúdo existente
       tabelaHead.innerHTML = '<th>Hospitais & Dias</th>';
@@ -1085,6 +1362,7 @@
     
     // Função para adicionar/remover plantão
     function togglePlantao(hospital, dia) {
+      const escalas = getCurrentEscalas();
       const index = escalas[hospital].indexOf(dia);
       
       if (index === -1) {
@@ -1101,14 +1379,20 @@
     // Função para redefinir dados
     function redefinirDados() {
       if (confirm('Tem certeza que deseja redefinir todos os dados para este mês/ano?')) {
-        escalas = {
+        const key = `${currentYear}_${currentMonth}`;
+        allEscalas[key] = {
           "HUSE Diurno": [],
           "HUSE Noturno": [],
           "HRP Diurno": [],
           "HRP Noturno": []
         };
         
-        observacoes = [];
+        // Remover observações deste mês
+        observacoes = observacoes.filter(obs => {
+          const dataObs = new Date(obs.data);
+          return dataObs.getMonth() !== currentMonth || dataObs.getFullYear() !== currentYear;
+        });
+        
         criarTabela();
         criarTabelaObservacoes();
         salvarDados();
@@ -1121,12 +1405,19 @@
       const tabelaBody = document.getElementById('observations-body');
       tabelaBody.innerHTML = '';
       
-      if (observacoes.length === 0) {
+      // Filtrar observações do mês atual
+      const observacoesDoMes = observacoes.filter(obs => {
+        if (!obs.data) return false;
+        const dataObs = new Date(obs.data);
+        return dataObs.getMonth() === currentMonth && dataObs.getFullYear() === currentYear;
+      });
+      
+      if (observacoesDoMes.length === 0) {
         adicionarLinhaObservacao();
         return;
       }
       
-      observacoes.forEach((obs, index) => {
+      observacoesDoMes.forEach((obs, index) => {
         const tr = document.createElement('tr');
         
         // Hospital
@@ -1141,7 +1432,7 @@
         `;
         selectHospital.value = obs.hospital || '';
         selectHospital.addEventListener('change', (e) => {
-          observacoes[index].hospital = e.target.value;
+          obs.hospital = e.target.value;
           salvarDados();
         });
         tdHospital.appendChild(selectHospital);
@@ -1153,7 +1444,7 @@
         inputData.type = 'date';
         inputData.value = obs.data || '';
         inputData.addEventListener('change', (e) => {
-          observacoes[index].data = e.target.value;
+          obs.data = e.target.value;
           salvarDados();
         });
         tdData.appendChild(inputData);
@@ -1165,7 +1456,7 @@
         inputDataTroca.type = 'date';
         inputDataTroca.value = obs.dataTroca || '';
         inputDataTroca.addEventListener('change', (e) => {
-          observacoes[index].dataTroca = e.target.value;
+          obs.dataTroca = e.target.value;
           salvarDados();
         });
         tdDataTroca.appendChild(inputDataTroca);
@@ -1178,7 +1469,7 @@
         inputNome.value = obs.nome || '';
         inputNome.placeholder = 'Digite o nome';
         inputNome.addEventListener('change', (e) => {
-          observacoes[index].nome = e.target.value;
+          obs.nome = e.target.value;
           salvarDados();
         });
         tdNome.appendChild(inputNome);
@@ -1191,7 +1482,7 @@
         inputObs.value = obs.observacao || '';
         inputObs.placeholder = 'Digite uma observação';
         inputObs.addEventListener('change', (e) => {
-          observacoes[index].observacao = e.target.value;
+          obs.observacao = e.target.value;
           salvarDados();
         });
         tdObs.appendChild(inputObs);
@@ -1318,6 +1609,417 @@
       
       tabelaBody.appendChild(tr);
     }
+
+    // Função para realizar troca entre meses
+    function realizarTroca() {
+      const origemHospital = document.getElementById('origem-hospital').value;
+      const destinoHospital = document.getElementById('destino-hospital').value;
+      const nome = document.getElementById('nome-troca').value;
+      const observacao = document.getElementById('obs-troca').value;
+      
+      const origemDataInput = document.getElementById('origem-data').value;
+      const origemMes = parseInt(document.getElementById('origem-mes').value);
+      const origemAno = parseInt(document.getElementById('origem-ano').value);
+      
+      const destinoDataInput = document.getElementById('destino-data').value;
+      const destinoMes = parseInt(document.getElementById('destino-mes').value);
+      const destinoAno = parseInt(document.getElementById('destino-ano').value);
+
+      // Validações básicas
+      if (!origemHospital || !destinoHospital || !nome || !origemDataInput || !destinoDataInput) {
+        mostrarNotificacao('Preencha todos os campos obrigatórios!', true);
+        return;
+      }
+
+      // Converter datas para objetos Date
+      const [anoOrigem, mesOrigem, diaOrigem] = origemDataInput.split('-').map(Number);
+      const [anoDestino, mesDestino, diaDestino] = destinoDataInput.split('-').map(Number);
+      
+      const dataOrigem = new Date(anoOrigem, mesOrigem - 1, diaOrigem);
+      const dataDestino = new Date(anoDestino, mesDestino - 1, diaDestino);
+      
+      // Verificar se as datas são válidas
+      if (isNaN(dataOrigem.getTime()) || isNaN(dataDestino.getTime())) {
+        mostrarNotificacao('Datas inválidas!', true);
+        return;
+      }
+
+      // Verificar se as datas correspondem aos meses selecionados
+      if (dataOrigem.getMonth() !== origemMes || dataOrigem.getFullYear() !== origemAno) {
+        const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        mostrarNotificacao(`A data de origem deve ser de ${meses[origemMes]} ${origemAno}!`, true);
+        return;
+      }
+
+      if (dataDestino.getMonth() !== destinoMes || dataDestino.getFullYear() !== destinoAno) {
+        const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        mostrarNotificacao(`A data de destino deve ser de ${meses[destinoMes]} ${destinoAno}!`, true);
+        return;
+      }
+
+      // Extrair o DIA da data (1-31)
+      const diaOrigemNum = dataOrigem.getDate();
+      const diaDestinoNum = dataDestino.getDate();
+
+      // Obter escalas dos meses de origem e destino
+      const escalasOrigem = getEscalas(origemMes, origemAno);
+      const escalasDestino = getEscalas(destinoMes, destinoAno);
+
+      // Verificar se existe plantão na origem
+      if (!escalasOrigem[origemHospital].includes(diaOrigemNum)) {
+        const dataFormatada = dataOrigem.toLocaleDateString('pt-BR');
+        mostrarNotificacao(`Não existe plantão de ${origemHospital} no dia ${dataFormatada}!`, true);
+        return;
+      }
+
+      // Verificar se o destino está livre
+      if (escalasDestino[destinoHospital].includes(diaDestinoNum)) {
+        const dataFormatada = dataDestino.toLocaleDateString('pt-BR');
+        mostrarNotificacao(`Já existe plantão de ${destinoHospital} no dia ${dataFormatada}!`, true);
+        return;
+      }
+
+      // Realizar a troca nos meses de origem e destino
+      const indexOrigem = escalasOrigem[origemHospital].indexOf(diaOrigemNum);
+      escalasOrigem[origemHospital].splice(indexOrigem, 1);
+
+      escalasDestino[destinoHospital].push(diaDestinoNum);
+      escalasDestino[destinoHospital].sort((a, b) => a - b);
+
+      // Adicionar observação da troca
+      observacoes.push({
+        hospital: origemHospital,
+        data: origemDataInput,
+        dataTroca: destinoDataInput,
+        nome: nome,
+        observacao: observacao || `Troca realizada: ${origemHospital} → ${destinoHospital}`
+      });
+
+      // Fechar modal e atualizar interface
+      fecharModal();
+      salvarDados();
+      criarTabela();
+      criarTabelaObservacoes();
+      
+      const dataOrigemFormatada = dataOrigem.toLocaleDateString('pt-BR');
+      const dataDestinoFormatada = dataDestino.toLocaleDateString('pt-BR');
+      
+      mostrarNotificacao(`Troca realizada com sucesso! ${origemHospital} ${dataOrigemFormatada} → ${destinoHospital} ${dataDestinoFormatada}`);
+    }
+
+    // Função para abrir modal de troca
+    function abrirModalTroca() {
+      const modal = document.getElementById('troca-modal');
+      modal.classList.add('show');
+
+      // Limpar campos
+      document.getElementById('origem-hospital').value = '';
+      document.getElementById('destino-hospital').value = '';
+      
+      // Preencher com datas que estão no mês/ano correto
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      
+      // Usar datas no meio do mês
+      const diaOrigemSugerido = Math.max(1, Math.min(15, daysInMonth));
+      const diaDestinoSugerido = Math.max(1, Math.min(20, daysInMonth));
+      
+      // Garantir que as datas são do mês/ano correto
+      const dataOrigemSugerida = new Date(currentYear, currentMonth, diaOrigemSugerido);
+      const dataDestinoSugerida = new Date(currentYear, currentMonth, diaDestinoSugerido);
+      
+      // Formatar datas como YYYY-MM-DD
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+      
+      document.getElementById('origem-data').value = formatDate(dataOrigemSugerida);
+      document.getElementById('destino-data').value = formatDate(dataDestinoSugerida);
+      
+      // Definir meses/anos atuais
+      document.getElementById('origem-mes').value = currentMonth;
+      document.getElementById('origem-ano').value = currentYear;
+      document.getElementById('destino-mes').value = currentMonth;
+      document.getElementById('destino-ano').value = currentYear;
+      
+      document.getElementById('nome-troca').value = '';
+      document.getElementById('obs-troca').value = '';
+    }
+
+    // Função para fechar modal
+    function fecharModal() {
+      const modal = document.getElementById('troca-modal');
+      modal.classList.remove('show');
+    }
+    
+    // NOVA FUNÇÃO: Gerar PDF com possíveis trocas
+    function gerarPossiveisTrocasPDF() {
+      mostrarLoading(true);
+      
+      setTimeout(() => {
+        try {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF('p', 'mm', 'a4');
+          const escalas = getCurrentEscalas();
+          const trocasHRP = contarTrocasHRP();
+          const maxTrocasHRP = 6;
+          const trocasRestantesHRP = maxTrocasHRP - trocasHRP;
+          
+          const monthNames = [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+          ];
+          const monthName = monthNames[currentMonth];
+          
+          // PÁGINA 1: CABEÇALHO E INFORMAÇÕES
+          doc.setFontSize(20);
+          doc.setTextColor(26, 82, 118);
+          doc.text(`Possíveis Trocas de Plantão - ${monthName} ${currentYear}`, 20, 20);
+          
+          doc.setFontSize(10);
+          doc.setTextColor(100, 100, 100);
+          doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}`, 20, 30);
+          
+          // Informações sobre trocas no HRP
+          doc.setFontSize(12);
+          doc.setTextColor(231, 76, 60);
+          doc.text(`Trocas no HRP este mês: ${trocasHRP} de ${maxTrocasHRP} (${trocasRestantesHRP} restantes)`, 20, 45);
+          
+          // Análise da escala atual
+          doc.setFontSize(14);
+          doc.setTextColor(26, 82, 118);
+          doc.text('Análise da Escala Atual:', 20, 60);
+          
+          doc.setFontSize(10);
+          doc.setTextColor(100, 100, 100);
+          
+          let yPos = 70;
+          
+          // Contar plantões por hospital
+          Object.keys(escalas).forEach(hospital => {
+            const count = escalas[hospital].length;
+            doc.text(`${hospital}: ${count} plantões`, 20, yPos);
+            yPos += 6;
+          });
+          
+          yPos += 10;
+          
+          // Detectar conflitos
+          const conflitos = detectarConflitos();
+          if (Object.keys(conflitos).length > 0) {
+            doc.setFontSize(12);
+            doc.setTextColor(231, 76, 60);
+            doc.text('Conflitos Detectados:', 20, yPos);
+            yPos += 8;
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            
+            Object.keys(conflitos).forEach(dia => {
+              doc.text(`Dia ${dia}: ${conflitos[dia].join(', ')}`, 20, yPos);
+              yPos += 6;
+              
+              if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+              }
+            });
+            
+            yPos += 10;
+          }
+          
+          // SUGESTÕES DE TROCAS
+          doc.addPage();
+          doc.setFontSize(16);
+          doc.setTextColor(26, 82, 118);
+          doc.text('Sugestões de Trocas Possíveis', 20, 20);
+          
+          doc.setFontSize(10);
+          doc.setTextColor(100, 100, 100);
+          doc.text('As seguintes trocas são sugeridas para melhorar a distribuição de plantões:', 20, 30);
+          
+          yPos = 40;
+          
+          // Gerar sugestões de trocas
+          const sugestoes = gerarSugestoesTrocas();
+          
+          if (sugestoes.length === 0) {
+            doc.setFontSize(12);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Não foram encontradas sugestões de trocas para este mês.', 20, yPos);
+          } else {
+            sugestoes.forEach((sugestao, index) => {
+              if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+              }
+              
+              doc.setFontSize(12);
+              doc.setTextColor(52, 152, 219);
+              doc.text(`Sugestão ${index + 1}:`, 20, yPos);
+              yPos += 8;
+              
+              doc.setFontSize(10);
+              doc.setTextColor(100, 100, 100);
+              doc.text(`Trocar ${sugestao.origem} no dia ${sugestao.diaOrigem} por ${sugestao.destino} no dia ${sugestao.diaDestino}`, 20, yPos);
+              yPos += 6;
+              
+              doc.text(`Benefício: ${sugestao.beneficio}`, 20, yPos);
+              yPos += 6;
+              
+              doc.text(`Complexidade: ${sugestao.complexidade}`, 20, yPos);
+              yPos += 10;
+            });
+          }
+          
+          // PÁGINA FINAL: RECOMENDAÇÕES
+          doc.addPage();
+          doc.setFontSize(16);
+          doc.setTextColor(26, 82, 118);
+          doc.text('Recomendações para Trocas', 20, 20);
+          
+          doc.setFontSize(10);
+          doc.setTextColor(100, 100, 100);
+          
+          const recomendacoes = [
+            '1. Priorize trocas que resolvam conflitos de horários',
+            '2. Considere o limite máximo de 6 trocas no HRP por mês',
+            '3. Evite trocas que criem deslocamentos desnecessários entre hospitais',
+            '4. Mantenha um equilíbrio entre plantões diurnos e noturnos',
+            '5. Considere a proximidade das datas para facilitar a organização',
+            '6. Comunique todas as trocas com antecedência à chefia'
+          ];
+          
+          yPos = 40;
+          recomendacoes.forEach(recomendacao => {
+            doc.text(recomendacao, 20, yPos);
+            yPos += 8;
+          });
+          
+          yPos += 10;
+          doc.setFontSize(12);
+          doc.setTextColor(231, 76, 60);
+          doc.text('Lembrete Importante:', 20, yPos);
+          yPos += 8;
+          
+          doc.setFontSize(10);
+          doc.setTextColor(100, 100, 100);
+          doc.text('Todas as trocas devem ser registradas no sistema para controle e aprovação.', 20, yPos);
+          
+          const pageHeight = doc.internal.pageSize.height;
+          doc.setFontSize(9);
+          doc.setTextColor(150, 150, 150);
+          doc.text('Sistema de Gerenciamento de Escalas - Gerador de Possíveis Trocas', 20, pageHeight - 10);
+          
+          doc.save(`Possiveis_Trocas_${monthName}_${currentYear}.pdf`);
+          
+          mostrarLoading(false);
+          mostrarNotificacao('PDF com possíveis trocas gerado com sucesso!');
+        } catch (error) {
+          console.error('Erro ao gerar PDF de trocas:', error);
+          mostrarLoading(false);
+          mostrarNotificacao('Erro ao gerar PDF!', true);
+        }
+      }, 100);
+    }
+    
+    // NOVA FUNÇÃO: Gerar sugestões de trocas
+    function gerarSugestoesTrocas() {
+      const escalas = getCurrentEscalas();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const conflitos = detectarConflitos();
+      const sugestoes = [];
+      const trocasHRP = contarTrocasHRP();
+      const maxTrocasHRP = 6;
+      
+      // Prioridade 1: Resolver conflitos
+      Object.keys(conflitos).forEach(dia => {
+        const diaNum = parseInt(dia);
+        const hospitaisConflito = conflitos[dia];
+        
+        // Para cada hospital em conflito, tentar encontrar um dia livre para troca
+        hospitaisConflito.forEach(hospitalConflito => {
+          for (let diaDestino = 1; diaDestino <= daysInMonth; diaDestino++) {
+            // Verificar se o dia de destino está livre para este hospital
+            if (!escalas[hospitalConflito].includes(diaDestino)) {
+              // Verificar se a troca não criaria outro conflito
+              let conflitoNovo = false;
+              Object.keys(escalas).forEach(outroHospital => {
+                if (outroHospital !== hospitalConflito && escalas[outroHospital].includes(diaDestino)) {
+                  conflitoNovo = true;
+                }
+              });
+              
+              if (!conflitoNovo) {
+                // Verificar limite de trocas no HRP
+                if (hospitalConflito.includes('HRP') && trocasHRP >= maxTrocasHRP) {
+                  continue;
+                }
+                
+                sugestoes.push({
+                  origem: hospitalConflito,
+                  diaOrigem: diaNum,
+                  destino: hospitalConflito,
+                  diaDestino: diaDestino,
+                  beneficio: 'Resolver conflito de horários',
+                  complexidade: 'Baixa'
+                });
+                break;
+              }
+            }
+          }
+        });
+      });
+      
+      // Prioridade 2: Melhorar distribuição (evitar muitos plantões consecutivos)
+      Object.keys(escalas).forEach(hospital => {
+        const plantoes = escalas[hospital];
+        
+        // Verificar se há muitos plantões consecutivos
+        for (let i = 0; i < plantoes.length - 3; i++) {
+          if (plantoes[i+3] - plantoes[i] <= 4) {
+            // Encontrar um dia livre para trocar um dos plantões
+            for (let diaDestino = 1; diaDestino <= daysInMonth; diaDestino++) {
+              if (!plantoes.includes(diaDestino) && 
+                  Math.abs(diaDestino - plantoes[i]) > 2) {
+                
+                // Verificar se a troca não criaria conflito
+                let conflitoNovo = false;
+                Object.keys(escalas).forEach(outroHospital => {
+                  if (outroHospital !== hospital && escalas[outroHospital].includes(diaDestino)) {
+                    conflitoNovo = true;
+                  }
+                });
+                
+                if (!conflitoNovo) {
+                  // Verificar limite de trocas no HRP
+                  if (hospital.includes('HRP') && trocasHRP >= maxTrocasHRP) {
+                    continue;
+                  }
+                  
+                  sugestoes.push({
+                    origem: hospital,
+                    diaOrigem: plantoes[i],
+                    destino: hospital,
+                    diaDestino: diaDestino,
+                    beneficio: 'Melhorar distribuição de plantões',
+                    complexidade: 'Média'
+                  });
+                  break;
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      // Limitar a 10 sugestões para não sobrecarregar o PDF
+      return sugestoes.slice(0, 10);
+    }
     
     // Função para exportar para PDF
     function exportarParaPDF() {
@@ -1342,12 +2044,10 @@
           doc.setTextColor(26, 82, 118);
           doc.text(`Escala de Plantões - ${monthName} ${currentYear}`, 20, 20);
           
-          // Adicionar data de geração
           doc.setFontSize(10);
           doc.setTextColor(100, 100, 100);
           doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}`, 20, 30);
           
-          // Converter a tabela para imagem
           html2canvas(tabela, {
             scale: 2,
             useCORS: true,
@@ -1357,10 +2057,8 @@
             const imgWidth = 270;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             
-            // Adicionar a imagem da tabela ao PDF
             doc.addImage(imgData, 'PNG', 15, 40, imgWidth, imgHeight);
             
-            // Adicionar informações básicas (sem legenda detalhada)
             const infoY = 40 + imgHeight + 15;
             doc.setFontSize(12);
             doc.setTextColor(26, 82, 118);
@@ -1382,7 +2080,6 @@
               doc.text(info, 20, infoY + 10 + (index * 5));
             });
             
-            // Adicionar rodapé na primeira página
             const pageHeight = doc.internal.pageSize.height;
             doc.setFontSize(9);
             doc.setTextColor(150, 150, 150);
@@ -1391,29 +2088,23 @@
             // PÁGINA 2: TROCAS E OBSERVAÇÕES
             doc.addPage();
             
-            // Título da segunda página
             doc.setFontSize(20);
             doc.setTextColor(26, 82, 118);
             doc.text(`Registro de Trocas e Observações - ${monthName} ${currentYear}`, 20, 20);
             
-            // Adicionar contador de trocas HRP
             doc.setFontSize(16);
             doc.setTextColor(231, 76, 60);
             doc.text(`Trocas no HRP este mês: ${trocasHRP}`, 20, 40);
             
-            // Adicionar tabela de observações se houver dados
             if (observacoes.length > 0) {
-              // Criar uma cópia da tabela de observações com fonte maior para exportação
               const tabelaObservacoesClone = tabelaObservacoes.cloneNode(true);
               
-              // Aumentar a fonte das células da tabela de observações
               const todasAsCelulas = tabelaObservacoesClone.querySelectorAll('td, th');
               todasAsCelulas.forEach(celula => {
                 celula.style.fontSize = '14px';
                 celula.style.padding = '12px 8px';
               });
               
-              // Aumentar a fonte dos inputs e selects
               const todosInputs = tabelaObservacoesClone.querySelectorAll('input, select');
               todosInputs.forEach(input => {
                 input.style.fontSize = '14px';
@@ -1421,38 +2112,32 @@
                 input.style.height = 'auto';
               });
               
-              // Adicionar a tabela clonada temporariamente ao DOM para captura
               tabelaObservacoesClone.style.position = 'absolute';
               tabelaObservacoesClone.style.left = '-9999px';
               tabelaObservacoesClone.style.top = '0';
               tabelaObservacoesClone.style.width = tabelaObservacoes.offsetWidth + 'px';
               document.body.appendChild(tabelaObservacoesClone);
               
-              // Converter a tabela de observações com fonte maior para imagem
               html2canvas(tabelaObservacoesClone, {
                 scale: 2,
                 useCORS: true,
                 logging: false,
                 width: tabelaObservacoes.offsetWidth
               }).then(canvasObs => {
-                // Remover a tabela clonada do DOM
                 document.body.removeChild(tabelaObservacoesClone);
                 
                 const imgDataObs = canvasObs.toDataURL('image/png');
                 const imgWidthObs = 270;
                 const imgHeightObs = (canvasObs.height * imgWidthObs) / canvasObs.width;
                 
-                // Adicionar a imagem da tabela de observações ao PDF
                 doc.addImage(imgDataObs, 'PNG', 15, 55, imgWidthObs, imgHeightObs);
                 
-                // Adicionar informações sobre as trocas com fonte maior
                 const infoObsY = 55 + imgHeightObs + 15;
                 doc.setFontSize(12);
                 doc.setTextColor(100, 100, 100);
                 doc.text('• As trocas devem ser comunicadas com antecedência à chefia', 20, infoObsY);
                 doc.text('• Observações devem ser registradas para controle', 20, infoObsY + 8);
                 
-                // Adicionar rodapé na segunda página
                 const pageHeight2 = doc.internal.pageSize.height;
                 doc.setFontSize(9);
                 doc.setTextColor(150, 150, 150);
@@ -1460,13 +2145,11 @@
                 doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
                         20, pageHeight2 - 8);
                 
-                // Salvar o PDF
                 doc.save(`Escala_Plantões_${monthName}_${currentYear}.pdf`);
                 
                 mostrarLoading(false);
                 mostrarNotificacao('PDF exportado com sucesso!');
               }).catch(error => {
-                // Remover a tabela clonada em caso de erro
                 if (document.body.contains(tabelaObservacoesClone)) {
                   document.body.removeChild(tabelaObservacoesClone);
                 }
@@ -1475,17 +2158,14 @@
                 mostrarNotificacao('Erro ao gerar PDF!', true);
               });
             } else {
-              // Se não há observações, adicionar mensagem com fonte maior
               doc.setFontSize(14);
               doc.setTextColor(100, 100, 100);
               doc.text('Nenhuma troca ou observação registrada para este mês.', 20, 60);
               
-              // Adicionar informações sobre trocas
               doc.setFontSize(12);
               doc.text('• As trocas devem ser comunicadas com antecedência à chefia', 20, 80);
               doc.text('• Observações devem ser registradas para controle', 20, 95);
               
-              // Adicionar rodapé na segunda página
               const pageHeight2 = doc.internal.pageSize.height;
               doc.setFontSize(9);
               doc.setTextColor(150, 150, 150);
@@ -1493,7 +2173,6 @@
               doc.text('Sistema de Gerenciamento de Escalas - Desenvolvido para facilitar o controle de plantões', 
                       20, pageHeight2 - 8);
               
-              // Salvar o PDF
               doc.save(`Escala_Plantões_${monthName}_${currentYear}.pdf`);
               
               mostrarLoading(false);
@@ -1513,19 +2192,35 @@
       }, 100);
     }
     
-    // Função para preencher o seletor de anos
+    // Função para preencher os seletores de anos
     function preencherAnos() {
       const yearSelect = document.getElementById('year-select');
+      const origemAnoSelect = document.getElementById('origem-ano');
+      const destinoAnoSelect = document.getElementById('destino-ano');
       const currentYear = new Date().getFullYear();
       
       for (let year = 2020; year <= 2030; year++) {
+        // Para o seletor principal
         const option = document.createElement('option');
         option.value = year;
         option.textContent = year;
         yearSelect.appendChild(option);
+        
+        // Para os seletores do modal
+        const optionOrigem = document.createElement('option');
+        optionOrigem.value = year;
+        optionOrigem.textContent = year;
+        origemAnoSelect.appendChild(optionOrigem);
+        
+        const optionDestino = document.createElement('option');
+        optionDestino.value = year;
+        optionDestino.textContent = year;
+        destinoAnoSelect.appendChild(optionDestino);
       }
       
       yearSelect.value = currentYear;
+      origemAnoSelect.value = currentYear;
+      destinoAnoSelect.value = currentYear;
     }
     
     // Inicialização
@@ -1536,10 +2231,25 @@
       criarTabela();
       criarTabelaObservacoes();
       
+      // Event Listeners
       document.getElementById('save-data').addEventListener('click', salvarDados);
       document.getElementById('load-data').addEventListener('click', carregarDados);
       document.getElementById('reset-data').addEventListener('click', redefinirDados);
+      document.getElementById('gerar-trocas').addEventListener('click', gerarPossiveisTrocasPDF);
       document.getElementById('export-pdf').addEventListener('click', exportarParaPDF);
+      document.getElementById('nova-troca').addEventListener('click', abrirModalTroca);
+      
+      // Modal events
+      document.getElementById('close-modal').addEventListener('click', fecharModal);
+      document.getElementById('cancelar-troca').addEventListener('click', fecharModal);
+      document.getElementById('confirmar-troca').addEventListener('click', realizarTroca);
+      
+      // Fechar modal ao clicar fora
+      document.getElementById('troca-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'troca-modal') {
+          fecharModal();
+        }
+      });
       
       document.getElementById('month-select').addEventListener('change', (e) => {
         currentMonth = parseInt(e.target.value);
