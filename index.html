@@ -185,6 +185,8 @@
     z-index: 1003;
     align-items: center;
     justify-content: center;
+    padding: 15px;
+    overflow-y: auto;
   }
 
   .modal.show {
@@ -194,11 +196,13 @@
   .modal-content {
     background: white;
     border-radius: 12px;
-    padding: 25px;
-    width: 90%;
-    max-width: 550px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
   .modal-header {
@@ -208,10 +212,14 @@
     margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 2px solid #eaeaea;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
   }
 
   .modal-title {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #1a5276;
   }
@@ -223,6 +231,7 @@
     cursor: pointer;
     color: #6c757d;
     transition: color 0.3s ease;
+    flex-shrink: 0;
   }
 
   .close-modal:hover {
@@ -230,7 +239,7 @@
   }
 
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
   .form-group label {
@@ -238,11 +247,12 @@
     margin-bottom: 8px;
     font-weight: 600;
     color: #2c3e50;
+    font-size: 0.95rem;
   }
 
   .form-group select, .form-group input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 14px;
     border: 2px solid #eaeaea;
     border-radius: 8px;
     font-size: 1rem;
@@ -257,7 +267,7 @@
 
   .form-row {
     display: flex;
-    gap: 15px;
+    gap: 12px;
   }
 
   .form-row .form-group {
@@ -274,7 +284,7 @@
 
   .data-field-full {
     display: flex;
-    gap: 10px;
+    gap: 12px;
   }
 
   .data-field-full .form-group {
@@ -288,16 +298,22 @@
     margin-top: 25px;
     padding-top: 20px;
     border-top: 1px solid #eaeaea;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding-bottom: 5px;
   }
 
   .btn-cancel {
     background: #6c757d;
     color: white;
+    flex: 1;
   }
 
   .btn-confirm {
     background: #27ae60;
     color: white;
+    flex: 1;
   }
   
   .legend {
@@ -693,6 +709,75 @@
     100% { transform: rotate(360deg); }
   }
   
+  /* Estilos específicos para dispositivos móveis */
+  @media (max-width: 768px) {
+    .modal {
+      padding: 10px;
+      align-items: flex-start;
+    }
+    
+    .modal-content {
+      padding: 15px;
+      max-height: 95vh;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .modal-header {
+      position: sticky;
+      top: 0;
+      background: white;
+      padding: 10px 0;
+      margin-bottom: 15px;
+    }
+    
+    .modal-title {
+      font-size: 1.2rem;
+    }
+    
+    .close-modal {
+      font-size: 1.4rem;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      font-size: 0.9rem;
+    }
+    
+    .form-group select, .form-group input {
+      padding: 10px 12px;
+      font-size: 0.95rem;
+    }
+    
+    .form-row {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .data-field-full {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .data-fields {
+      padding: 12px;
+    }
+    
+    .modal-actions {
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
+      padding-top: 15px;
+    }
+    
+    .btn-cancel, .btn-confirm {
+      width: 100%;
+    }
+  }
+  
   @media (max-width: 576px) {
     body {
       padding: 10px;
@@ -724,20 +809,28 @@
       min-width: 120px;
       padding: 8px 10px;
     }
-
-    .modal-content {
-      padding: 20px;
-      width: 95%;
-    }
-
-    .form-row {
-      flex-direction: column;
-      gap: 10px;
+    
+    .modal {
+      padding: 5px;
     }
     
-    .data-field-full {
-      flex-direction: column;
-      gap: 10px;
+    .modal-content {
+      padding: 12px;
+      border-radius: 10px;
+    }
+    
+    .modal-header {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+    }
+    
+    .modal-title {
+      font-size: 1.1rem;
+    }
+    
+    .form-group select, .form-group input {
+      padding: 8px 10px;
+      font-size: 0.9rem;
     }
     
     .legend {
@@ -780,6 +873,15 @@
     .content {
       flex: 1;
       min-height: 300px;
+    }
+    
+    .modal {
+      align-items: flex-start;
+      padding-top: 10px;
+    }
+    
+    .modal-content {
+      max-height: 95vh;
     }
   }
 </style>
@@ -915,72 +1017,68 @@
     </div>
   </div>
 
-  <!-- Modal de Troca -->
+  <!-- Modal de Troca - Versão Otimizada para Mobile -->
   <div class="modal" id="troca-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title"><i class="fas fa-exchange-alt"></i> Registrar Troca de Plantão</h3>
+        <h3 class="modal-title"><i class="fas fa-exchange-alt"></i> Registrar Troca</h3>
         <button class="close-modal" id="close-modal">&times;</button>
       </div>
       
       <div class="data-fields">
-        <div class="data-field-full">
-          <div class="form-group">
-            <label for="origem-data">Data de Origem:</label>
-            <input type="date" id="origem-data">
-          </div>
-          
-          <div class="form-group">
-            <label for="origem-mes">Mês/Ano de Origem:</label>
-            <div class="form-row">
-              <select id="origem-mes">
-                <option value="0">Jan</option>
-                <option value="1">Fev</option>
-                <option value="2">Mar</option>
-                <option value="3">Abr</option>
-                <option value="4">Mai</option>
-                <option value="5">Jun</option>
-                <option value="6">Jul</option>
-                <option value="7">Ago</option>
-                <option value="8">Set</option>
-                <option value="9">Out</option>
-                <option value="10">Nov</option>
-                <option value="11">Dez</option>
-              </select>
-              <select id="origem-ano">
-                <!-- Preenchido dinamicamente -->
-              </select>
-            </div>
+        <div class="form-group">
+          <label for="origem-data">Data de Origem:</label>
+          <input type="date" id="origem-data">
+        </div>
+        
+        <div class="form-group">
+          <label for="origem-mes">Mês/Ano de Origem:</label>
+          <div class="form-row">
+            <select id="origem-mes">
+              <option value="0">Jan</option>
+              <option value="1">Fev</option>
+              <option value="2">Mar</option>
+              <option value="3">Abr</option>
+              <option value="4">Mai</option>
+              <option value="5">Jun</option>
+              <option value="6">Jul</option>
+              <option value="7">Ago</option>
+              <option value="8">Set</option>
+              <option value="9">Out</option>
+              <option value="10">Nov</option>
+              <option value="11">Dez</option>
+            </select>
+            <select id="origem-ano">
+              <!-- Preenchido dinamicamente -->
+            </select>
           </div>
         </div>
         
-        <div class="data-field-full">
-          <div class="form-group">
-            <label for="destino-data">Data de Destino:</label>
-            <input type="date" id="destino-data">
-          </div>
-          
-          <div class="form-group">
-            <label for="destino-mes">Mês/Ano de Destino:</label>
-            <div class="form-row">
-              <select id="destino-mes">
-                <option value="0">Jan</option>
-                <option value="1">Fev</option>
-                <option value="2">Mar</option>
-                <option value="3">Abr</option>
-                <option value="4">Mai</option>
-                <option value="5">Jun</option>
-                <option value="6">Jul</option>
-                <option value="7">Ago</option>
-                <option value="8">Set</option>
-                <option value="9">Out</option>
-                <option value="10">Nov</option>
-                <option value="11">Dez</option>
-              </select>
-              <select id="destino-ano">
-                <!-- Preenchido dinamicamente -->
-              </select>
-            </div>
+        <div class="form-group">
+          <label for="destino-data">Data de Destino:</label>
+          <input type="date" id="destino-data">
+        </div>
+        
+        <div class="form-group">
+          <label for="destino-mes">Mês/Ano de Destino:</label>
+          <div class="form-row">
+            <select id="destino-mes">
+              <option value="0">Jan</option>
+              <option value="1">Fev</option>
+              <option value="2">Mar</option>
+              <option value="3">Abr</option>
+              <option value="4">Mai</option>
+              <option value="5">Jun</option>
+              <option value="6">Jul</option>
+              <option value="7">Ago</option>
+              <option value="8">Set</option>
+              <option value="9">Out</option>
+              <option value="10">Nov</option>
+              <option value="11">Dez</option>
+            </select>
+            <select id="destino-ano">
+              <!-- Preenchido dinamicamente -->
+            </select>
           </div>
         </div>
       </div>
@@ -2035,7 +2133,7 @@
           
           const monthNames = [
             "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            "Jully", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
           ];
           const monthName = monthNames[currentMonth];
           
