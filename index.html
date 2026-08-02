@@ -2,409 +2,241 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
   <title>Plantões - Mª de Fatima Velame</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --primary-color: #2563eb;
-      --primary-dark: #1e40af;
-      --success-color: #10b981;
-      --danger-color: #ef4444;
-      --warning-color: #f59e0b;
-      --info-color: #06b6d4;
-      --purple-color: #8b5cf6;
-      --bg-primary: #f9fafb;
-      --bg-secondary: #ffffff;
-      --bg-tertiary: #f3f4f6;
-      --text-primary: #111827;
-      --text-secondary: #6b7280;
-      --border-color: #e5e7eb;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      --transition: all 0.3s ease;
-    }
-
+    /* ===== RESET & VARIÁVEIS ===== */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      padding: 12px;
-      min-height: 100vh;
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #06b6d4;
+      --bg: #f1f5f9;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-500: #64748b;
+      --gray-700: #334155;
+      --text: #0f172a;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.2s ease;
     }
-
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 8px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      background: var(--bg-secondary);
-      border-radius: 12px;
-      box-shadow: var(--shadow-md);
+      max-width: 1000px;
+      width: 100%;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 24px);
+      min-height: calc(100vh - 16px);
     }
 
     /* ===== HEADER ===== */
     header {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 15px 20px;
+      padding: 16px 16px 12px;
       text-align: center;
       flex-shrink: 0;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
-
     .main-title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin: 0;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 8px 0;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      letter-spacing: 0.5px;
-      position: relative;
-    }
-
-    .main-title i {
-      color: #fbbf24;
-      font-size: 1.6rem;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
-    }
-
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .header-counter {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      padding: 8px 12px;
-      text-align: center;
-      min-width: 100px;
-      transition: var(--transition);
-      order: 2;
-    }
-
-    .counter-label {
-      font-size: 0.7rem;
-      opacity: 0.9;
-      margin-bottom: 4px;
-      font-weight: 500;
-    }
-
-    .counter-value {
       font-size: 1.4rem;
       font-weight: 700;
-      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      letter-spacing: -0.3px;
     }
-
-    .counter-subtitle {
-      font-size: 0.6rem;
-      opacity: 0.8;
-      margin-top: 2px;
+    .main-title i {
+      color: #fbbf24;
+      font-size: 1.5rem;
     }
-
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
     .month-selector {
       display: flex;
-      justify-content: center;
+      gap: 6px;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
       flex-wrap: wrap;
-      order: 1;
-      margin: 0 auto;
+      width: 100%;
     }
-
     .month-selector select {
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background: rgba(255, 255, 255, 0.1);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(4px);
       color: white;
       font-size: 0.9rem;
+      font-weight: 500;
       cursor: pointer;
       transition: var(--transition);
-      min-width: 120px;
+      min-width: 100px;
+      flex: 1;
+      max-width: 160px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+    }
+    .month-selector select option {
+      color: #0f172a;
+      background: white;
+    }
+    .month-selector select:focus {
+      outline: 2px solid rgba(255,255,255,0.5);
     }
 
-    .month-selector select:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .horas-info-container {
-      display: none;
-    }
-
-    /* ===== CONTROLS ===== */
+    /* ===== CONTROLES ===== */
     .controls {
-      padding: 12px 15px;
-      background: var(--bg-tertiary);
-      border-bottom: 1px solid var(--border-color);
+      padding: 10px 12px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-
     .btn {
-      padding: 8px 12px;
+      padding: 10px 10px;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
+      border-radius: var(--radius-sm);
       font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
       transition: var(--transition);
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: clamp(0.75rem, 2vw, 0.85rem);
-      flex: 1;
-      min-width: 120px;
       justify-content: center;
+      gap: 6px;
+      flex: 1 0 auto;
+      min-width: 70px;
+      max-width: 140px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
+      touch-action: manipulation;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
     }
-
-    .btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+    .btn:active {
+      transform: scale(0.94);
     }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:active { background: var(--primary-dark); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:active { background: #059669; }
+    .btn-warning { background: var(--warning); color: white; }
+    .btn-warning:active { background: #d97706; }
+    .btn-info { background: var(--info); color: white; }
+    .btn-info:active { background: #0891b2; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:active { background: #dc2626; }
+    .btn-cancel { background: var(--gray-500); color: white; }
+    .btn-cancel:active { background: #475569; }
+    .btn-confirm { background: var(--success); color: white; }
+    .btn-confirm:active { background: #059669; }
 
-    .btn:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn-primary {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: var(--primary-dark);
-    }
-
-    .btn-success {
-      background: var(--success-color);
-      color: white;
-    }
-
-    .btn-success:hover:not(:disabled) {
-      background: #059669;
-    }
-
-    .btn-danger {
-      background: var(--danger-color);
-      color: white;
-    }
-
-    .btn-danger:hover:not(:disabled) {
-      background: #dc2626;
-    }
-
-    .btn-warning {
-      background: var(--warning-color);
-      color: white;
-    }
-
-    .btn-warning:hover:not(:disabled) {
-      background: #d97706;
-    }
-
-    .btn-info {
-      background: var(--info-color);
-      color: white;
-    }
-
-    .btn-info:hover:not(:disabled) {
-      background: #0891b2;
-    }
-
-    .btn-purple {
-      background: var(--purple-color);
-      color: white;
-    }
-
-    .btn-purple:hover:not(:disabled) {
-      background: #7c3aed;
-    }
-
-    /* ===== CONTENT ===== */
+    /* ===== CONTEÚDO ===== */
     .content {
-      padding: 15px;
+      padding: 8px 8px 4px;
       overflow: auto;
       flex: 1;
-      display: flex;
-      flex-direction: column;
+      -webkit-overflow-scrolling: touch;
     }
-
     .table-container {
       overflow-x: auto;
-      border-radius: 8px;
-      box-shadow: var(--shadow-sm);
-      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -4px;
+      padding: 0 4px;
     }
-
     .editable-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 0;
-      background: var(--bg-secondary);
-      min-width: 900px;
+      font-size: 0.75rem;
+      min-width: 480px;
     }
-
     .editable-table thead tr {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
       color: white;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 5;
     }
-
     .editable-table th {
-      padding: 10px 6px;
+      padding: 8px 2px;
       font-weight: 600;
       text-align: center;
       border: 1px solid var(--primary-dark);
-      font-size: clamp(0.7rem, 1.5vw, 0.85rem);
       white-space: nowrap;
+      font-size: 0.7rem;
     }
-
     .editable-table tbody tr {
-      border-bottom: 1px solid var(--border-color);
-      transition: background-color 0.2s;
+      border-bottom: 1px solid var(--gray-200);
+      transition: background 0.12s;
     }
-
     .editable-table tbody tr:nth-child(even) {
-      background: var(--bg-tertiary);
+      background: var(--gray-50);
     }
-
-    .editable-table tbody tr:hover {
-      background: #e0e7ff;
+    .editable-table tbody tr:active {
+      background: #dbeafe;
     }
-
     .editable-table td {
-      padding: 8px 4px;
+      padding: 6px 2px;
       text-align: center;
-      border: 1px solid var(--border-color);
-      transition: var(--transition);
-      font-size: clamp(0.65rem, 1.5vw, 0.8rem);
-      white-space: nowrap;
+      border: 1px solid var(--gray-200);
+      vertical-align: middle;
+      font-size: 0.7rem;
     }
-
     .hospital-name {
       text-align: left;
-      padding-left: 10px;
-      font-weight: 600;
-      background: #f0f9ff;
-      width: 130px;
-      font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+      padding-left: 6px;
+      font-weight: 700;
+      background: #eff6ff;
+      width: 90px;
+      font-size: 0.7rem;
       position: sticky;
       left: 0;
-      z-index: 5;
-    }
-
-    .plantao-cell {
-      border-radius: 6px;
-      padding: 5px 3px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      min-width: 28px;
-      font-size: clamp(0.65rem, 1.5vw, 0.75rem);
-    }
-
-    .plantao-cell:hover {
-      transform: scale(1.05);
-    }
-
-    .plantao {
-      background: var(--success-color);
-      color: white;
-    }
-
-    .conflito-cell {
-      background: linear-gradient(135deg, #ef4444, #f59e0b);
-      color: white;
-      border: 2px solid var(--danger-color);
-      animation: pulse-danger 2s infinite;
-    }
-
-    .alerta-carro-cell {
-      background: var(--warning-color);
-      color: #333;
-      font-weight: bold;
-      animation: bounce-warning 2s infinite;
-    }
-
-    .dobra-cell {
-      background: linear-gradient(135deg, #f59e0b, #eab308);
-      color: #333;
-      font-weight: bold;
-      animation: pulse-dobra 2s infinite;
-    }
-
-    .empty-cell {
-      background: var(--bg-tertiary);
-      color: var(--text-secondary);
-      cursor: pointer;
-      border-radius: 6px;
-      padding: 5px 3px;
-      transition: var(--transition);
-      font-size: clamp(0.65rem, 1.5vw, 0.75rem);
-    }
-
-    .empty-cell:hover {
-      background: #e5e7eb;
-      transform: scale(1.05);
-    }
-
-    .weekend, .sunday {
-      background: #f9fafb;
-      color: var(--text-secondary);
-    }
-
-    .folga-cell {
-      background: #d1fae5;
-      color: #065f46;
-      font-style: italic;
-      font-weight: 500;
-      border-radius: 6px;
-      padding: 5px 3px;
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: clamp(0.65rem, 1.5vw, 0.75rem);
-    }
-
-    .folga-cell:hover {
-      background: #a7f3d0;
-      transform: scale(1.05);
+      z-index: 3;
+      border-right: 2px solid var(--primary);
+      color: var(--primary-dark);
+      letter-spacing: -0.2px;
     }
 
     .day-header {
@@ -412,129 +244,70 @@
       flex-direction: column;
       align-items: center;
       position: relative;
+      line-height: 1.2;
     }
-
     .day-number {
-      font-size: 1em;
-      font-weight: bold;
-    }
-
-    .day-name {
-      font-size: 0.7em;
-      opacity: 0.9;
-    }
-
-    .carro-indicator {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      font-size: 0.8em;
-      animation: drive 3s infinite;
-      z-index: 2;
-    }
-
-    /* ===== HORAS FOOTER CONTAINER ===== */
-    .horas-footer-container {
-      padding: 12px 15px;
-      background: var(--bg-tertiary);
-      border-top: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .horas-hospital-linha {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 5px 10px;
-      background: rgba(37, 99, 235, 0.05);
-      border-radius: 6px;
-      border: 1px solid rgba(37, 99, 235, 0.1);
-      transition: var(--transition);
-      min-width: 280px;
-      max-width: 600px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .horas-hospital-nome {
-      font-size: 0.85rem;
       font-weight: 700;
-      min-width: 70px;
-      text-align: left;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-size: 0.9rem;
+    }
+    .day-name {
+      font-size: 0.55rem;
+      opacity: 0.85;
+      text-transform: lowercase;
+      margin-top: 1px;
     }
 
-    .horas-semanas-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      flex: 1;
-    }
-
-    .horas-semana-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 3px 6px;
-      background: rgba(37, 99, 235, 0.05);
+    .plantao-cell, .folga-cell {
       border-radius: 4px;
-      min-width: 60px;
-      border: 1px solid rgba(37, 99, 235, 0.1);
-    }
-
-    .horas-semana-label {
+      padding: 4px 2px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      min-width: 22px;
       font-size: 0.65rem;
-      opacity: 0.9;
+      touch-action: manipulation;
+      user-select: none;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+    }
+    .plantao-cell:active, .folga-cell:active {
+      transform: scale(0.92);
+    }
+    .plantao {
+      background: var(--success);
+      color: white;
+    }
+    .folga-cell {
+      background: #d1fae5;
+      color: #065f46;
+      font-style: italic;
       font-weight: 500;
     }
-
-    .horas-semana-valor {
-      font-size: 0.85rem;
+    .conflito-cell {
+      background: linear-gradient(135deg, var(--danger), var(--warning));
+      color: white;
+      border: 2px solid var(--danger);
+      animation: pulse-danger 1.8s infinite;
+    }
+    .alerta-carro-cell {
+      background: var(--warning);
+      color: #1e293b;
       font-weight: 700;
-      margin-top: 2px;
+      animation: bounce-warning 1.8s infinite;
+    }
+    .dobra-cell {
+      background: linear-gradient(135deg, #f59e0b, #eab308);
+      color: #1e293b;
+      font-weight: 700;
+      animation: pulse-dobra 1.8s infinite;
+    }
+    .weekend, .sunday {
+      background: #f8fafc;
+      color: var(--gray-500);
     }
 
-    .huse-icon {
-      color: #3b82f6;
-    }
-
-    .hrp-icon {
-      color: #ef4444;
-    }
-
-    /* ===== ANIMATIONS ===== */
-    @keyframes pulse-danger {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-      50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-    }
-
-    @keyframes bounce-warning {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    @keyframes pulse-dobra {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
-      50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
-    }
-
-    @keyframes drive {
-      0%, 100% { transform: translateX(0) rotate(0deg); }
-      25% { transform: translateX(2px) rotate(5deg); }
-      75% { transform: translateX(-2px) rotate(-5deg); }
-    }
-
-    /* ===== MODAL ===== */
+    /* ===== MODAIS ===== */
     .modal {
       display: none;
       position: fixed;
@@ -542,214 +315,147 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(15,23,42,0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 1000;
       align-items: center;
       justify-content: center;
-      padding: 15px;
-      overflow-y: auto;
+      padding: 12px;
     }
-
     .modal.show {
       display: flex;
     }
-
     .modal-content {
-      background: var(--bg-secondary);
-      border-radius: 12px;
-      padding: 20px;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px 18px;
       width: 100%;
-      max-width: 700px;
-      box-shadow: var(--shadow-lg);
-      position: relative;
+      max-width: 460px;
       max-height: 90vh;
       overflow-y: auto;
+      box-shadow: 0 24px 48px -12px rgba(0,0,0,0.3);
+      position: relative;
+      animation: modalIn 0.25s ease;
     }
-
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.94) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--gray-200);
       position: sticky;
       top: 0;
-      background: var(--bg-secondary);
-      z-index: 1;
+      background: var(--white);
+      z-index: 2;
     }
-
     .modal-title {
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       font-weight: 700;
-      color: var(--primary-color);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-
     .close-modal {
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
-      color: var(--text-secondary);
+      color: var(--gray-500);
+      padding: 0 8px;
+      line-height: 1;
       transition: var(--transition);
-      flex-shrink: 0;
-      padding: 0;
-      width: 36px;
-      height: 36px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px;
+    }
+    .close-modal:hover, .close-modal:active {
+      background: var(--gray-100);
+      color: var(--danger);
     }
 
-    .close-modal:hover {
-      color: var(--danger-color);
-      background: var(--bg-tertiary);
-    }
-
-    /* ===== FORMS ===== */
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-
     .form-group label {
       display: block;
-      margin-bottom: 6px;
       font-weight: 600;
-      color: var(--text-primary);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: var(--gray-700);
     }
-
     .form-group select,
     .form-group input {
       width: 100%;
-      padding: 10px 12px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 6px;
+      padding: 12px 14px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
       font-size: 1rem;
+      background: var(--white);
+      color: var(--text);
       transition: var(--transition);
-      background: var(--bg-secondary);
-      color: var(--text-primary);
+      -webkit-appearance: none;
+      appearance: none;
     }
-
     .form-group select:focus,
     .form-group input:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .form-row {
-      display: flex;
-      gap: 12px;
-    }
-
-    .form-row .form-group {
-      flex: 1;
-    }
-
-    .data-fields {
-      background: var(--bg-tertiary);
-      padding: 15px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      margin-bottom: 15px;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
     }
 
     .modal-actions {
       display: flex;
       gap: 10px;
       justify-content: flex-end;
-      margin-top: 20px;
-      padding-top: 15px;
-      border-top: 1px solid var(--border-color);
-      position: sticky;
-      bottom: 0;
-      background: var(--bg-secondary);
-      padding-bottom: 5px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--gray-200);
+    }
+    .modal-actions .btn {
+      flex: 1;
+      min-width: 80px;
+      max-width: 160px;
     }
 
-    .btn-cancel {
-      background: var(--text-secondary);
-      color: white;
-      flex: 0.5;
-    }
-
-    .btn-cancel:hover:not(:disabled) {
-      background: #4b5563;
-    }
-
-    .btn-confirm {
-      background: var(--success-color);
-      color: white;
-      flex: 0.5;
-    }
-
-    .btn-confirm:hover:not(:disabled) {
-      background: #059669;
-    }
-
-    /* ===== ACTION BUTTONS ===== */
-    .btn-group {
-      display: flex;
-      gap: 5px;
-      flex-wrap: nowrap;
-    }
-
-    .btn-small {
-      padding: 4px 8px;
-      font-size: 0.7rem;
-      min-width: auto;
-      flex: none;
-    }
-
-    .btn-edit {
-      background: var(--warning-color);
-      color: white;
-    }
-
-    .btn-edit:hover:not(:disabled) {
-      background: #d97706;
-    }
-
-    .btn-reverter {
-      background: var(--info-color);
-      color: white;
-    }
-
-    .btn-reverter:hover:not(:disabled) {
-      background: #0891b2;
-    }
-
-    /* ===== NOTIFICATION ===== */
+    /* ===== NOTIFICAÇÃO ===== */
     .notification {
       position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 12px 20px;
-      background: var(--success-color);
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      padding: 12px 24px;
+      background: var(--success);
       color: white;
-      border-radius: 8px;
-      box-shadow: var(--shadow-lg);
-      transform: translateX(150%);
-      transition: transform 0.3s ease;
-      z-index: 1001;
-      max-width: 300px;
-      font-size: clamp(0.8rem, 2vw, 0.95rem);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      z-index: 2000;
+      max-width: 320px;
+      width: 90%;
       font-weight: 500;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
     }
-
     .notification.show {
-      transform: translateX(0);
+      transform: translateX(-50%) translateY(0);
     }
-
     .notification.error {
-      background: var(--danger-color);
+      background: var(--danger);
     }
-
     .notification.warning {
-      background: var(--warning-color);
-      color: #333;
+      background: var(--warning);
+      color: #1e293b;
     }
 
     /* ===== LOADING ===== */
@@ -760,1774 +466,1126 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(15,23,42,0.7);
+      backdrop-filter: blur(4px);
       z-index: 999;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       color: white;
     }
-
-    .loading.show {
-      display: flex;
-    }
-
+    .loading.show { display: flex; }
     .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.3);
+      border: 4px solid rgba(255,255,255,0.2);
       border-top: 4px solid white;
       border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 15px;
+      width: 44px;
+      height: 44px;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 14px;
     }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ===== FOOTER ===== */
     .footer {
       text-align: center;
-      padding: 12px 15px;
-      background: var(--bg-tertiary);
-      border-top: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      font-size: clamp(0.75rem, 2vw, 0.8rem);
+      padding: 12px 12px 10px;
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      color: var(--gray-500);
+      font-size: 0.7rem;
       flex-shrink: 0;
     }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      .month-selector { gap: 8px; }
-      .controls { gap: 6px; padding: 10px; }
-      .btn { min-width: 100px; padding: 6px 8px; font-size: 0.7rem; }
-      .modal-content { padding: 15px; max-height: 95vh; margin-top: 20px; margin-bottom: 20px; }
-      .form-row { flex-direction: column; gap: 10px; }
-      .hospital-name { width: 110px; }
-      .horas-footer-container { padding: 10px; gap: 10px; }
-      .horas-hospital-linha { padding: 4px 8px; min-width: 250px; }
-      .horas-semana-item { min-width: 55px; padding: 2px 5px; }
-      .header-counter { padding: 6px 10px; min-width: 90px; }
-      .counter-value { font-size: 1.2rem; }
-      .month-selector select { padding: 5px 8px; font-size: 0.85rem; min-width: 100px; }
-      .main-title { font-size: 1.4rem; }
-      .btn-small { padding: 3px 6px; font-size: 0.65rem; }
-      .btn-group { gap: 3px; }
+    /* ===== ANIMAÇÕES ===== */
+    @keyframes pulse-danger {
+      0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+      50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+    }
+    @keyframes bounce-warning {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+    @keyframes pulse-dobra {
+      0%,100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.5); }
+      50% { box-shadow: 0 0 0 6px rgba(245,158,11,0); }
     }
 
-    @media (max-width: 576px) {
-      body { padding: 8px; }
-      .container { height: calc(100vh - 16px); }
-      header { padding: 10px 12px; gap: 8px; }
-      .header-content { flex-direction: column; gap: 8px; }
-      .header-counter { order: 1; margin: 0 auto; }
-      .month-selector { order: 2; }
-      .controls { padding: 8px; gap: 5px; }
-      .btn { min-width: 80px; padding: 5px 6px; font-size: 0.65rem; }
-      .editable-table { min-width: 650px; }
-      .editable-table td, .editable-table th { padding: 5px 2px; font-size: 0.6rem; }
-      .hospital-name { width: 90px; }
-      .horas-footer-container { padding: 8px; gap: 8px; }
-      .horas-hospital-linha { flex-direction: column; align-items: flex-start; gap: 5px; padding: 8px; }
-      .horas-hospital-nome { min-width: 60px; }
-      .horas-semanas-container { width: 100%; justify-content: flex-start; }
-      .horas-semana-item { min-width: 50px; }
-      .footer { padding: 10px; font-size: 0.7rem; }
-      .main-title { font-size: 1.2rem; flex-direction: column; gap: 4px; }
-      .main-title i { font-size: 1.3rem; }
-      .btn-small { padding: 2px 4px; font-size: 0.6rem; }
-      .btn-group { flex-direction: column; gap: 2px; }
+    /* ===== RESPONSIVO ===== */
+    @media (max-width: 640px) {
+      body { padding: 4px; }
+      .container { border-radius: var(--radius-sm); min-height: calc(100vh - 8px); }
+      header { padding: 12px 12px 10px; }
+      .main-title { font-size: 1.2rem; }
+      .main-title i { font-size: 1.2rem; }
+      .month-selector select { font-size: 0.8rem; padding: 6px 10px; min-width: 80px; }
+
+      .controls { padding: 8px 6px; gap: 4px; }
+      .btn { font-size: 0.7rem; padding: 8px 6px; min-width: 56px; max-width: 100px; }
+
+      .content { padding: 4px 2px; }
+      .editable-table { font-size: 0.65rem; min-width: 360px; }
+      .editable-table th { padding: 6px 1px; font-size: 0.6rem; }
+      .editable-table td { padding: 4px 1px; font-size: 0.6rem; }
+      .hospital-name { width: 70px; font-size: 0.6rem; padding-left: 4px; }
+
+      .plantao-cell, .folga-cell { font-size: 0.55rem; padding: 3px 1px; min-width: 18px; }
+      .day-number { font-size: 0.8rem; }
+      .day-name { font-size: 0.5rem; }
+
+      .modal-content { padding: 16px 14px; max-width: 100%; margin: 8px; }
+      .modal-title { font-size: 1rem; }
+      .form-group label { font-size: 0.8rem; }
+      .form-group select, .form-group input { padding: 10px 12px; font-size: 0.9rem; }
+
+      .notification { font-size: 0.8rem; padding: 10px 18px; max-width: 280px; top: 12px; }
+
+      .footer { font-size: 0.6rem; padding: 8px; }
     }
 
-    @media (max-height: 500px) and (orientation: landscape) {
-      .container { height: auto; min-height: 100vh; }
-      header, .controls, .horas-footer-container { flex-shrink: 0; }
-      .content { flex: 1; min-height: 300px; }
+    @media (max-width: 400px) {
+      .btn { font-size: 0.6rem; padding: 6px 4px; min-width: 48px; }
+      .editable-table { font-size: 0.55rem; min-width: 300px; }
+      .hospital-name { width: 56px; font-size: 0.55rem; }
+      .plantao-cell, .folga-cell { font-size: 0.5rem; padding: 2px 1px; }
+      .day-number { font-size: 0.7rem; }
     }
 
-    /* ===== PRINT STYLES ===== */
+    @media (pointer: coarse) {
+      .btn, .plantao-cell, .folga-cell, .close-modal {
+        min-height: 44px;
+        min-width: 44px;
+      }
+      .plantao-cell, .folga-cell {
+        min-height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    /* ===== PRINT ===== */
     @media print {
-      body { margin: 0; padding: 0; }
-      .editable-table { width: 100%; }
-      .editable-table td, .editable-table th { padding: 6px 3px; font-size: 0.75rem; }
-      header .horas-info-container {
-        display: flex !important;
-      }
-      .horas-footer-container {
-        display: none !important;
-      }
+      .controls, .footer, .modal, .notification, .loading { display: none !important; }
+      .container { box-shadow: none; border: 1px solid #ccc; }
+      .editable-table td, .editable-table th { border: 1px solid #333 !important; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1 class="main-title">
-        <i class="fas fa-user-nurse"></i> Plantões de Mª de Fatima Velame
-      </h1>
-      
-      <div class="header-content">
-        <div class="month-selector">
-          <select id="month-select"></select>
-          <select id="year-select"></select>
-        </div>
-        
-        <div class="header-counter">
-          <div class="counter-label">Trocas HRP</div>
-          <div class="counter-value" id="hrp-trocas-count">0</div>
-          <div class="counter-subtitle">este mês</div>
-        </div>
-      </div>
-      
-      <div class="horas-info-container" id="horas-info-container">
-        <!-- Contadores de horas por hospital por semana serão injetados aqui -->
-      </div>
-    </header>
 
-    <div class="controls">
-      <button class="btn btn-primary" id="save-data"><i class="fas fa-save"></i> Salvar</button>
-      <button class="btn btn-success" id="export-pdf"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-      <button class="btn btn-warning" id="nova-troca"><i class="fas fa-exchange-alt"></i> Nova Troca</button>
-      <button class="btn btn-info" id="ver-trocas"><i class="fas fa-list"></i> Ver Trocas</button>
-    </div>
+<div class="container">
 
-    <div class="content">
-      <div class="table-container">
-        <table class="editable-table" id="escala-table">
-          <thead><tr id="table-header"></tr></thead>
-          <tbody id="table-body"></tbody>
-        </table>
+  <header>
+    <h1 class="main-title">
+      <i class="fas fa-user-nurse"></i> Plantões HUSE
+    </h1>
+    <div class="header-content">
+      <div class="month-selector">
+        <select id="month-select"></select>
+        <select id="year-select"></select>
       </div>
     </div>
+  </header>
 
-    <!-- Contador de horas movido para baixo (visualização normal) -->
-    <div class="horas-footer-container" id="horas-footer-container">
-      <!-- Contadores de horas serão injetados aqui -->
-    </div>
+  <div class="controls">
+    <button class="btn btn-primary" id="save-data"><i class="fas fa-save"></i> Salvar</button>
+    <button class="btn btn-success" id="export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+    <button class="btn btn-warning" id="nova-troca"><i class="fas fa-exchange-alt"></i> Trocar</button>
+    <button class="btn btn-info" id="ver-trocas"><i class="fas fa-list"></i> Trocas</button>
+  </div>
 
-    <div class="footer">
-      <p><strong>Escala de Plantões</strong> • Sistema de Gerenciamento Flexível</p>
+  <div class="content">
+    <div class="table-container">
+      <table class="editable-table" id="escala-table">
+        <thead><tr id="table-header"></tr></thead>
+        <tbody id="table-body"></tbody>
+      </table>
     </div>
   </div>
 
-  <!-- Modal: Nova Troca -->
-  <div class="modal" id="troca-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title"><i class="fas fa-exchange-alt"></i> Registrar Troca</h3>
-        <button class="close-modal" id="close-modal">&times;</button>
-      </div>
+  <div class="footer">
+    <span>Escala 12x36 • Mª de Fatima Velame</span>
+  </div>
+</div>
 
-      <div class="form-group">
-        <label for="origem-hospital">Plantão Origem:</label>
-        <select id="origem-hospital">
-          <option value="">-- Selecione --</option>
-          <option value="HUSE Diurno">HUSE Diurno</option>
-          <option value="HUSE Noturno">HUSE Noturno</option>
-          <option value="HRP Diurno">HRP Diurno</option>
-          <option value="HRP Noturno">HRP Noturno</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="origem-data">Data de Origem:</label>
-        <input type="date" id="origem-data">
-      </div>
-
-      <div class="form-group">
-        <label for="destino-hospital">Plantão Destino:</label>
-        <select id="destino-hospital">
-          <option value="">-- Selecione --</option>
-          <option value="HUSE Diurno">HUSE Diurno</option>
-          <option value="HUSE Noturno">HUSE Noturno</option>
-          <option value="HRP Diurno">HRP Diurno</option>
-          <option value="HRP Noturno">HRP Noturno</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="destino-data">Data de Destino:</label>
-        <input type="date" id="destino-data">
-      </div>
-
-      <div class="form-group">
-        <label for="nome-troca">Nome:</label>
-        <input type="text" id="nome-troca" placeholder="Seu nome">
-      </div>
-
-      <div class="form-group">
-        <label for="obs-troca">Observação (opcional):</label>
-        <input type="text" id="obs-troca" placeholder="Motivo da troca">
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn btn-cancel" id="cancelar-troca">Cancelar</button>
-        <button class="btn btn-confirm" id="confirmar-troca">Confirmar</button>
-      </div>
+<!-- Modal Nova Troca -->
+<div class="modal" id="troca-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title"><i class="fas fa-exchange-alt"></i> Nova Troca</span>
+      <button class="close-modal" id="close-modal">&times;</button>
+    </div>
+    <div class="form-group">
+      <label for="origem-hospital">Plantão Origem</label>
+      <select id="origem-hospital">
+        <option value="">Selecione</option>
+        <option value="HUSE Diurno">HUSE Diurno</option>
+        <option value="HUSE Noturno">HUSE Noturno</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="origem-data">Data de Origem</label>
+      <input type="date" id="origem-data">
+    </div>
+    <div class="form-group">
+      <label for="destino-hospital">Plantão Destino</label>
+      <select id="destino-hospital">
+        <option value="">Selecione</option>
+        <option value="HUSE Diurno">HUSE Diurno</option>
+        <option value="HUSE Noturno">HUSE Noturno</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="destino-data">Data de Destino</label>
+      <input type="date" id="destino-data">
+    </div>
+    <div class="form-group">
+      <label for="nome-troca">Nome</label>
+      <input type="text" id="nome-troca" placeholder="Seu nome">
+    </div>
+    <div class="form-group">
+      <label for="obs-troca">Observação (opcional)</label>
+      <input type="text" id="obs-troca" placeholder="Motivo">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" id="cancelar-troca">Cancelar</button>
+      <button class="btn btn-confirm" id="confirmar-troca">Confirmar</button>
     </div>
   </div>
+</div>
 
-  <!-- Modal: Editar Troca -->
-  <div class="modal" id="editar-troca-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title"><i class="fas fa-edit"></i> Editar Troca</h3>
-        <button class="close-modal" id="close-editar-modal">&times;</button>
-      </div>
-
-      <div class="form-group">
-        <label for="editar-origem-hospital">Plantão Origem:</label>
-        <select id="editar-origem-hospital">
-          <option value="">-- Selecione --</option>
-          <option value="HUSE Diurno">HUSE Diurno</option>
-          <option value="HUSE Noturno">HUSE Noturno</option>
-          <option value="HRP Diurno">HRP Diurno</option>
-          <option value="HRP Noturno">HRP Noturno</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="editar-origem-data">Data de Origem:</label>
-        <input type="date" id="editar-origem-data">
-      </div>
-
-      <div class="form-group">
-        <label for="editar-destino-hospital">Plantão Destino:</label>
-        <select id="editar-destino-hospital">
-          <option value="">-- Selecione --</option>
-          <option value="HUSE Diurno">HUSE Diurno</option>
-          <option value="HUSE Noturno">HUSE Noturno</option>
-          <option value="HRP Diurno">HRP Diurno</option>
-          <option value="HRP Noturno">HRP Noturno</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="editar-destino-data">Data de Destino:</label>
-        <input type="date" id="editar-destino-data">
-      </div>
-
-      <div class="form-group">
-        <label for="editar-nome-troca">Nome:</label>
-        <input type="text" id="editar-nome-troca" placeholder="Seu nome">
-      </div>
-
-      <div class="form-group">
-        <label for="editar-obs-troca">Observação (opcional):</label>
-        <input type="text" id="editar-obs-troca" placeholder="Motivo da troca">
-      </div>
-
-      <input type="hidden" id="editar-troca-id">
-
-      <div class="modal-actions">
-        <button class="btn btn-cancel" id="cancelar-edicao">Cancelar</button>
-        <button class="btn btn-confirm" id="salvar-edicao">Salvar Alterações</button>
-      </div>
+<!-- Modal Editar Troca -->
+<div class="modal" id="editar-troca-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title"><i class="fas fa-edit"></i> Editar Troca</span>
+      <button class="close-modal" id="close-editar-modal">&times;</button>
+    </div>
+    <div class="form-group">
+      <label for="editar-origem-hospital">Plantão Origem</label>
+      <select id="editar-origem-hospital">
+        <option value="">Selecione</option>
+        <option value="HUSE Diurno">HUSE Diurno</option>
+        <option value="HUSE Noturno">HUSE Noturno</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="editar-origem-data">Data de Origem</label>
+      <input type="date" id="editar-origem-data">
+    </div>
+    <div class="form-group">
+      <label for="editar-destino-hospital">Plantão Destino</label>
+      <select id="editar-destino-hospital">
+        <option value="">Selecione</option>
+        <option value="HUSE Diurno">HUSE Diurno</option>
+        <option value="HUSE Noturno">HUSE Noturno</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="editar-destino-data">Data de Destino</label>
+      <input type="date" id="editar-destino-data">
+    </div>
+    <div class="form-group">
+      <label for="editar-nome-troca">Nome</label>
+      <input type="text" id="editar-nome-troca" placeholder="Seu nome">
+    </div>
+    <div class="form-group">
+      <label for="editar-obs-troca">Observação (opcional)</label>
+      <input type="text" id="editar-obs-troca" placeholder="Motivo">
+    </div>
+    <input type="hidden" id="editar-troca-id">
+    <div class="modal-actions">
+      <button class="btn btn-cancel" id="cancelar-edicao">Cancelar</button>
+      <button class="btn btn-confirm" id="salvar-edicao">Salvar</button>
     </div>
   </div>
+</div>
 
-  <!-- Modal: Ver Trocas -->
-  <div class="modal" id="trocas-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title"><i class="fas fa-list"></i> Trocas Registradas</h3>
-        <button class="close-modal" id="close-trocas-modal">&times;</button>
+<!-- Modal Ver Trocas -->
+<div class="modal" id="trocas-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title"><i class="fas fa-list"></i> Trocas</span>
+      <button class="close-modal" id="close-trocas-modal">&times;</button>
+    </div>
+    <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+      <div class="form-group" style="flex:1; min-width:100px; margin-bottom:0;">
+        <label for="filter-month">Mês</label>
+        <select id="filter-month"></select>
       </div>
-
-      <div style="display: flex; gap: 12px; margin-bottom: 15px;">
-        <div class="form-group" style="flex: 1; margin-bottom: 0;">
-          <label for="filter-month">Mês:</label>
-          <select id="filter-month"></select>
-        </div>
-        <div class="form-group" style="flex: 1; margin-bottom: 0;">
-          <label for="filter-year">Ano:</label>
-          <select id="filter-year"></select>
-        </div>
-      </div>
-
-      <div class="table-container">
-        <table class="editable-table" id="trocas-table">
-          <thead>
-            <tr>
-              <th>Hospital</th>
-              <th>Data Origem</th>
-              <th>Data Destino</th>
-              <th>Nome</th>
-              <th>Observação</th>
-              <th style="min-width: 160px;">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="trocas-body"></tbody>
-        </table>
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn btn-cancel" id="fechar-trocas-modal">Fechar</button>
+      <div class="form-group" style="flex:1; min-width:100px; margin-bottom:0;">
+        <label for="filter-year">Ano</label>
+        <select id="filter-year"></select>
       </div>
     </div>
+    <div class="table-container" style="margin:0; padding:0; max-height:300px; overflow-y:auto;">
+      <table class="editable-table" id="trocas-table" style="min-width:400px;">
+        <thead>
+          <tr>
+            <th>Hospital</th>
+            <th>Data Origem</th>
+            <th>Data Destino</th>
+            <th>Nome</th>
+            <th>Obs</th>
+            <th style="min-width:120px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="trocas-body"></tbody>
+      </table>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" id="fechar-trocas-modal">Fechar</button>
+    </div>
   </div>
+</div>
 
-  <div class="notification" id="notification"></div>
-  <div class="loading" id="loading">
-    <div class="spinner"></div>
-    <p>Gerando PDF...</p>
-  </div>
+<div class="notification" id="notification"></div>
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <p>Gerando PDF...</p>
+</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  
-  <script>
-    // ============================================
-    // STORAGE SERVICE
-    // ============================================
-    const StorageService = {
-      STORAGE_KEY: 'escala_plantoes_data',
-      
-      get() {
-        try {
-          const raw = localStorage.getItem(this.STORAGE_KEY);
-          return raw ? JSON.parse(raw) : { allEscalas: {}, observacoes: [], dataSalvamento: null };
-        } catch (err) {
-          console.error('Erro ao carregar dados:', err);
-          return { allEscalas: {}, observacoes: [], dataSalvamento: null };
-        }
-      },
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  // ============================================================
+  // STORAGE
+  // ============================================================
+  const Storage = {
+    KEY: 'escala_huse_data',
+    get() {
+      try {
+        const raw = localStorage.getItem(this.KEY);
+        return raw ? JSON.parse(raw) : { allEscalas: {}, observacoes: [], dataSalvamento: null };
+      } catch { return { allEscalas: {}, observacoes: [], dataSalvamento: null }; }
+    },
+    set(data) {
+      try {
+        data.dataSalvamento = new Date().toISOString();
+        localStorage.setItem(this.KEY, JSON.stringify(data));
+        return true;
+      } catch { return false; }
+    }
+  };
 
-      set(data) {
-        try {
-          data.dataSalvamento = new Date().toISOString();
-          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
-          return true;
-        } catch (err) {
-          console.error('Erro ao salvar dados:', err);
-          return false;
-        }
-      },
+  // ============================================================
+  // APP STATE
+  // ============================================================
+  const App = {
+    allEscalas: {},
+    observacoes: [],
+    currentMonth: new Date().getMonth(),
+    currentYear: new Date().getFullYear(),
+    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+    diasDaSemana: ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'],
+    hospitais: ['HUSE Diurno', 'HUSE Noturno'],
+    currentEditId: null,
 
-      reset() {
-        try {
-          localStorage.removeItem(this.STORAGE_KEY);
-          return true;
-        } catch (err) {
-          console.error('Erro ao resetar dados:', err);
-          return false;
+    load() {
+      const data = Storage.get();
+      this.allEscalas = data.allEscalas;
+      this.observacoes = data.observacoes || [];
+    },
+
+    save() {
+      return Storage.set({ allEscalas: this.allEscalas, observacoes: this.observacoes });
+    },
+
+    getEscalas(month, year) {
+      const key = `${year}_${month}`;
+      if (!this.allEscalas[key]) {
+        this.allEscalas[key] = { 'HUSE Diurno': [], 'HUSE Noturno': [] };
+      }
+      return this.allEscalas[key];
+    },
+
+    getCurrentEscalas() {
+      return this.getEscalas(this.currentMonth, this.currentYear);
+    }
+  };
+
+  // ============================================================
+  // DATE HELPERS
+  // ============================================================
+  const DateHelper = {
+    parse(str) {
+      if (!str) return null;
+      const p = str.split('-');
+      if (p.length !== 3) return null;
+      return new Date(+p[0], +p[1]-1, +p[2]);
+    },
+    formatBR(date) {
+      if (!date || isNaN(date)) return '';
+      return String(date.getDate()).padStart(2,'0')+'/'+
+             String(date.getMonth()+1).padStart(2,'0')+'/'+
+             date.getFullYear();
+    },
+    formatInput(date) {
+      return date.getFullYear()+'-'+
+             String(date.getMonth()+1).padStart(2,'0')+'-'+
+             String(date.getDate()).padStart(2,'0');
+    },
+    daysInMonth(month, year) {
+      return new Date(year, month+1, 0).getDate();
+    },
+    getDayOfWeek(year, month, day) {
+      return new Date(year, month, day).getDay();
+    }
+  };
+
+  // ============================================================
+  // UI HELPERS
+  // ============================================================
+  const UI = {
+    notify(msg, type='success') {
+      const el = document.getElementById('notification');
+      el.textContent = msg;
+      el.className = `notification ${type}`;
+      el.classList.add('show');
+      clearTimeout(this._timer);
+      this._timer = setTimeout(() => el.classList.remove('show'), 3200);
+    },
+    loading(show) {
+      document.getElementById('loading').classList.toggle('show', show);
+    },
+    openModal(id) {
+      document.getElementById(id).classList.add('show');
+    },
+    closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+  };
+
+  // ============================================================
+  // DISTRIBUIÇÃO INTELIGENTE (APENAS HUSE)
+  // ============================================================
+  const Distribuicao = {
+    aplicar() {
+      const escalas = App.getCurrentEscalas();
+      const month = App.currentMonth;
+      const year = App.currentYear;
+      const days = DateHelper.daysInMonth(month, year);
+
+      App.hospitais.forEach(h => escalas[h] = []);
+
+      const semanas = [];
+      let atual = [];
+      for (let d=1; d<=days; d++) {
+        atual.push(d);
+        if (DateHelper.getDayOfWeek(year, month, d) === 6 || d === days) {
+          semanas.push([...atual]);
+          atual = [];
         }
       }
-    };
 
-    // ============================================
-    // APP STATE
-    // ============================================
-    const AppState = {
-      allEscalas: {},
-      observacoes: [],
-      currentMonth: new Date().getMonth(),
-      currentYear: new Date().getFullYear(),
-      monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-      diasDaSemana: ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'],
-      hospitais: ['HUSE Diurno', 'HUSE Noturno', 'HRP Diurno', 'HRP Noturno'],
-      codigoUnico: '',
-      currentEditId: null,
+      semanas.forEach(semana => {
+        const uteis = semana.filter(d => {
+          const w = DateHelper.getDayOfWeek(year, month, d);
+          return w >= 1 && w <= 5;
+        });
+        const noturnos = uteis.slice(0, 3);
+        noturnos.forEach(d => escalas['HUSE Noturno'].push(d));
 
-      load() {
-        const data = StorageService.get();
-        this.allEscalas = data.allEscalas;
-        this.observacoes = data.observacoes || [];
-      },
+        semana.forEach(d => {
+          if (!escalas['HUSE Noturno'].includes(d)) {
+            escalas['HUSE Diurno'].push(d);
+          }
+        });
+      });
 
-      save() {
-        return StorageService.set({ allEscalas: this.allEscalas, observacoes: this.observacoes });
-      },
+      App.hospitais.forEach(h => escalas[h].sort((a,b)=>a-b));
+      App.save();
+    }
+  };
 
-      getCurrentEscalas() {
-        return this.getEscalas(this.currentMonth, this.currentYear);
-      },
-
-      getEscalas(month, year) {
-        const key = `${year}_${month}`;
-        if (!this.allEscalas[key]) {
-          const codigo = this.gerarCodigoUnico(month, year);
-          this.allEscalas[key] = {
-            codigo: codigo,
-            'HUSE Diurno': [],
-            'HUSE Noturno': [],
-            'HRP Diurno': [],
-            'HRP Noturno': []
-          };
-        }
-        return this.allEscalas[key];
-      },
-
-      gerarCodigoUnico(month, year) {
-        const timestamp = Date.now().toString(36).slice(-4).toUpperCase();
-        const mesStr = String(month + 1).padStart(2, '0');
-        return `ESC-${year}-${mesStr}-${timestamp}`;
-      },
-
-      atualizarCodigoExibicao() {
-        // Não exibir mais o código na interface
+  // ============================================================
+  // ESCALA SERVICE
+  // ============================================================
+  const Escala = {
+    toggle(hospital, dia) {
+      const escalas = App.getCurrentEscalas();
+      const idx = escalas[hospital].indexOf(dia);
+      if (idx === -1) {
+        escalas[hospital].push(dia);
+        escalas[hospital].sort((a,b)=>a-b);
+      } else {
+        escalas[hospital].splice(idx, 1);
       }
-    };
+      App.save();
+    },
 
-    // ============================================
-    // DATE SERVICE
-    // ============================================
-    const DateService = {
-      parseDate(dateString) {
-        if (!dateString) return null;
-        const parts = dateString.split('-');
-        if (parts.length !== 3) return null;
-        const year = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10) - 1;
-        const day = parseInt(parts[2], 10);
-        return new Date(year, month, day);
-      },
-
-      formatDateBR(date) {
-        if (!date || isNaN(date.getTime())) return '';
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-      },
-
-      formatDateForInput(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-      },
-
-      getDaysInMonth(month, year) {
-        return new Date(year, month + 1, 0).getDate();
-      },
-
-      getDateDay(year, month, day) {
-        return new Date(year, month, day).getDay();
-      },
-
-      getWeekNumber(date) {
-        const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-        const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-        return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+    detectarConflitos() {
+      const escalas = App.getCurrentEscalas();
+      const conflitos = {};
+      const days = DateHelper.daysInMonth(App.currentMonth, App.currentYear);
+      for (let d=1; d<=days; d++) {
+        const ativos = App.hospitais.filter(h => escalas[h].includes(d));
+        if (ativos.length > 1) conflitos[d] = ativos;
       }
-    };
+      return conflitos;
+    },
 
-    // ============================================
-    // UI SERVICE
-    // ============================================
-    const UIService = {
-      showNotification(message, type = 'success') {
-        const notif = document.getElementById('notification');
-        notif.textContent = message;
-        notif.className = `notification ${type === 'error' ? 'error' : type === 'warning' ? 'warning' : ''}`;
-        notif.classList.add('show');
-        setTimeout(() => notif.classList.remove('show'), 4000);
-      },
+    obterDiasTransicao() {
+      const escalas = App.getCurrentEscalas();
+      const dias = new Set();
+      const days = DateHelper.daysInMonth(App.currentMonth, App.currentYear);
+      const noturnos = ['HUSE Noturno'];
+      const diurnos = ['HUSE Diurno'];
 
-      showLoading(show) {
-        const loading = document.getElementById('loading');
-        if (show) loading.classList.add('show');
-        else loading.classList.remove('show');
-      },
-
-      openModal(modalId) {
-        document.getElementById(modalId).classList.add('show');
-      },
-
-      closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('show');
+      for (let d=1; d<=days; d++) {
+        const ant = d-1;
+        if (ant>=1) {
+          const temNoturnoAnt = noturnos.some(n => escalas[n].includes(ant));
+          const temDiurnoAtual = diurnos.some(di => escalas[di].includes(d));
+          if (temNoturnoAnt && temDiurnoAtual) {
+            dias.add(ant);
+            dias.add(d);
+          }
+        }
+        const temDiurno = diurnos.some(di => escalas[di].includes(d));
+        const temNoturno = noturnos.some(n => escalas[n].includes(d));
+        if (temDiurno && temNoturno) dias.add(d);
       }
-    };
+      return Array.from(dias);
+    },
 
-    // ============================================
-    // HORAS SERVICE
-    // ============================================
-    const HorasService = {
-      calcularHorasHospitalGrupo(grupo, escalas) {
-        let total = 0;
-        if (grupo === 'HUSE') {
-          total += escalas['HUSE Diurno'].length * 12;
-          total += escalas['HUSE Noturno'].length * 12;
-        } else if (grupo === 'HRP') {
-          total += escalas['HRP Diurno'].length * 12;
-          total += escalas['HRP Noturno'].length * 12;
-        }
-        return total;
-      },
-
-      obterSemanasDoMes() {
-        const daysInMonth = DateService.getDaysInMonth(AppState.currentMonth, AppState.currentYear);
-        const semanas = [];
-        let semanaAtual = [];
-        
-        for (let dia = 1; dia <= daysInMonth; dia++) {
-          const data = new Date(AppState.currentYear, AppState.currentMonth, dia);
-          semanaAtual.push(dia);
-          
-          if (data.getDay() === 6 || dia === daysInMonth) {
-            semanas.push([...semanaAtual]);
-            semanaAtual = [];
-          }
-        }
-        
-        return semanas;
-      },
-
-      calcularHorasGrupoNaSemana(grupo, semana, escalas) {
-        let total = 0;
-        
-        if (grupo === 'HUSE') {
-          semana.forEach(dia => {
-            if (escalas['HUSE Diurno'].includes(dia)) total++;
-            if (escalas['HUSE Noturno'].includes(dia)) total++;
-          });
-        } else if (grupo === 'HRP') {
-          semana.forEach(dia => {
-            if (escalas['HRP Diurno'].includes(dia)) total++;
-            if (escalas['HRP Noturno'].includes(dia)) total++;
-          });
-        }
-        
-        return total * 12;
-      },
-
-      renderizarContadoresHoras() {
-        const containerNormal = document.getElementById('horas-footer-container');
-        const containerPDF = document.getElementById('horas-info-container');
-        
-        if (!containerNormal && !containerPDF) return;
-        
-        const escalas = AppState.getCurrentEscalas();
-        const semanas = this.obterSemanasDoMes();
-        
-        let html = '';
-        
-        // HUSE
-        html += `
-          <div class="horas-hospital-linha">
-            <div class="horas-hospital-nome">
-              <i class="fas fa-hospital huse-icon"></i> HUSE
-            </div>
-            <div class="horas-semanas-container">
-        `;
-        
-        semanas.forEach((semana, index) => {
-          const horas = this.calcularHorasGrupoNaSemana('HUSE', semana, escalas);
-          html += `
-            <div class="horas-semana-item">
-              <div class="horas-semana-label">Semana ${index + 1}</div>
-              <div class="horas-semana-valor">${horas}h</div>
-            </div>
-          `;
-        });
-        
-        html += `
-            </div>
-          </div>
-        `;
-        
-        // HRP
-        html += `
-          <div class="horas-hospital-linha">
-            <div class="horas-hospital-nome">
-              <i class="fas fa-hospital hrp-icon"></i> HRP
-            </div>
-            <div class="horas-semanas-container">
-        `;
-        
-        semanas.forEach((semana, index) => {
-          const horas = this.calcularHorasGrupoNaSemana('HRP', semana, escalas);
-          html += `
-            <div class="horas-semana-item">
-              <div class="horas-semana-label">Semana ${index + 1}</div>
-              <div class="horas-semana-valor">${horas}h</div>
-            </div>
-          `;
-        });
-        
-        html += `
-            </div>
-          </div>
-        `;
-        
-        if (containerNormal) {
-          containerNormal.innerHTML = html;
-        }
-        if (containerPDF) {
-          containerPDF.innerHTML = html;
-        }
+    verificarDobras() {
+      const conflitos = this.detectarConflitos();
+      const dobras = {};
+      for (const [dia, lista] of Object.entries(conflitos)) {
+        if (lista.length > 1) dobras[dia] = lista;
       }
-    };
+      return dobras;
+    }
+  };
 
-    // ============================================
-    // ESCALA DISTRIBUIÇÃO SERVICE
-    // ============================================
-    const EscalaDistribuicaoService = {
-      aplicarDistribuicaoInteligente() {
-        const escalas = AppState.getCurrentEscalas();
-        const daysInMonth = DateService.getDaysInMonth(AppState.currentMonth, AppState.currentYear);
-        
-        AppState.hospitais.forEach(hospital => {
-          escalas[hospital] = [];
-        });
-        
-        const semanas = this.calcularSemanasNoMes(AppState.currentMonth, AppState.currentYear);
-        
-        semanas.forEach(semana => {
-          this.distribuirHUSENoturno(semana, escalas);
-          this.distribuirHRPDiurnoPares(semana, escalas);
-          this.distribuirPlantoesRestantes(semana, escalas);
-        });
-        
-        AppState.save();
-      },
-      
-      calcularSemanasNoMes(month, year) {
-        const daysInMonth = DateService.getDaysInMonth(month, year);
-        const semanas = [];
-        let semanaAtual = [];
-        
-        for (let dia = 1; dia <= daysInMonth; dia++) {
-          const data = new Date(year, month, dia);
-          semanaAtual.push(dia);
-          
-          if (data.getDay() === 6 || dia === daysInMonth) {
-            semanas.push([...semanaAtual]);
-            semanaAtual = [];
-          }
-        }
-        
-        return semanas;
-      },
-      
-      distribuirHUSENoturno(semana, escalas) {
-        const diasUteis = semana.filter(dia => {
-          const data = new Date(AppState.currentYear, AppState.currentMonth, dia);
-          return data.getDay() >= 1 && data.getDay() <= 5;
-        });
-        
-        diasUteis.slice(0, 3).forEach(dia => {
-          escalas['HUSE Noturno'].push(dia);
-        });
-      },
-      
-      distribuirHRPDiurnoPares(semana, escalas) {
-        const diasParesUteis = semana.filter(dia => {
-          const data = new Date(AppState.currentYear, AppState.currentMonth, dia);
-          return dia % 2 === 0 && data.getDay() >= 1 && data.getDay() <= 5;
-        });
-        
-        let diasPares = [...diasParesUteis];
-        if (diasPares.length < 3) {
-          const diasParesFimDeSemana = semana.filter(dia => {
-            const data = new Date(AppState.currentYear, AppState.currentMonth, dia);
-            return dia % 2 === 0 && (data.getDay() === 0 || data.getDay() === 6);
-          });
-          diasPares = [...diasPares, ...diasParesFimDeSemana];
-        }
-        
-        diasPares.slice(0, 3).forEach(dia => {
-          if (!escalas['HUSE Noturno'].includes(dia)) {
-            escalas['HRP Diurno'].push(dia);
-          }
-        });
-        
-        if (escalas['HRP Diurno'].length < 3) {
-          const diasUteis = semana.filter(dia => {
-            const data = new Date(AppState.currentYear, AppState.currentMonth, dia);
-            return data.getDay() >= 1 && data.getDay() <= 5;
-          });
-          
-          const diasDisponiveis = diasUteis.filter(dia => {
-            return !escalas['HUSE Noturno'].includes(dia) && !escalas['HRP Diurno'].includes(dia);
-          });
-          
-          diasDisponiveis.slice(0, 3 - escalas['HRP Diurno'].length).forEach(dia => {
-            escalas['HRP Diurno'].push(dia);
-          });
-        }
-      },
-      
-      distribuirPlantoesRestantes(semana, escalas) {
-        semana.forEach(dia => {
-          if (!escalas['HUSE Noturno'].includes(dia) && !escalas['HUSE Diurno'].includes(dia)) {
-            escalas['HUSE Diurno'].push(dia);
-          }
-        });
-        
-        semana.forEach(dia => {
-          if (!escalas['HUSE Noturno'].includes(dia) && !escalas['HRP Noturno'].includes(dia)) {
-            escalas['HRP Noturno'].push(dia);
-          }
-        });
+  // ============================================================
+  // TROCA SERVICE
+  // ============================================================
+  const Troca = {
+    abrirModal() {
+      const hoje = new Date();
+      document.getElementById('origem-data').value = DateHelper.formatInput(hoje);
+      document.getElementById('destino-data').value = DateHelper.formatInput(hoje);
+      document.getElementById('origem-hospital').value = '';
+      document.getElementById('destino-hospital').value = '';
+      document.getElementById('nome-troca').value = '';
+      document.getElementById('obs-troca').value = '';
+      UI.openModal('troca-modal');
+    },
+
+    realizar() {
+      const origHosp = document.getElementById('origem-hospital').value.trim();
+      const destHosp = document.getElementById('destino-hospital').value.trim();
+      const nome = document.getElementById('nome-troca').value.trim();
+      const obs = document.getElementById('obs-troca').value.trim();
+      const origData = document.getElementById('origem-data').value;
+      const destData = document.getElementById('destino-data').value;
+
+      if (!origHosp || !destHosp || !nome || !origData || !destData) {
+        UI.notify('Preencha todos os campos!', 'error');
+        return;
       }
-    };
 
-    // ============================================
-    // ESCALA SERVICE
-    // ============================================
-    const EscalaService = {
-      togglePlantao(hospital, dia) {
-        const escalas = AppState.getCurrentEscalas();
-        const idx = escalas[hospital].indexOf(dia);
-        
-        if (idx === -1) {
-          escalas[hospital].push(dia);
-          escalas[hospital].sort((a, b) => a - b);
-        } else {
-          escalas[hospital].splice(idx, 1);
-        }
-        AppState.save();
-      },
-
-      obterHospitalBase(hospital) {
-        if (hospital.includes('HUSE')) return 'HUSE';
-        if (hospital.includes('HRP')) return 'HRP';
-        return null;
-      },
-
-      obterSemanaDoDia(dia) {
-        const data = new Date(AppState.currentYear, AppState.currentMonth, dia);
-        const semana = [];
-        const diaSemana = data.getDay();
-        
-        const domingo = new Date(data);
-        domingo.setDate(dia - diaSemana);
-        
-        for (let i = 0; i < 7; i++) {
-          const diaDaSemana = new Date(domingo);
-          diaDaSemana.setDate(domingo.getDate() + i);
-          
-          if (diaDaSemana.getMonth() === AppState.currentMonth && 
-              diaDaSemana.getFullYear() === AppState.currentYear) {
-            semana.push(diaDaSemana.getDate());
-          }
-        }
-        
-        return semana;
-      },
-
-      contarPlantoesHospitalNaSemana(hospital, semana) {
-        const escalas = AppState.getCurrentEscalas();
-        let total = 0;
-        
-        if (hospital === 'HUSE') {
-          total += this.contarPlantoesNaSemana(escalas['HUSE Diurno'], semana);
-          total += this.contarPlantoesNaSemana(escalas['HUSE Noturno'], semana);
-        } else if (hospital === 'HRP') {
-          total += this.contarPlantoesNaSemana(escalas['HRP Diurno'], semana);
-          total += this.contarPlantoesNaSemana(escalas['HRP Noturno'], semana);
-        }
-        
-        return total;
-      },
-
-      contarPlantoesNaSemana(plantoes, semana) {
-        return plantoes.filter(dia => semana.includes(dia)).length;
-      },
-
-      detectarConflitos() {
-        const escalas = AppState.getCurrentEscalas();
-        const conflitos = {};
-        const daysInMonth = DateService.getDaysInMonth(AppState.currentMonth, AppState.currentYear);
-        for (let dia = 1; dia <= daysInMonth; dia++) {
-          const plantoes = [];
-          AppState.hospitais.forEach(h => {
-            if (escalas[h].includes(dia)) plantoes.push(h);
-          });
-          if (plantoes.length > 1) conflitos[dia] = plantoes;
-        }
-        return conflitos;
-      },
-
-      obterDiasComTransicao() {
-        const escalas = AppState.getCurrentEscalas();
-        const dias = new Set();
-        const daysInMonth = DateService.getDaysInMonth(AppState.currentMonth, AppState.currentYear);
-        const noturnos = ['HUSE Noturno', 'HRP Noturno'];
-        const diurnos = ['HUSE Diurno', 'HRP Diurno'];
-
-        for (let d = 1; d <= daysInMonth; d++) {
-          const diaAnterior = d - 1;
-          if (diaAnterior >= 1) {
-            const temNoturnoAnterior = noturnos.some(n => escalas[n].includes(diaAnterior));
-            const temDiurnoAtual = diurnos.some(di => escalas[di].includes(d));
-            if (temNoturnoAnterior && temDiurnoAtual) {
-              dias.add(diaAnterior);
-              dias.add(d);
-            }
-          }
-        }
-
-        for (let d = 1; d <= daysInMonth; d++) {
-          const temDiurno = diurnos.some(di => escalas[di].includes(d));
-          const temNoturno = noturnos.some(no => escalas[no].includes(d));
-          if (temDiurno && temNoturno) dias.add(d);
-        }
-        return Array.from(dias);
-      },
-
-      contarTrocasHRP() {
-        let count = 0;
-        AppState.observacoes.forEach(obs => {
-          const dataOrigem = DateService.parseDate(obs.data);
-          const dataTroca = DateService.parseDate(obs.dataTroca);
-          const matches = (dataOrigem && dataOrigem.getMonth() === AppState.currentMonth && dataOrigem.getFullYear() === AppState.currentYear) ||
-                          (dataTroca && dataTroca.getMonth() === AppState.currentMonth && dataTroca.getFullYear() === AppState.currentYear);
-          if (matches && ((obs.hospital?.includes('HRP')) || (obs.hospitalTroca?.includes('HRP')))) {
-            count++;
-          }
-        });
-        return count;
-      },
-
-      verificarDobras() {
-        const escalas = AppState.getCurrentEscalas();
-        const dobras = {};
-        const daysInMonth = DateService.getDaysInMonth(AppState.currentMonth, AppState.currentYear);
-        
-        for (let dia = 1; dia <= daysInMonth; dia++) {
-          const plantoes = [];
-          AppState.hospitais.forEach(h => {
-            if (escalas[h].includes(dia)) plantoes.push(h);
-          });
-          
-          if (plantoes.length > 1) {
-            dobras[dia] = plantoes;
-          }
-        }
-        
-        return dobras;
+      const dOrig = DateHelper.parse(origData);
+      const dDest = DateHelper.parse(destData);
+      if (!dOrig || !dDest) {
+        UI.notify('Datas inválidas!', 'error');
+        return;
       }
-    };
 
-    // ============================================
-    // TROCA MANAGEMENT SERVICE
-    // ============================================
-    const TrocaManagementService = {
-      abrirModalEdicao(trocaId) {
-        const troca = AppState.observacoes[trocaId];
-        if (!troca) {
-          UIService.showNotification('Troca não encontrada!', 'error');
-          return;
-        }
+      const mesOrig = dOrig.getMonth(), anoOrig = dOrig.getFullYear();
+      const mesDest = dDest.getMonth(), anoDest = dDest.getFullYear();
+      const diaOrig = dOrig.getDate(), diaDest = dDest.getDate();
 
-        AppState.currentEditId = trocaId;
-        
-        document.getElementById('editar-origem-hospital').value = troca.hospital || '';
-        document.getElementById('editar-destino-hospital').value = troca.hospitalTroca || '';
-        document.getElementById('editar-origem-data').value = troca.data || '';
-        document.getElementById('editar-destino-data').value = troca.dataTroca || '';
-        document.getElementById('editar-nome-troca').value = troca.nome || '';
-        document.getElementById('editar-obs-troca').value = troca.observacao || '';
-        document.getElementById('editar-troca-id').value = trocaId;
+      const escOrig = App.getEscalas(mesOrig, anoOrig);
+      const escDest = App.getEscalas(mesDest, anoDest);
 
-        UIService.openModal('editar-troca-modal');
-      },
-
-      salvarEdicao() {
-        const trocaId = AppState.currentEditId;
-        if (trocaId === null || trocaId >= AppState.observacoes.length) {
-          UIService.showNotification('ID de troca inválido!', 'error');
-          return;
-        }
-
-        const troca = AppState.observacoes[trocaId];
-        
-        const origemHospital = document.getElementById('editar-origem-hospital').value.trim();
-        const destinoHospital = document.getElementById('editar-destino-hospital').value.trim();
-        const nome = document.getElementById('editar-nome-troca').value.trim();
-        const observacao = document.getElementById('editar-obs-troca').value.trim();
-        const origemDataInput = document.getElementById('editar-origem-data').value;
-        const destinoDataInput = document.getElementById('editar-destino-data').value;
-
-        if (!origemHospital || !destinoHospital || !nome || !origemDataInput || !destinoDataInput) {
-          UIService.showNotification('Preencha todos os campos obrigatórios!', 'error');
-          return;
-        }
-
-        const dataOrigem = DateService.parseDate(origemDataInput);
-        const dataDestino = DateService.parseDate(destinoDataInput);
-
-        if (!dataOrigem || !dataDestino) {
-          UIService.showNotification('Datas inválidas!', 'error');
-          return;
-        }
-
-        // Primeiro, reverter a troca original nas escalas
-        this.reverterTrocaNoBackend(troca);
-
-        // Aplicar a nova troca
-        const origemMes = dataOrigem.getMonth();
-        const origemAno = dataOrigem.getFullYear();
-        const destinoMes = dataDestino.getMonth();
-        const destinoAno = dataDestino.getFullYear();
-        const diaOrigNum = dataOrigem.getDate();
-        const diaDestNum = dataDestino.getDate();
-
-        const escalasOrigem = AppState.getEscalas(origemMes, origemAno);
-        const escalasDestino = AppState.getEscalas(destinoMes, destinoAno);
-
-        // Verificar se a nova origem existe
-        if (!escalasOrigem[origemHospital].includes(diaOrigNum)) {
-          UIService.showNotification(`Não existe plantão de ${origemHospital} no dia ${DateService.formatDateBR(dataOrigem)}!`, 'error');
-          return;
-        }
-
-        // Verificar se o novo destino está disponível
-        if (escalasDestino[destinoHospital].includes(diaDestNum)) {
-          UIService.showNotification(`Já existe plantão de ${destinoHospital} no dia ${DateService.formatDateBR(dataDestino)}!`, 'error');
-          return;
-        }
-
-        // Remover da origem e adicionar no destino
-        const idx = escalasOrigem[origemHospital].indexOf(diaOrigNum);
-        if (idx > -1) escalasOrigem[origemHospital].splice(idx, 1);
-
-        escalasDestino[destinoHospital].push(diaDestNum);
-        escalasDestino[destinoHospital].sort((a, b) => a - b);
-
-        // Atualizar os dados da troca
-        troca.hospital = origemHospital;
-        troca.hospitalTroca = destinoHospital;
-        troca.data = origemDataInput;
-        troca.dataTroca = destinoDataInput;
-        troca.nome = nome;
-        troca.observacao = observacao || `${origemHospital} → ${destinoHospital}`;
-
-        AppState.save();
-
-        // Atualizar a interface se necessário
-        if ((origemMes === AppState.currentMonth && origemAno === AppState.currentYear) ||
-            (destinoMes === AppState.currentMonth && destinoAno === AppState.currentYear)) {
-          RenderService.renderTable();
-          HorasService.renderizarContadoresHoras();
-        }
-
-        RenderService.updateCounter();
-        UIService.closeModal('editar-troca-modal');
-        RenderService.renderTrocasTable();
-        UIService.showNotification(`✅ Troca editada com sucesso!`);
-      },
-
-      reverterTroca(trocaId) {
-        const troca = AppState.observacoes[trocaId];
-        if (!troca) {
-          UIService.showNotification('Troca não encontrada!', 'error');
-          return;
-        }
-
-        if (!confirm(`Deseja reverter a troca de ${troca.hospital} (${DateService.formatDateBR(DateService.parseDate(troca.data))}) para ${troca.hospitalTroca} (${DateService.formatDateBR(DateService.parseDate(troca.dataTroca))})?`)) {
-          return;
-        }
-
-        // Reverter a troca nas escalas
-        this.reverterTrocaNoBackend(troca);
-
-        // Remover a observação
-        AppState.observacoes.splice(trocaId, 1);
-
-        AppState.save();
-
-        // Atualizar a interface
-        RenderService.renderTable();
-        HorasService.renderizarContadoresHoras();
-        RenderService.updateCounter();
-        RenderService.renderTrocasTable();
-
-        UIService.showNotification('✅ Troca revertida com sucesso!');
-      },
-
-      reverterTrocaNoBackend(troca) {
-        const dataOrigem = DateService.parseDate(troca.data);
-        const dataDestino = DateService.parseDate(troca.dataTroca);
-        
-        if (!dataOrigem || !dataDestino) return;
-
-        const origemMes = dataOrigem.getMonth();
-        const origemAno = dataOrigem.getFullYear();
-        const destinoMes = dataDestino.getMonth();
-        const destinoAno = dataDestino.getFullYear();
-        const diaOrigNum = dataOrigem.getDate();
-        const diaDestNum = dataDestino.getDate();
-
-        const escalasOrigem = AppState.getEscalas(origemMes, origemAno);
-        const escalasDestino = AppState.getEscalas(destinoMes, destinoAno);
-
-        // Remover do destino
-        const idxDest = escalasDestino[troca.hospitalTroca]?.indexOf(diaDestNum);
-        if (idxDest > -1) {
-          escalasDestino[troca.hospitalTroca].splice(idxDest, 1);
-        }
-
-        // Adicionar na origem
-        if (!escalasOrigem[troca.hospital]?.includes(diaOrigNum)) {
-          escalasOrigem[troca.hospital]?.push(diaOrigNum);
-          escalasOrigem[troca.hospital]?.sort((a, b) => a - b);
-        }
-      },
-
-      excluirTroca(trocaId) {
-        const troca = AppState.observacoes[trocaId];
-        if (!troca) {
-          UIService.showNotification('Troca não encontrada!', 'error');
-          return;
-        }
-
-        if (!confirm(`Deseja excluir permanentemente a troca de ${troca.hospital} (${DateService.formatDateBR(DateService.parseDate(troca.data))}) para ${troca.hospitalTroca} (${DateService.formatDateBR(DateService.parseDate(troca.dataTroca))})?`)) {
-          return;
-        }
-
-        // Remover a observação sem reverter a troca nas escalas
-        AppState.observacoes.splice(trocaId, 1);
-
-        AppState.save();
-
-        // Atualizar a interface
-        RenderService.renderTable();
-        HorasService.renderizarContadoresHoras();
-        RenderService.updateCounter();
-        RenderService.renderTrocasTable();
-
-        UIService.showNotification('✅ Troca excluída com sucesso!');
+      if (!escOrig[origHosp].includes(diaOrig)) {
+        UI.notify(`Não existe ${origHosp} em ${DateHelper.formatBR(dOrig)}`, 'error');
+        return;
       }
-    };
+      if (escDest[destHosp].includes(diaDest)) {
+        UI.notify(`Já existe ${destHosp} em ${DateHelper.formatBR(dDest)}`, 'error');
+        return;
+      }
 
-    // ============================================
-    // RENDER SERVICE
-    // ============================================
-    const RenderService = {
-      renderTable() {
-        const header = document.querySelector('#table-header');
-        const body = document.querySelector('#table-body');
-        const conflitos = EscalaService.detectarConflitos();
-        const dobras = EscalaService.verificarDobras();
-        const diasComTransicao = EscalaService.obterDiasComTransicao();
-        const escalas = AppState.getCurrentEscalas();
-        const daysInMonth = DateService.getDaysInMonth(AppState.currentMonth, AppState.currentYear);
+      const idx = escOrig[origHosp].indexOf(diaOrig);
+      if (idx > -1) escOrig[origHosp].splice(idx, 1);
+      escDest[destHosp].push(diaDest);
+      escDest[destHosp].sort((a,b)=>a-b);
 
-        header.innerHTML = '<th>Hospitais & Dias</th>';
-        body.innerHTML = '';
+      App.observacoes.push({
+        hospital: origHosp,
+        hospitalTroca: destHosp,
+        data: origData,
+        dataTroca: destData,
+        nome: nome,
+        observacao: obs || `${origHosp} → ${destHosp}`
+      });
 
-        for (let dia = 1; dia <= daysInMonth; dia++) {
-          const diaSemana = DateService.getDateDay(AppState.currentYear, AppState.currentMonth, dia);
-          const th = document.createElement('th');
-          if (diaSemana === 0 || diaSemana === 6) {
-            th.className = diaSemana === 0 ? 'sunday' : 'weekend';
-          }
+      UI.closeModal('troca-modal');
+      App.save();
+      Render.renderTable();
+      UI.notify(`✅ Troca ${origHosp} → ${destHosp}`);
+    }
+  };
 
-          const dayHeader = document.createElement('div');
-          dayHeader.className = 'day-header';
+  // ============================================================
+  // TROCA MANAGEMENT
+  // ============================================================
+  const TrocaManage = {
+    abrirEdicao(idx) {
+      const t = App.observacoes[idx];
+      if (!t) { UI.notify('Troca não encontrada!', 'error'); return; }
+      App.currentEditId = idx;
+      document.getElementById('editar-origem-hospital').value = t.hospital || '';
+      document.getElementById('editar-destino-hospital').value = t.hospitalTroca || '';
+      document.getElementById('editar-origem-data').value = t.data || '';
+      document.getElementById('editar-destino-data').value = t.dataTroca || '';
+      document.getElementById('editar-nome-troca').value = t.nome || '';
+      document.getElementById('editar-obs-troca').value = t.observacao || '';
+      document.getElementById('editar-troca-id').value = idx;
+      UI.openModal('editar-troca-modal');
+    },
 
-          if (diasComTransicao.includes(dia)) {
-            const carro = document.createElement('div');
-            carro.className = 'carro-indicator';
-            carro.textContent = '🚗';
-            carro.title = 'Deslocamento necessário';
-            dayHeader.appendChild(carro);
-          }
+    salvarEdicao() {
+      const idx = parseInt(document.getElementById('editar-troca-id').value, 10);
+      if (isNaN(idx) || idx >= App.observacoes.length) {
+        UI.notify('ID inválido!', 'error');
+        return;
+      }
 
-          const dayNum = document.createElement('div');
-          dayNum.className = 'day-number';
-          dayNum.textContent = dia;
-          dayHeader.appendChild(dayNum);
+      const origHosp = document.getElementById('editar-origem-hospital').value.trim();
+      const destHosp = document.getElementById('editar-destino-hospital').value.trim();
+      const nome = document.getElementById('editar-nome-troca').value.trim();
+      const obs = document.getElementById('editar-obs-troca').value.trim();
+      const origData = document.getElementById('editar-origem-data').value;
+      const destData = document.getElementById('editar-destino-data').value;
 
-          const dayName = document.createElement('div');
-          dayName.className = 'day-name';
-          dayName.textContent = AppState.diasDaSemana[diaSemana];
-          dayHeader.appendChild(dayName);
+      if (!origHosp || !destHosp || !nome || !origData || !destData) {
+        UI.notify('Preencha todos os campos!', 'error');
+        return;
+      }
 
-          th.appendChild(dayHeader);
-          th.setAttribute('data-day', dia);
-          header.appendChild(th);
+      const dOrig = DateHelper.parse(origData);
+      const dDest = DateHelper.parse(destData);
+      if (!dOrig || !dDest) { UI.notify('Datas inválidas!', 'error'); return; }
+
+      const troca = App.observacoes[idx];
+      this._reverter(troca);
+
+      const mesOrig = dOrig.getMonth(), anoOrig = dOrig.getFullYear();
+      const mesDest = dDest.getMonth(), anoDest = dDest.getFullYear();
+      const diaOrig = dOrig.getDate(), diaDest = dDest.getDate();
+
+      const escOrig = App.getEscalas(mesOrig, anoOrig);
+      const escDest = App.getEscalas(mesDest, anoDest);
+
+      if (!escOrig[origHosp].includes(diaOrig)) {
+        UI.notify(`Não existe ${origHosp} em ${DateHelper.formatBR(dOrig)}`, 'error');
+        return;
+      }
+      if (escDest[destHosp].includes(diaDest)) {
+        UI.notify(`Já existe ${destHosp} em ${DateHelper.formatBR(dDest)}`, 'error');
+        return;
+      }
+
+      const idxOrig = escOrig[origHosp].indexOf(diaOrig);
+      if (idxOrig > -1) escOrig[origHosp].splice(idxOrig, 1);
+      escDest[destHosp].push(diaDest);
+      escDest[destHosp].sort((a,b)=>a-b);
+
+      troca.hospital = origHosp;
+      troca.hospitalTroca = destHosp;
+      troca.data = origData;
+      troca.dataTroca = destData;
+      troca.nome = nome;
+      troca.observacao = obs || `${origHosp} → ${destHosp}`;
+
+      App.save();
+      UI.closeModal('editar-troca-modal');
+      Render.renderTable();
+      Render.renderTrocasTable();
+      UI.notify('✅ Troca editada');
+    },
+
+    _reverter(troca) {
+      const dOrig = DateHelper.parse(troca.data);
+      const dDest = DateHelper.parse(troca.dataTroca);
+      if (!dOrig || !dDest) return;
+      const mesOrig = dOrig.getMonth(), anoOrig = dOrig.getFullYear();
+      const mesDest = dDest.getMonth(), anoDest = dDest.getFullYear();
+      const diaOrig = dOrig.getDate(), diaDest = dDest.getDate();
+
+      const escOrig = App.getEscalas(mesOrig, anoOrig);
+      const escDest = App.getEscalas(mesDest, anoDest);
+
+      const idxDest = escDest[troca.hospitalTroca]?.indexOf(diaDest);
+      if (idxDest > -1) escDest[troca.hospitalTroca].splice(idxDest, 1);
+      if (!escOrig[troca.hospital]?.includes(diaOrig)) {
+        escOrig[troca.hospital]?.push(diaOrig);
+        escOrig[troca.hospital]?.sort((a,b)=>a-b);
+      }
+    },
+
+    reverter(idx) {
+      const t = App.observacoes[idx];
+      if (!t) { UI.notify('Troca não encontrada!', 'error'); return; }
+      if (!confirm(`Reverter ${t.hospital} → ${t.hospitalTroca}?`)) return;
+      this._reverter(t);
+      App.observacoes.splice(idx, 1);
+      App.save();
+      Render.renderTable();
+      Render.renderTrocasTable();
+      UI.notify('✅ Revertida');
+    },
+
+    excluir(idx) {
+      const t = App.observacoes[idx];
+      if (!t) { UI.notify('Troca não encontrada!', 'error'); return; }
+      if (!confirm(`Excluir troca de ${t.hospital} → ${t.hospitalTroca}?`)) return;
+      App.observacoes.splice(idx, 1);
+      App.save();
+      Render.renderTrocasTable();
+      UI.notify('✅ Excluída');
+    }
+  };
+
+  // ============================================================
+  // RENDER
+  // ============================================================
+  const Render = {
+    renderTable() {
+      const header = document.getElementById('table-header');
+      const body = document.getElementById('table-body');
+      const escalas = App.getCurrentEscalas();
+      const days = DateHelper.daysInMonth(App.currentMonth, App.currentYear);
+      const conflitos = Escala.detectarConflitos();
+      const dobras = Escala.verificarDobras();
+      const transicao = Escala.obterDiasTransicao();
+
+      header.innerHTML = '<th>Hospitais</th>';
+      for (let d=1; d<=days; d++) {
+        const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, d);
+        const th = document.createElement('th');
+        if (diaSem === 0) th.className = 'sunday';
+        else if (diaSem === 6) th.className = 'weekend';
+
+        const div = document.createElement('div');
+        div.className = 'day-header';
+        if (transicao.includes(d)) {
+          const carro = document.createElement('div');
+          carro.textContent = '🚗';
+          carro.style.fontSize = '0.6rem';
+          carro.style.position = 'absolute';
+          carro.style.top = '-2px';
+          carro.style.right = '-4px';
+          div.appendChild(carro);
         }
+        const num = document.createElement('div');
+        num.className = 'day-number';
+        num.textContent = d;
+        div.appendChild(num);
+        const nome = document.createElement('div');
+        nome.className = 'day-name';
+        nome.textContent = App.diasDaSemana[diaSem];
+        div.appendChild(nome);
+        th.appendChild(div);
+        th.setAttribute('data-day', d);
+        header.appendChild(th);
+      }
 
-        AppState.hospitais.forEach(hospital => {
-          const tr = document.createElement('tr');
-          const tdNome = document.createElement('td');
-          tdNome.className = 'hospital-name';
-          tdNome.textContent = hospital;
-          tr.appendChild(tdNome);
+      body.innerHTML = '';
+      App.hospitais.forEach(hosp => {
+        const tr = document.createElement('tr');
+        const tdNome = document.createElement('td');
+        tdNome.className = 'hospital-name';
+        tdNome.textContent = hosp;
+        tr.appendChild(tdNome);
 
-          for (let dia = 1; dia <= daysInMonth; dia++) {
-            const diaSemana = DateService.getDateDay(AppState.currentYear, AppState.currentMonth, dia);
-            const td = document.createElement('td');
-            if (diaSemana === 0 || diaSemana === 6) {
-              td.className = diaSemana === 0 ? 'sunday' : 'weekend';
-            }
+        for (let d=1; d<=days; d++) {
+          const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, d);
+          const td = document.createElement('td');
+          if (diaSem === 0) td.className = 'sunday';
+          else if (diaSem === 6) td.className = 'weekend';
 
-            if (escalas[hospital].includes(dia)) {
-              const div = document.createElement('div');
-              if (conflitos[dia]?.includes(hospital)) {
-                div.className = 'plantao-cell conflito-cell';
-                div.textContent = '⚠️';
-                div.title = 'Conflito de horário!';
-              } else if (dobras[dia]?.includes(hospital)) {
-                div.className = 'plantao-cell dobra-cell';
-                div.textContent = 'D';
-                div.title = 'Dobra - Cuidado com o limite de horas!';
-              } else if (diasComTransicao.includes(dia)) {
-                div.className = 'plantao-cell alerta-carro-cell';
-                div.textContent = 'S 🚗';
-                div.title = 'Plantão com deslocamento';
-              } else {
-                div.className = 'plantao-cell plantao';
-                div.textContent = 'S';
-                div.title = 'Plantão confirmado';
-              }
-              div.addEventListener('click', () => {
-                EscalaService.togglePlantao(hospital, dia);
-                this.renderTable();
-                this.updateCounter();
-                HorasService.renderizarContadoresHoras();
-              });
-              td.appendChild(div);
+          const hasPlantao = escalas[hosp].includes(d);
+          const div = document.createElement('div');
+
+          if (hasPlantao) {
+            div.className = 'plantao-cell';
+            if (conflitos[d]?.includes(hosp)) {
+              div.classList.add('conflito-cell');
+              div.textContent = '⚠️';
+              div.title = 'Conflito!';
+            } else if (dobras[d]?.includes(hosp)) {
+              div.classList.add('dobra-cell');
+              div.textContent = 'D';
+              div.title = 'Dobra';
+            } else if (transicao.includes(d)) {
+              div.classList.add('alerta-carro-cell');
+              div.textContent = 'S🚗';
+              div.title = 'Deslocamento';
             } else {
-              const div = document.createElement('div');
-              div.className = 'folga-cell';
-              div.textContent = 'F';
-              div.title = 'Folga';
-              div.addEventListener('click', () => {
-                EscalaService.togglePlantao(hospital, dia);
-                this.renderTable();
-                this.updateCounter();
-                HorasService.renderizarContadoresHoras();
-              });
-              td.appendChild(div);
+              div.classList.add('plantao');
+              div.textContent = 'S';
+              div.title = 'Plantão';
             }
-            tr.appendChild(td);
+          } else {
+            div.className = 'folga-cell';
+            div.textContent = 'F';
+            div.title = 'Folga';
           }
-          body.appendChild(tr);
-        });
-      },
 
-      updateCounter() {
-        const count = EscalaService.contarTrocasHRP();
-        document.getElementById('hrp-trocas-count').textContent = count;
-      },
-
-      populateSelects() {
-        ['month-select', 'filter-month'].forEach(id => {
-          const el = document.getElementById(id);
-          if (!el) return;
-          el.innerHTML = id.includes('filter') ? '<option value="">Todos</option>' : '';
-          AppState.monthNames.forEach((m, i) => {
-            const opt = document.createElement('option');
-            opt.value = i;
-            opt.textContent = m;
-            el.appendChild(opt);
+          div.addEventListener('click', (e) => {
+            e.stopPropagation();
+            Escala.toggle(hosp, d);
+            Render.renderTable();
           });
-          el.value = AppState.currentMonth;
-        });
-
-        ['year-select', 'filter-year'].forEach(id => {
-          const el = document.getElementById(id);
-          if (!el) return;
-          el.innerHTML = '';
-          for (let y = AppState.currentYear - 2; y <= AppState.currentYear + 2; y++) {
-            const opt = document.createElement('option');
-            opt.value = y;
-            opt.textContent = y;
-            el.appendChild(opt);
-          }
-          el.value = AppState.currentYear;
-        });
-      },
-
-      renderTrocasTable() {
-        const tbody = document.getElementById('trocas-body');
-        tbody.innerHTML = '';
-
-        const filterMonth = document.getElementById('filter-month').value;
-        const filterYear = document.getElementById('filter-year').value;
-        const hasFilterMonth = filterMonth !== '';
-        const hasFilterYear = filterYear !== '';
-
-        const filtradas = AppState.observacoes.filter(obs => {
-          if (!hasFilterMonth && !hasFilterYear) return true;
-          const dataOrigem = DateService.parseDate(obs.data);
-          const dataTroca = DateService.parseDate(obs.dataTroca);
-          if (hasFilterMonth || hasFilterYear) {
-            if (dataOrigem && (!hasFilterMonth || dataOrigem.getMonth() == filterMonth) && (!hasFilterYear || dataOrigem.getFullYear() == filterYear)) {
-              return true;
-            }
-            if (dataTroca && (!hasFilterMonth || dataTroca.getMonth() == filterMonth) && (!hasFilterYear || dataTroca.getFullYear() == filterYear)) {
-              return true;
-            }
-          }
-          return false;
-        });
-
-        if (filtradas.length === 0) {
-          const tr = document.createElement('tr');
-          tr.innerHTML = '<td colspan="6" style="text-align:center; color:#999;">Nenhuma troca registrada</td>';
-          tbody.appendChild(tr);
-          return;
+          td.appendChild(div);
+          tr.appendChild(td);
         }
+        body.appendChild(tr);
+      });
+    },
 
-        filtradas.forEach((obs, index) => {
+    renderTrocasTable() {
+      const tbody = document.getElementById('trocas-body');
+      tbody.innerHTML = '';
+
+      const filterMonth = document.getElementById('filter-month').value;
+      const filterYear = document.getElementById('filter-year').value;
+
+      let filtradas = App.observacoes;
+      if (filterMonth !== '' || filterYear !== '') {
+        filtradas = filtradas.filter(obs => {
+          const d1 = DateHelper.parse(obs.data);
+          const d2 = DateHelper.parse(obs.dataTroca);
+          const match = (d1 && (filterMonth==='' || d1.getMonth()==+filterMonth) && (filterYear==='' || d1.getFullYear()==+filterYear)) ||
+                        (d2 && (filterMonth==='' || d2.getMonth()==+filterMonth) && (filterYear==='' || d2.getFullYear()==+filterYear));
+          return match;
+        });
+      }
+
+      if (filtradas.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:16px;">Nenhuma troca</td></tr>';
+        return;
+      }
+
+      filtradas.forEach((obs) => {
+        const realIdx = App.observacoes.indexOf(obs);
+        const tr = document.createElement('tr');
+        const btnGroup = document.createElement('div');
+        btnGroup.style.display = 'flex';
+        btnGroup.style.gap = '4px';
+        btnGroup.style.flexWrap = 'wrap';
+        btnGroup.innerHTML = `
+          <button class="btn btn-warning" style="padding:4px 6px;font-size:0.6rem;flex:1;min-width:40px;" onclick="TrocaManage.abrirEdicao(${realIdx})"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-info" style="padding:4px 6px;font-size:0.6rem;flex:1;min-width:40px;" onclick="TrocaManage.reverter(${realIdx})"><i class="fas fa-undo"></i></button>
+          <button class="btn btn-danger" style="padding:4px 6px;font-size:0.6rem;flex:1;min-width:40px;" onclick="TrocaManage.excluir(${realIdx})"><i class="fas fa-trash"></i></button>
+        `;
+
+        tr.innerHTML = `
+          <td>${obs.hospital || '--'}</td>
+          <td>${DateHelper.formatBR(DateHelper.parse(obs.data)) || '--'}</td>
+          <td>${DateHelper.formatBR(DateHelper.parse(obs.dataTroca)) || '--'}</td>
+          <td>${obs.nome || '--'}</td>
+          <td>${obs.observacao || '--'}</td>
+        `;
+        const tdAcoes = document.createElement('td');
+        tdAcoes.appendChild(btnGroup);
+        tr.appendChild(tdAcoes);
+        tbody.appendChild(tr);
+      });
+    }
+  };
+
+  // ============================================================
+  // PDF SERVICE
+  // ============================================================
+  const PDF = {
+    exportar() {
+      UI.loading(true);
+      const mes = App.monthNames[App.currentMonth];
+      const ano = App.currentYear;
+
+      const container = document.createElement('div');
+      container.style.padding = '20px';
+      container.style.fontFamily = 'Arial, sans-serif';
+      container.style.width = '297mm';
+      container.style.minHeight = '420mm';
+      container.style.background = 'white';
+
+      const titulo = document.createElement('h1');
+      titulo.textContent = `ESCALA HUSE - ${mes.toUpperCase()}/${ano}`;
+      titulo.style.textAlign = 'center';
+      titulo.style.marginBottom = '14px';
+      titulo.style.fontSize = '24px';
+      titulo.style.fontWeight = 'bold';
+      titulo.style.color = '#2563eb';
+      titulo.style.borderBottom = '3px solid #2563eb';
+      titulo.style.paddingBottom = '10px';
+      container.appendChild(titulo);
+
+      const subt = document.createElement('h2');
+      subt.textContent = 'Plantões de Mª de Fatima Velame';
+      subt.style.textAlign = 'center';
+      subt.style.marginBottom = '18px';
+      subt.style.fontSize = '16px';
+      subt.style.fontWeight = '600';
+      subt.style.color = '#475569';
+      subt.style.fontStyle = 'italic';
+      container.appendChild(subt);
+
+      const dataGer = document.createElement('div');
+      dataGer.textContent = `Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})}`;
+      dataGer.style.textAlign = 'right';
+      dataGer.style.fontSize = '11px';
+      dataGer.style.color = '#64748b';
+      dataGer.style.marginBottom = '18px';
+      dataGer.style.fontStyle = 'italic';
+      container.appendChild(dataGer);
+
+      const table = document.getElementById('escala-table').cloneNode(true);
+      table.style.width = '100%';
+      table.style.borderCollapse = 'collapse';
+      table.style.boxShadow = '0 2px 4px rgba(0,0,0,0.06)';
+
+      const allCells = table.querySelectorAll('td, th');
+      allCells.forEach(cell => {
+        cell.style.padding = '5px 3px';
+        cell.style.fontSize = '9px';
+        cell.style.border = '1px solid #cbd5e1';
+        cell.style.verticalAlign = 'middle';
+      });
+
+      // Cabeçalho
+      const ths = table.querySelectorAll('thead th');
+      ths.forEach((th, idx) => {
+        if (idx === 0) return;
+        const dia = idx;
+        if (dia <= DateHelper.daysInMonth(App.currentMonth, App.currentYear)) {
+          const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, dia);
+          if (diaSem === 0) {
+            th.style.background = '#fee2e2';
+            th.style.color = '#dc2626';
+            th.style.border = '2px solid #dc2626';
+          } else if (diaSem === 6) {
+            th.style.background = '#dbeafe';
+            th.style.color = '#2563eb';
+            th.style.border = '2px solid #2563eb';
+          } else {
+            th.style.background = 'linear-gradient(135deg, #2563eb, #1e40af)';
+            th.style.color = 'white';
+            th.style.border = '1px solid #1e40af';
+          }
+        }
+      });
+
+      const rows = table.querySelectorAll('tbody tr');
+      rows.forEach(tr => {
+        const tds = tr.querySelectorAll('td');
+        tds.forEach((td, idx) => {
+          if (idx === 0) return;
+          const dia = idx;
+          if (dia <= DateHelper.daysInMonth(App.currentMonth, App.currentYear)) {
+            const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, dia);
+            if (diaSem === 0) {
+              td.style.background = '#fef2f2';
+              td.style.border = '2px solid #fecaca';
+            } else if (diaSem === 6) {
+              td.style.background = '#eff6ff';
+              td.style.border = '2px solid #bfdbfe';
+            }
+          }
+        });
+      });
+
+      container.appendChild(table);
+
+      // Trocas
+      const trocasMes = App.observacoes.filter(obs => {
+        const d1 = DateHelper.parse(obs.data);
+        const d2 = DateHelper.parse(obs.dataTroca);
+        return (d1 && d1.getMonth()===App.currentMonth && d1.getFullYear()===App.currentYear) ||
+               (d2 && d2.getMonth()===App.currentMonth && d2.getFullYear()===App.currentYear);
+      });
+
+      if (trocasMes.length > 0) {
+        const sec = document.createElement('div');
+        sec.style.marginTop = '32px';
+        sec.style.pageBreakInside = 'avoid';
+
+        const h2 = document.createElement('h2');
+        h2.textContent = 'TROCAS REGISTRADAS';
+        h2.style.fontSize = '16px';
+        h2.style.marginBottom = '12px';
+        h2.style.paddingBottom = '6px';
+        h2.style.borderBottom = '2px solid #2563eb';
+        h2.style.color = '#1e40af';
+        sec.appendChild(h2);
+
+        const tbl = document.createElement('table');
+        tbl.style.width = '100%';
+        tbl.style.borderCollapse = 'collapse';
+        tbl.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+          <tr style="background:linear-gradient(135deg,#2563eb,#1e40af);color:white;">
+            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Hospital</th>
+            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Origem</th>
+            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Destino</th>
+            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Nome</th>
+            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Obs</th>
+          </tr>
+        `;
+        tbl.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        trocasMes.forEach((obs, i) => {
           const tr = document.createElement('tr');
-          const btnGroup = document.createElement('div');
-          btnGroup.className = 'btn-group';
-          
-          btnGroup.innerHTML = `
-            <button class="btn btn-edit btn-small" onclick="TrocaManagementService.abrirModalEdicao(${index})">
-              <i class="fas fa-edit"></i> Editar
-            </button>
-            <button class="btn btn-reverter btn-small" onclick="TrocaManagementService.reverterTroca(${index})">
-              <i class="fas fa-undo"></i> Reverter
-            </button>
-            <button class="btn btn-danger btn-small" onclick="TrocaManagementService.excluirTroca(${index})">
-              <i class="fas fa-trash"></i> Excluir
-            </button>
-          `;
-          
+          tr.style.background = i%2===0 ? '#fff' : '#f8fafc';
           tr.innerHTML = `
-            <td>${obs.hospital || '--'}</td>
-            <td>${DateService.formatDateBR(DateService.parseDate(obs.data)) || '--'}</td>
-            <td>${DateService.formatDateBR(DateService.parseDate(obs.dataTroca)) || '--'}</td>
-            <td>${obs.nome || '--'}</td>
-            <td>${obs.observacao || '--'}</td>
+            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${obs.hospital||'--'}</td>
+            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${DateHelper.formatBR(DateHelper.parse(obs.data))||'--'}</td>
+            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${DateHelper.formatBR(DateHelper.parse(obs.dataTroca))||'--'}</td>
+            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${obs.nome||'--'}</td>
+            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${obs.observacao||'--'}</td>
           `;
-          
-          const tdAcoes = document.createElement('td');
-          tdAcoes.appendChild(btnGroup);
-          tr.appendChild(tdAcoes);
-          
           tbody.appendChild(tr);
         });
+        tbl.appendChild(tbody);
+        sec.appendChild(tbl);
+        container.appendChild(sec);
       }
-    };
 
-    // ============================================
-    // SUGESTÃO SERVICE (REMOVIDO)
-    // ============================================
-    // O serviço de sugestões foi removido conforme solicitado
+      const footer = document.createElement('div');
+      footer.style.marginTop = '32px';
+      footer.style.paddingTop = '16px';
+      footer.style.borderTop = '1px solid #e2e8f0';
+      footer.style.fontSize = '9px';
+      footer.style.color = '#64748b';
+      footer.style.textAlign = 'center';
+      footer.innerHTML = `
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <div style="text-align:left;"><strong>HUSE</strong> • 12x36</div>
+          <div style="text-align:right;">Página 1/1</div>
+        </div>
+        <div style="font-style:italic;">Gerado automaticamente</div>
+      `;
+      container.appendChild(footer);
 
-    // ============================================
-    // TROCA SERVICE
-    // ============================================
-    const TrocaService = {
-      abrirModal() {
-        const hoje = new Date();
-        document.getElementById('origem-data').value = DateService.formatDateForInput(hoje);
-        document.getElementById('destino-data').value = DateService.formatDateForInput(hoje);
-        document.getElementById('origem-hospital').value = '';
-        document.getElementById('destino-hospital').value = '';
-        document.getElementById('nome-troca').value = '';
-        document.getElementById('obs-troca').value = '';
-        UIService.openModal('troca-modal');
-      },
+      const opt = {
+        margin: [10,10,10,10],
+        filename: `escala_huse_${mes.toLowerCase()}_${ano}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false, windowWidth: 1123, windowHeight: 1587 },
+        jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a3', compress: true }
+      };
 
-      realizar() {
-        const origemHospital = document.getElementById('origem-hospital').value.trim();
-        const destinoHospital = document.getElementById('destino-hospital').value.trim();
-        const nome = document.getElementById('nome-troca').value.trim();
-        const observacao = document.getElementById('obs-troca').value.trim();
-        const origemDataInput = document.getElementById('origem-data').value;
-        const destinoDataInput = document.getElementById('destino-data').value;
-
-        if (!origemHospital || !destinoHospital || !nome || !origemDataInput || !destinoDataInput) {
-          UIService.showNotification('Preencha todos os campos obrigatórios!', 'error');
-          return;
-        }
-
-        const dataOrigem = DateService.parseDate(origemDataInput);
-        const dataDestino = DateService.parseDate(destinoDataInput);
-
-        if (!dataOrigem || !dataDestino) {
-          UIService.showNotification('Datas inválidas!', 'error');
-          return;
-        }
-
-        const origemMes = dataOrigem.getMonth();
-        const origemAno = dataOrigem.getFullYear();
-        const destinoMes = dataDestino.getMonth();
-        const destinoAno = dataDestino.getFullYear();
-        const diaOrigNum = dataOrigem.getDate();
-        const diaDestNum = dataDestino.getDate();
-
-        const escalasOrigem = AppState.getEscalas(origemMes, origemAno);
-        const escalasDestino = AppState.getEscalas(destinoMes, destinoAno);
-
-        if (!escalasOrigem[origemHospital].includes(diaOrigNum)) {
-          UIService.showNotification(`Não existe plantão de ${origemHospital} no dia ${DateService.formatDateBR(dataOrigem)}!`, 'error');
-          return;
-        }
-
-        if (escalasDestino[destinoHospital].includes(diaDestNum)) {
-          UIService.showNotification(`Já existe plantão de ${destinoHospital} no dia ${DateService.formatDateBR(dataDestino)}!`, 'error');
-          return;
-        }
-
-        const idx = escalasOrigem[origemHospital].indexOf(diaOrigNum);
-        if (idx > -1) escalasOrigem[origemHospital].splice(idx, 1);
-
-        escalasDestino[destinoHospital].push(diaDestNum);
-        escalasDestino[destinoHospital].sort((a, b) => a - b);
-
-        const novaObservacao = {
-          hospital: origemHospital,
-          hospitalTroca: destinoHospital,
-          data: origemDataInput,
-          dataTroca: destinoDataInput,
-          nome: nome,
-          observacao: observacao || `${origemHospital} → ${destinoHospital}`
-        };
-        AppState.observacoes.push(novaObservacao);
-
-        UIService.closeModal('troca-modal');
-        AppState.save();
-
-        if ((origemMes === AppState.currentMonth && origemAno === AppState.currentYear) ||
-            (destinoMes === AppState.currentMonth && destinoAno === AppState.currentYear)) {
-          RenderService.renderTable();
-          HorasService.renderizarContadoresHoras();
-        }
-
-        RenderService.updateCounter();
-        UIService.showNotification(`✅ Troca realizada: ${origemHospital} (${DateService.formatDateBR(dataOrigem)}) → ${destinoHospital} (${DateService.formatDateBR(dataDestino)})`);
-      }
-    };
-
-    // ============================================
-    // PDF SERVICE
-    // ============================================
-    const PDFService = {
-      exportarPDF() {
-        UIService.showLoading(true);
-        
-        const mes = AppState.monthNames[AppState.currentMonth];
-        const ano = AppState.currentYear;
-        
-        const container = document.createElement('div');
-        container.style.padding = '20px';
-        container.style.fontFamily = 'Arial, sans-serif';
-        container.style.width = '297mm';
-        container.style.minHeight = '420mm';
-        
-        const titulo = document.createElement('h1');
-        titulo.textContent = `ESCALA DE PLANTÕES - ${mes.toUpperCase()}/${ano}`;
-        titulo.style.textAlign = 'center';
-        titulo.style.marginBottom = '15px';
-        titulo.style.fontSize = '24px';
-        titulo.style.fontWeight = 'bold';
-        titulo.style.color = '#2563eb';
-        titulo.style.borderBottom = '3px solid #2563eb';
-        titulo.style.paddingBottom = '10px';
-        container.appendChild(titulo);
-        
-        const subtitulo = document.createElement('h2');
-        subtitulo.textContent = 'Plantões de Mª de Fatima Velame';
-        subtitulo.style.textAlign = 'center';
-        subtitulo.style.marginBottom = '20px';
-        subtitulo.style.fontSize = '18px';
-        subtitulo.style.fontWeight = '600';
-        subtitulo.style.color = '#4b5563';
-        subtitulo.style.fontStyle = 'italic';
-        container.appendChild(subtitulo);
-        
-        const contadorHoras = document.getElementById('horas-info-container').cloneNode(true);
-        contadorHoras.style.display = 'flex';
-        contadorHoras.style.flexDirection = 'column';
-        contadorHoras.style.marginBottom = '20px';
-        contadorHoras.style.padding = '15px';
-        contadorHoras.style.background = '#f8fafc';
-        contadorHoras.style.borderRadius = '8px';
-        contadorHoras.style.border = '1px solid #e5e7eb';
-        container.appendChild(contadorHoras);
-        
-        const infoContainer = document.createElement('div');
-        infoContainer.style.display = 'flex';
-        infoContainer.style.justifyContent = 'space-between';
-        infoContainer.style.marginBottom = '20px';
-        infoContainer.style.flexWrap = 'wrap';
-        infoContainer.style.gap = '10px';
-        
-        const infoBox = (titulo, conteudo, cor = '#2563eb') => {
-          const box = document.createElement('div');
-          box.style.flex = '1';
-          box.style.minWidth = '200px';
-          box.style.padding = '10px';
-          box.style.background = '#f8fafc';
-          box.style.borderRadius = '8px';
-          box.style.borderLeft = `4px solid ${cor}`;
-          
-          const titEl = document.createElement('div');
-          titEl.textContent = titulo;
-          titEl.style.fontSize = '12px';
-          titEl.style.fontWeight = '600';
-          titEl.style.color = '#4b5563';
-          titEl.style.marginBottom = '5px';
-          
-          const cont = document.createElement('div');
-          cont.textContent = conteudo;
-          cont.style.fontSize = '14px';
-          cont.style.fontWeight = '600';
-          cont.style.color = '#1f2937';
-          
-          box.appendChild(titEl);
-          box.appendChild(cont);
-          return box;
-        };
-        
-        infoContainer.appendChild(infoBox('JORNADA', 'Escala 12x36', '#10b981'));
-        
-        const totalTrocas = AppState.observacoes.filter(obs => {
-          const dataOrigem = DateService.parseDate(obs.data);
-          const dataTroca = DateService.parseDate(obs.dataTroca);
-          return (dataOrigem && dataOrigem.getMonth() === AppState.currentMonth && dataOrigem.getFullYear() === AppState.currentYear) ||
-                 (dataTroca && dataTroca.getMonth() === AppState.currentMonth && dataTroca.getFullYear() === AppState.currentYear);
-        }).length;
-        
-        infoContainer.appendChild(infoBox('TROCAS ESTE MÊS', totalTrocas.toString(), '#8b5cf6'));
-        
-        const dobras = EscalaService.verificarDobras();
-        infoContainer.appendChild(infoBox('DOBRAS', Object.keys(dobras).length.toString(), '#f59e0b'));
-        
-        container.appendChild(infoContainer);
-        
-        const dataGeracao = document.createElement('div');
-        dataGeracao.textContent = `Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}`;
-        dataGeracao.style.textAlign = 'right';
-        dataGeracao.style.fontSize = '11px';
-        dataGeracao.style.color = '#6b7280';
-        dataGeracao.style.marginBottom = '20px';
-        dataGeracao.style.fontStyle = 'italic';
-        container.appendChild(dataGeracao);
-        
-        const table = document.getElementById('escala-table').cloneNode(true);
-        table.style.marginBottom = '30px';
-        table.style.width = '100%';
-        table.style.borderCollapse = 'collapse';
-        table.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-        
-        const allCells = table.querySelectorAll('td, th');
-        allCells.forEach(cell => {
-          cell.style.padding = '8px 4px';
-          cell.style.fontSize = '11px';
-          cell.style.border = '1px solid #d1d5db';
-          cell.style.verticalAlign = 'middle';
+      setTimeout(() => {
+        html2pdf().set(opt).from(container).save().then(() => {
+          UI.loading(false);
+          UI.notify('✅ PDF exportado');
+        }).catch(err => {
+          UI.loading(false);
+          UI.notify('❌ Erro: '+err.message, 'error');
+          console.error(err);
         });
-        
-        const hospitalCells = table.querySelectorAll('.hospital-name');
-        hospitalCells.forEach(cell => {
-          cell.style.width = '180px';
-          cell.style.fontSize = '12px';
-          cell.style.fontWeight = 'bold';
-          cell.style.background = '#f0f9ff';
-          cell.style.position = 'sticky';
-          cell.style.left = '0';
-          cell.style.zIndex = '2';
-        });
-        
-        const daysInMonth = DateService.getDaysInMonth(AppState.currentMonth, AppState.currentYear);
-        const headerCells = table.querySelectorAll('th');
-        const bodyRows = table.querySelectorAll('tbody tr');
-        
-        headerCells.forEach((th, index) => {
-          if (index === 0) return;
-          
-          const dia = index;
-          if (dia <= daysInMonth) {
-            const diaSemana = DateService.getDateDay(AppState.currentYear, AppState.currentMonth, dia);
-            if (diaSemana === 0) {
-              th.style.background = '#fee2e2';
-              th.style.color = '#dc2626';
-              th.style.fontWeight = 'bold';
-              th.style.border = '2px solid #dc2626';
-            } else if (diaSemana === 6) {
-              th.style.background = '#dbeafe';
-              th.style.color = '#2563eb';
-              th.style.fontWeight = 'bold';
-              th.style.border = '2px solid #2563eb';
-            } else {
-              th.style.background = 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)';
-              th.style.color = 'white';
-              th.style.fontWeight = 'bold';
-              th.style.fontSize = '12px';
-              th.style.border = '1px solid #1e40af';
-            }
-          }
-        });
-        
-        bodyRows.forEach(tr => {
-          const cells = tr.querySelectorAll('td');
-          cells.forEach((td, index) => {
-            if (index === 0) return;
-            
-            const dia = index;
-            if (dia <= daysInMonth) {
-              const diaSemana = DateService.getDateDay(AppState.currentYear, AppState.currentMonth, dia);
-              if (diaSemana === 0) {
-                td.style.background = '#fef2f2';
-                td.style.border = '2px solid #fecaca';
-                const contentDiv = td.querySelector('div');
-                if (contentDiv) {
-                  contentDiv.style.color = '#dc2626';
-                  contentDiv.style.fontWeight = 'bold';
-                }
-              } else if (diaSemana === 6) {
-                td.style.background = '#eff6ff';
-                td.style.border = '2px solid #bfdbfe';
-                const contentDiv = td.querySelector('div');
-                if (contentDiv) {
-                  contentDiv.style.color = '#2563eb';
-                  contentDiv.style.fontWeight = 'bold';
-                }
-              }
-            }
-          });
-        });
-        
-        const caption = document.createElement('caption');
-        caption.style.captionSide = 'bottom';
-        caption.style.padding = '10px';
-        caption.style.fontSize = '10px';
-        caption.style.color = '#6b7280';
-        caption.style.textAlign = 'center';
-        caption.innerHTML = `
-          <div style="display: flex; justify-content: center; gap: 15px; margin-top: 10px; flex-wrap: wrap;">
-            <div style="display: flex; align-items: center; gap: 5px;">
-              <div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 3px;"></div>
-              <span>HUSE Dia</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 5px;">
-              <div style="width: 12px; height: 12px; background: #1e3a8a; border-radius: 3px;"></div>
-              <span>HUSE Noite</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 5px;">
-              <div style="width: 12px; height: 12px; background: #ef4444; border-radius: 3px;"></div>
-              <span>HRP Dia</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 5px;">
-              <div style="width: 12px; height: 12px; background: #8b5cf6; border-radius: 3px;"></div>
-              <span>HRP Noite</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 5px;">
-              <div style="width: 12px; height: 12px; background: linear-gradient(135deg, #f59e0b, #eab308); border-radius: 3px;"></div>
-              <span>Dobra</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 5px;">
-              <div style="width: 12px; height: 12px; background: linear-gradient(135deg, #ef4444, #f59e0b); border-radius: 3px;"></div>
-              <span>Conflito</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 5px;">
-              <div style="width: 12px; height: 12px; background: #fee2e2; border: 1px solid #dc2626; border-radius: 3px;"></div>
-              <span style="color: #dc2626;">Domingo</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 5px;">
-              <div style="width: 12px; height: 12px; background: #eff6ff; border: 1px solid #2563eb; border-radius: 3px;"></div>
-              <span style="color: #2563eb;">Sábado</span>
-            </div>
-          </div>
-        `;
-        table.appendChild(caption);
-        
-        container.appendChild(table);
-        
-        const trocasDoMes = AppState.observacoes.filter(obs => {
-          const dataOrigem = DateService.parseDate(obs.data);
-          const dataTroca = DateService.parseDate(obs.dataTroca);
-          return (dataOrigem && dataOrigem.getMonth() === AppState.currentMonth && dataOrigem.getFullYear() === AppState.currentYear) ||
-                 (dataTroca && dataTroca.getMonth() === AppState.currentMonth && dataTroca.getFullYear() === AppState.currentYear);
-        });
-        
-        if (trocasDoMes.length > 0) {
-          const trocasSection = document.createElement('div');
-          trocasSection.style.marginTop = '40px';
-          trocasSection.style.pageBreakInside = 'avoid';
-          
-          const tituloTrocas = document.createElement('h2');
-          tituloTrocas.textContent = 'TROCAS REGISTRADAS';
-          tituloTrocas.style.fontSize = '18px';
-          tituloTrocas.style.marginBottom = '15px';
-          tituloTrocas.style.paddingBottom = '8px';
-          tituloTrocas.style.borderBottom = '2px solid #2563eb';
-          tituloTrocas.style.color = '#1e40af';
-          trocasSection.appendChild(tituloTrocas);
-          
-          const tabelaTrocas = document.createElement('table');
-          tabelaTrocas.style.width = '100%';
-          tabelaTrocas.style.borderCollapse = 'collapse';
-          tabelaTrocas.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-          tabelaTrocas.style.marginBottom = '20px';
-          
-          const headerTrocas = document.createElement('thead');
-          headerTrocas.innerHTML = `
-            <tr style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white;">
-              <th style="padding: 12px 8px; font-weight: bold; text-align: left; border: 1px solid #1e40af;">Hospital</th>
-              <th style="padding: 12px 8px; font-weight: bold; text-align: left; border: 1px solid #1e40af;">Data Origem</th>
-              <th style="padding: 12px 8px; font-weight: bold; text-align: left; border: 1px solid #1e40af;">Data Destino</th>
-              <th style="padding: 12px 8px; font-weight: bold; text-align: left; border: 1px solid #1e40af;">Nome</th>
-              <th style="padding: 12px 8px; font-weight: bold; text-align: left; border: 1px solid #1e40af;">Observação</th>
-            </tr>
-          `;
-          tabelaTrocas.appendChild(headerTrocas);
-          
-          const bodyTrocas = document.createElement('tbody');
-          
-          trocasDoMes.forEach((obs, idx) => {
-            const tr = document.createElement('tr');
-            tr.style.background = idx % 2 === 0 ? '#ffffff' : '#f9fafb';
-            tr.style.borderBottom = '1px solid #e5e7eb';
-            
-            const dados = [
-              obs.hospital || '--',
-              DateService.formatDateBR(DateService.parseDate(obs.data)) || '--',
-              DateService.formatDateBR(DateService.parseDate(obs.dataTroca)) || '--',
-              obs.nome || '--',
-              obs.observacao || '--'
-            ];
-            
-            dados.forEach(dado => {
-              const td = document.createElement('td');
-              td.textContent = dado;
-              td.style.padding = '10px 8px';
-              td.style.fontSize = '11px';
-              td.style.border = '1px solid #e5e7eb';
-              tr.appendChild(td);
-            });
-            
-            bodyTrocas.appendChild(tr);
-          });
-          
-          tabelaTrocas.appendChild(bodyTrocas);
-          trocasSection.appendChild(tabelaTrocas);
-          container.appendChild(trocasSection);
-        }
-        
-        const footer = document.createElement('div');
-        footer.style.marginTop = '40px';
-        footer.style.paddingTop = '20px';
-        footer.style.borderTop = '1px solid #e5e7eb';
-        footer.style.fontSize = '10px';
-        footer.style.color = '#6b7280';
-        footer.style.textAlign = 'center';
-        footer.innerHTML = `
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-            <div style="text-align: left;">
-              <strong>Sistema de Gerenciamento de Escalas</strong><br/>
-              Versão 2.0 • Gerador Inteligente
-            </div>
-            <div style="text-align: right;">
-              <strong>Documento oficial</strong><br/>
-              Página 1 de 1
-            </div>
-          </div>
-          <div style="font-style: italic;">
-            Este documento foi gerado automaticamente pelo sistema. Distribuição flexível de plantões.
-          </div>
-        `;
-        container.appendChild(footer);
+      }, 400);
+    }
+  };
 
-        const opt = {
-          margin: [10, 10, 10, 10],
-          filename: `escala_${mes.toLowerCase()}_${ano}_A3.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { 
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            windowWidth: 1123,
-            windowHeight: 1587
-          },
-          jsPDF: { 
-            orientation: 'landscape', 
-            unit: 'mm', 
-            format: 'a3',
-            compress: true
-          }
-        };
+  // ============================================================
+  // INIT
+  // ============================================================
+  function init() {
+    App.load();
 
-        setTimeout(() => {
-          html2pdf().set(opt).from(container).save().then(() => {
-            UIService.showLoading(false);
-            UIService.showNotification('✅ PDF A3 exportado com sucesso!');
-          }).catch(err => {
-            UIService.showLoading(false);
-            UIService.showNotification('❌ Erro ao exportar PDF: ' + err.message, 'error');
-            console.error('Erro PDF:', err);
-          });
-        }, 500);
-      }
-    };
+    // Popula selects
+    const monthSelect = document.getElementById('month-select');
+    const yearSelect = document.getElementById('year-select');
+    const filterMonth = document.getElementById('filter-month');
+    const filterYear = document.getElementById('filter-year');
 
-    // ============================================
-    // INIT
-    // ============================================
-    function initApp() {
-      AppState.load();
-      RenderService.populateSelects();
-      
-      const escalasAtuais = AppState.getCurrentEscalas();
-      const estaVazio = escalasAtuais['HUSE Diurno'].length === 0 && 
-                       escalasAtuais['HUSE Noturno'].length === 0 &&
-                       escalasAtuais['HRP Diurno'].length === 0 &&
-                       escalasAtuais['HRP Noturno'].length === 0;
-      
-      if (estaVazio) {
-        EscalaDistribuicaoService.aplicarDistribuicaoInteligente();
-      }
-      
-      RenderService.renderTable();
-      RenderService.updateCounter();
-      HorasService.renderizarContadoresHoras();
-      bindEvents();
+    App.monthNames.forEach((m,i) => {
+      const opt1 = document.createElement('option');
+      opt1.value = i; opt1.textContent = m;
+      monthSelect.appendChild(opt1);
+      const opt2 = document.createElement('option');
+      opt2.value = i; opt2.textContent = m;
+      filterMonth.appendChild(opt2);
+    });
+    monthSelect.value = App.currentMonth;
+    filterMonth.value = '';
+
+    for (let y=App.currentYear-2; y<=App.currentYear+2; y++) {
+      const opt1 = document.createElement('option');
+      opt1.value = y; opt1.textContent = y;
+      yearSelect.appendChild(opt1);
+      const opt2 = document.createElement('option');
+      opt2.value = y; opt2.textContent = y;
+      filterYear.appendChild(opt2);
+    }
+    yearSelect.value = App.currentYear;
+    filterYear.value = '';
+
+    // Se vazio, distribui
+    const escalas = App.getCurrentEscalas();
+    if (escalas['HUSE Diurno'].length === 0 && escalas['HUSE Noturno'].length === 0) {
+      Distribuicao.aplicar();
     }
 
-    // ============================================
-    // EVENT HANDLERS
-    // ============================================
-    function bindEvents() {
-      document.getElementById('month-select').addEventListener('change', e => {
-        AppState.currentMonth = parseInt(e.target.value, 10);
-        RenderService.renderTable();
-        RenderService.updateCounter();
-        HorasService.renderizarContadoresHoras();
-      });
+    Render.renderTable();
+    bindEvents();
+  }
 
-      document.getElementById('year-select').addEventListener('change', e => {
-        AppState.currentYear = parseInt(e.target.value, 10);
-        RenderService.renderTable();
-        RenderService.updateCounter();
-        HorasService.renderizarContadoresHoras();
-      });
+  // ============================================================
+  // BIND EVENTS
+  // ============================================================
+  function bindEvents() {
+    document.getElementById('month-select').addEventListener('change', e => {
+      App.currentMonth = parseInt(e.target.value, 10);
+      Render.renderTable();
+    });
+    document.getElementById('year-select').addEventListener('change', e => {
+      App.currentYear = parseInt(e.target.value, 10);
+      Render.renderTable();
+    });
 
-      document.getElementById('save-data').addEventListener('click', () => {
-        AppState.save();
-        UIService.showNotification('✅ Dados salvos com sucesso!');
-      });
+    document.getElementById('save-data').addEventListener('click', () => {
+      App.save();
+      UI.notify('✅ Dados salvos');
+    });
 
-      // Botão "reset-data" foi removido
+    document.getElementById('export-pdf').addEventListener('click', PDF.exportar);
 
-      document.getElementById('export-pdf').addEventListener('click', () => PDFService.exportarPDF());
-      document.getElementById('nova-troca').addEventListener('click', () => TrocaService.abrirModal());
-      document.getElementById('ver-trocas').addEventListener('click', () => {
-        RenderService.renderTrocasTable();
-        UIService.openModal('trocas-modal');
-      });
+    document.getElementById('nova-troca').addEventListener('click', Troca.abrirModal);
 
-      document.getElementById('close-modal').addEventListener('click', () => UIService.closeModal('troca-modal'));
-      document.getElementById('cancelar-troca').addEventListener('click', () => UIService.closeModal('troca-modal'));
-      document.getElementById('confirmar-troca').addEventListener('click', () => TrocaService.realizar());
+    document.getElementById('ver-trocas').addEventListener('click', () => {
+      Render.renderTrocasTable();
+      UI.openModal('trocas-modal');
+    });
 
-      document.getElementById('close-editar-modal').addEventListener('click', () => UIService.closeModal('editar-troca-modal'));
-      document.getElementById('cancelar-edicao').addEventListener('click', () => UIService.closeModal('editar-troca-modal'));
-      document.getElementById('salvar-edicao').addEventListener('click', () => TrocaManagementService.salvarEdicao());
+    // Modais
+    document.getElementById('close-modal').addEventListener('click', () => UI.closeModal('troca-modal'));
+    document.getElementById('cancelar-troca').addEventListener('click', () => UI.closeModal('troca-modal'));
+    document.getElementById('confirmar-troca').addEventListener('click', Troca.realizar);
 
-      document.getElementById('close-trocas-modal').addEventListener('click', () => UIService.closeModal('trocas-modal'));
-      document.getElementById('fechar-trocas-modal').addEventListener('click', () => UIService.closeModal('trocas-modal'));
+    document.getElementById('close-editar-modal').addEventListener('click', () => UI.closeModal('editar-troca-modal'));
+    document.getElementById('cancelar-edicao').addEventListener('click', () => UI.closeModal('editar-troca-modal'));
+    document.getElementById('salvar-edicao').addEventListener('click', TrocaManage.salvarEdicao);
 
-      document.getElementById('filter-month').addEventListener('change', () => RenderService.renderTrocasTable());
-      document.getElementById('filter-year').addEventListener('change', () => RenderService.renderTrocasTable());
+    document.getElementById('close-trocas-modal').addEventListener('click', () => UI.closeModal('trocas-modal'));
+    document.getElementById('fechar-trocas-modal').addEventListener('click', () => UI.closeModal('trocas-modal'));
 
-      // Botão "gerar-trocas" foi removido
-    }
+    document.getElementById('filter-month').addEventListener('change', Render.renderTrocasTable);
+    document.getElementById('filter-year').addEventListener('change', Render.renderTrocasTable);
+  }
 
-    document.addEventListener('DOMContentLoaded', initApp);
-  </script>
+  document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
