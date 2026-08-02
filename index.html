@@ -31,6 +31,8 @@
       --radius: 16px;
       --radius-sm: 10px;
       --transition: all 0.2s ease;
+      --feriado-bg: #fef3c7;
+      --feriado-border: #f59e0b;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -206,6 +208,7 @@
       border: 1px solid var(--primary-dark);
       white-space: nowrap;
       font-size: 0.7rem;
+      position: relative;
     }
     .editable-table tbody tr {
       border-bottom: 1px solid var(--gray-200);
@@ -256,6 +259,11 @@
       text-transform: lowercase;
       margin-top: 1px;
     }
+    /* Ícone de feriado no cabeçalho */
+    .feriado-icon {
+      font-size: 0.7rem;
+      margin-top: 2px;
+    }
 
     .plantao-cell, .folga-cell {
       border-radius: 4px;
@@ -305,6 +313,32 @@
     .weekend, .sunday {
       background: #f8fafc;
       color: var(--gray-500);
+    }
+    /* Destaque para feriados */
+    .feriado {
+      background: var(--feriado-bg) !important;
+      border: 2px solid var(--feriado-border) !important;
+      position: relative;
+    }
+    .feriado .day-number::after {
+      content: "🎉";
+      font-size: 0.6rem;
+      margin-left: 2px;
+    }
+    .feriado .day-name {
+      font-weight: 700;
+      color: #b45309;
+    }
+    /* Células de plantão em feriado */
+    .plantao-cell.feriado-cell {
+      background: #fcd34d !important;
+      color: #1e293b;
+      border: 2px solid #b45309;
+    }
+    .folga-cell.feriado-cell {
+      background: #fef3c7 !important;
+      border: 2px solid #b45309;
+      color: #78350f;
     }
 
     /* ===== MODAIS ===== */
@@ -496,6 +530,29 @@
       font-size: 0.7rem;
       flex-shrink: 0;
     }
+    .footer .legenda {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .footer .legenda span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .footer .legenda .badge {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .badge-feriado { background: #fef3c7; border-color: #f59e0b; }
+    .badge-plantao { background: var(--success); }
+    .badge-folga { background: #d1fae5; }
+    .badge-conflito { background: linear-gradient(135deg, var(--danger), var(--warning)); }
 
     /* ===== ANIMAÇÕES ===== */
     @keyframes pulse-danger {
@@ -541,6 +598,7 @@
       .notification { font-size: 0.8rem; padding: 10px 18px; max-width: 280px; top: 12px; }
 
       .footer { font-size: 0.6rem; padding: 8px; }
+      .footer .legenda { gap: 8px; }
     }
 
     @media (max-width: 400px) {
@@ -605,6 +663,13 @@
   </div>
 
   <div class="footer">
+    <div class="legenda">
+      <span><span class="badge badge-feriado"></span> Feriado</span>
+      <span><span class="badge badge-plantao"></span> Plantão</span>
+      <span><span class="badge badge-folga"></span> Folga</span>
+      <span><span class="badge badge-conflito"></span> Conflito</span>
+      <span>🚗 Deslocamento</span>
+    </div>
     <span>Escala 12x36 • Mª de Fatima Velame</span>
   </div>
 </div>
@@ -748,6 +813,78 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
+  // ============================================================
+  // FERIADOS
+  // ============================================================
+  const Feriados = {
+    // Retorna array de {mes, dia, nome, tipo} para o ano informado
+    getFeriados(ano) {
+      // Feriados fixos (nacionais)
+      const fixos = [
+        { mes: 0, dia: 1, nome: 'Confraternização Universal', tipo: 'Nacional' },
+        { mes: 3, dia: 21, nome: 'Tiradentes', tipo: 'Nacional' },
+        { mes: 4, dia: 1, nome: 'Dia do Trabalho', tipo: 'Nacional' },
+        { mes: 8, dia: 7, nome: 'Independência do Brasil', tipo: 'Nacional' },
+        { mes: 9, dia: 12, nome: 'Nossa Senhora Aparecida', tipo: 'Nacional' },
+        { mes: 10, dia: 2, nome: 'Finados', tipo: 'Nacional' },
+        { mes: 10, dia: 15, nome: 'Proclamação da República', tipo: 'Nacional' },
+        { mes: 10, dia: 20, nome: 'Consciência Negra', tipo: 'Nacional' }, // feriado nacional desde 2024?
+        { mes: 11, dia: 25, nome: 'Natal', tipo: 'Nacional' }
+      ];
+
+      // Estaduais (Sergipe)
+      const estaduais = [
+        { mes: 6, dia: 8, nome: 'Independência de Sergipe', tipo: 'Estadual' }
+      ];
+
+      // Municipais (Aracaju)
+      const municipais = [
+        { mes: 9, dia: 24, nome: 'Aniversário de Aracaju', tipo: 'Municipal' }
+      ];
+
+      // Feriados móveis (calculados para o ano)
+      const moveis = this.calcularMoveis(ano);
+
+      // Combinar todos
+      return [...fixos, ...estaduais, ...municipais, ...moveis];
+    },
+
+    // Cálculo de Páscoa (algoritmo de Gauss)
+    calcularPascoa(ano) {
+      const a = ano % 19;
+      const b = Math.floor(ano / 100);
+      const c = ano % 100;
+      const d = Math.floor(b / 4);
+      const e = b % 4;
+      const f = Math.floor((b + 8) / 25);
+      const g = Math.floor((b - f + 1) / 3);
+      const h = (19 * a + b - d - g + 15) % 30;
+      const i = Math.floor(c / 4);
+      const k = c % 4;
+      const l = (32 + 2 * e + 2 * i - h - k) % 7;
+      const m = Math.floor((a + 11 * h + 22 * l) / 451);
+      const mes = Math.floor((h + l - 7 * m + 114) / 31);
+      const dia = ((h + l - 7 * m + 114) % 31) + 1;
+      return new Date(ano, mes - 1, dia);
+    },
+
+    calcularMoveis(ano) {
+      const pascoa = this.calcularPascoa(ano);
+      const carnaval = new Date(pascoa);
+      carnaval.setDate(pascoa.getDate() - 47); // terça-feira de carnaval
+      const sextaSanta = new Date(pascoa);
+      sextaSanta.setDate(pascoa.getDate() - 2);
+      const corpusChristi = new Date(pascoa);
+      corpusChristi.setDate(pascoa.getDate() + 60);
+
+      return [
+        { mes: carnaval.getMonth(), dia: carnaval.getDate(), nome: 'Carnaval', tipo: 'Móvel' },
+        { mes: sextaSanta.getMonth(), dia: sextaSanta.getDate(), nome: 'Sexta-Feira Santa', tipo: 'Móvel' },
+        { mes: corpusChristi.getMonth(), dia: corpusChristi.getDate(), nome: 'Corpus Christi', tipo: 'Móvel' }
+      ];
+    }
+  };
+
   // ============================================================
   // STORAGE
   // ============================================================
@@ -1165,6 +1302,16 @@
       const dobras = Escala.verificarDobras();
       const transicao = Escala.obterDiasTransicao();
 
+      // Obter feriados do ano atual
+      const feriados = Feriados.getFeriados(App.currentYear);
+      // Mapa para lookup rápido: chave "mes-dia"
+      const feriadoMap = {};
+      feriados.forEach(f => {
+        const key = `${f.mes}-${f.dia}`;
+        feriadoMap[key] = f.nome;
+      });
+
+      // Cabeçalho
       header.innerHTML = '<th>Hospitais</th>';
       for (let d=1; d<=days; d++) {
         const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, d);
@@ -1174,6 +1321,8 @@
 
         const div = document.createElement('div');
         div.className = 'day-header';
+
+        // Ícone de deslocamento
         if (transicao.includes(d)) {
           const carro = document.createElement('div');
           carro.textContent = '🚗';
@@ -1183,19 +1332,35 @@
           carro.style.right = '-4px';
           div.appendChild(carro);
         }
+
         const num = document.createElement('div');
         num.className = 'day-number';
         num.textContent = d;
         div.appendChild(num);
+
         const nome = document.createElement('div');
         nome.className = 'day-name';
         nome.textContent = App.diasDaSemana[diaSem];
         div.appendChild(nome);
+
+        // Verifica se é feriado
+        const key = `${App.currentMonth}-${d}`;
+        if (feriadoMap[key]) {
+          th.classList.add('feriado');
+          const icon = document.createElement('div');
+          icon.className = 'feriado-icon';
+          icon.textContent = '🎉';
+          icon.title = feriadoMap[key];
+          div.appendChild(icon);
+          th.title = feriadoMap[key];
+        }
+
         th.appendChild(div);
         th.setAttribute('data-day', d);
         header.appendChild(th);
       }
 
+      // Corpo
       body.innerHTML = '';
       App.hospitais.forEach(hosp => {
         const tr = document.createElement('tr');
@@ -1212,6 +1377,10 @@
 
           const hasPlantao = escalas[hosp].includes(d);
           const div = document.createElement('div');
+
+          // Verifica feriado
+          const key = `${App.currentMonth}-${d}`;
+          const isFeriado = !!feriadoMap[key];
 
           if (hasPlantao) {
             div.className = 'plantao-cell';
@@ -1232,10 +1401,18 @@
               div.textContent = 'S';
               div.title = 'Plantão';
             }
+            if (isFeriado) {
+              div.classList.add('feriado-cell');
+              div.title += ` • ${feriadoMap[key]}`;
+            }
           } else {
             div.className = 'folga-cell';
             div.textContent = 'F';
             div.title = 'Folga';
+            if (isFeriado) {
+              div.classList.add('feriado-cell');
+              div.title += ` • ${feriadoMap[key]}`;
+            }
           }
 
           div.addEventListener('click', (e) => {
@@ -1380,6 +1557,20 @@
             th.style.color = 'white';
             th.style.border = '1px solid #1e40af';
           }
+          // Feriado no PDF
+          const key = `${App.currentMonth}-${dia}`;
+          const feriados = Feriados.getFeriados(App.currentYear);
+          const feriadoMap = {};
+          feriados.forEach(f => { feriadoMap[`${f.mes}-${f.dia}`] = f.nome; });
+          if (feriadoMap[key]) {
+            th.style.background = '#fef3c7';
+            th.style.color = '#b45309';
+            th.style.border = '2px solid #f59e0b';
+            const span = document.createElement('span');
+            span.textContent = ' 🎉';
+            span.style.fontSize = '8px';
+            th.appendChild(span);
+          }
         }
       });
 
@@ -1473,7 +1664,7 @@
           <div style="text-align:left;"><strong>HUSE</strong> • 12x36</div>
           <div style="text-align:right;">Página 1/1</div>
         </div>
-        <div style="font-style:italic;">Gerado automaticamente</div>
+        <div style="font-style:italic;">Gerado automaticamente • Feriados destacados</div>
       `;
       container.appendChild(footer);
 
