@@ -1,1782 +1,294 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Plantões - Mª de Fatima Velame</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* ===== RESET & VARIÁVEIS ===== */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1e40af;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --info: #06b6d4;
-      --bg: #f1f5f9;
-      --white: #ffffff;
-      --gray-50: #f8fafc;
-      --gray-100: #f1f5f9;
-      --gray-200: #e2e8f0;
-      --gray-500: #64748b;
-      --gray-700: #334155;
-      --text: #0f172a;
-      --shadow: 0 4px 12px rgba(0,0,0,0.08);
-      --radius: 16px;
-      --radius-sm: 10px;
-      --transition: all 0.2s ease;
-      --feriado-bg: #fef3c7;
-      --feriado-border: #f59e0b;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: 8px;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .container {
-      max-width: 1000px;
-      width: 100%;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      min-height: calc(100vh - 16px);
-    }
-
-    /* ===== HEADER ===== */
-    header {
-      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
-      color: white;
-      padding: 16px 16px 12px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-    .main-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      letter-spacing: -0.3px;
-    }
-    .main-title i {
-      color: #fbbf24;
-      font-size: 1.5rem;
-    }
-    .header-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .month-selector {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-    .month-selector select {
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(255,255,255,0.25);
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(4px);
-      color: white;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-      min-width: 100px;
-      flex: 1;
-      max-width: 160px;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      padding-right: 30px;
-    }
-    .month-selector select option {
-      color: #0f172a;
-      background: white;
-    }
-    .month-selector select:focus {
-      outline: 2px solid rgba(255,255,255,0.5);
-    }
-
-    /* ===== CONTROLES ===== */
-    .controls {
-      padding: 10px 12px;
-      background: var(--gray-50);
-      border-bottom: 1px solid var(--gray-200);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .btn {
-      padding: 10px 10px;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      flex: 1 0 auto;
-      min-width: 70px;
-      max-width: 140px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      touch-action: manipulation;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-    }
-    .btn:active {
-      transform: scale(0.94);
-    }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:active { background: var(--primary-dark); }
-    .btn-success { background: var(--success); color: white; }
-    .btn-success:active { background: #059669; }
-    .btn-warning { background: var(--warning); color: white; }
-    .btn-warning:active { background: #d97706; }
-    .btn-info { background: var(--info); color: white; }
-    .btn-info:active { background: #0891b2; }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-danger:active { background: #dc2626; }
-    .btn-cancel { background: var(--gray-500); color: white; }
-    .btn-cancel:active { background: #475569; }
-    .btn-confirm { background: var(--success); color: white; }
-    .btn-confirm:active { background: #059669; }
-
-    /* ===== CONTEÚDO ===== */
-    .content {
-      padding: 8px 8px 4px;
-      overflow: auto;
-      flex: 1;
-      -webkit-overflow-scrolling: touch;
-    }
-    .table-container {
-      overflow-x: auto;
-      border-radius: var(--radius-sm);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-      -webkit-overflow-scrolling: touch;
-      margin: 0 -4px;
-      padding: 0 4px;
-    }
-    .editable-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.75rem;
-      min-width: 480px;
-    }
-    .editable-table thead tr {
-      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-    .editable-table th {
-      padding: 8px 2px;
-      font-weight: 600;
-      text-align: center;
-      border: 1px solid var(--primary-dark);
-      white-space: nowrap;
-      font-size: 0.7rem;
-      position: relative;
-    }
-    .editable-table tbody tr {
-      border-bottom: 1px solid var(--gray-200);
-      transition: background 0.12s;
-    }
-    .editable-table tbody tr:nth-child(even) {
-      background: var(--gray-50);
-    }
-    .editable-table tbody tr:active {
-      background: #dbeafe;
-    }
-    .editable-table td {
-      padding: 6px 2px;
-      text-align: center;
-      border: 1px solid var(--gray-200);
-      vertical-align: middle;
-      font-size: 0.7rem;
-    }
-    .hospital-name {
-      text-align: left;
-      padding-left: 6px;
-      font-weight: 700;
-      background: #eff6ff;
-      width: 90px;
-      font-size: 0.7rem;
-      position: sticky;
-      left: 0;
-      z-index: 3;
-      border-right: 2px solid var(--primary);
-      color: var(--primary-dark);
-      letter-spacing: -0.2px;
-    }
-
-    .day-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      line-height: 1.2;
-    }
-    .day-number {
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-    .day-name {
-      font-size: 0.55rem;
-      opacity: 0.85;
-      text-transform: lowercase;
-      margin-top: 1px;
-    }
-    /* Ícone de feriado no cabeçalho */
-    .feriado-icon {
-      font-size: 0.7rem;
-      margin-top: 2px;
-    }
-
-    .plantao-cell, .folga-cell {
-      border-radius: 4px;
-      padding: 4px 2px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      min-width: 22px;
-      font-size: 0.65rem;
-      touch-action: manipulation;
-      user-select: none;
-      display: inline-block;
-      width: 100%;
-      text-align: center;
-    }
-    .plantao-cell:active, .folga-cell:active {
-      transform: scale(0.92);
-    }
-    .plantao {
-      background: var(--success);
-      color: white;
-    }
-    .folga-cell {
-      background: #d1fae5;
-      color: #065f46;
-      font-style: italic;
-      font-weight: 500;
-    }
-    .conflito-cell {
-      background: linear-gradient(135deg, var(--danger), var(--warning));
-      color: white;
-      border: 2px solid var(--danger);
-      animation: pulse-danger 1.8s infinite;
-    }
-    .alerta-carro-cell {
-      background: var(--warning);
-      color: #1e293b;
-      font-weight: 700;
-      animation: bounce-warning 1.8s infinite;
-    }
-    .dobra-cell {
-      background: linear-gradient(135deg, #f59e0b, #eab308);
-      color: #1e293b;
-      font-weight: 700;
-      animation: pulse-dobra 1.8s infinite;
-    }
-    .weekend, .sunday {
-      background: #f8fafc;
-      color: var(--gray-500);
-    }
-    /* Destaque para feriados */
-    .feriado {
-      background: var(--feriado-bg) !important;
-      border: 2px solid var(--feriado-border) !important;
-      position: relative;
-    }
-    .feriado .day-number::after {
-      content: "🎉";
-      font-size: 0.6rem;
-      margin-left: 2px;
-    }
-    .feriado .day-name {
-      font-weight: 700;
-      color: #b45309;
-    }
-    /* Células de plantão em feriado */
-    .plantao-cell.feriado-cell {
-      background: #fcd34d !important;
-      color: #1e293b;
-      border: 2px solid #b45309;
-    }
-    .folga-cell.feriado-cell {
-      background: #fef3c7 !important;
-      border: 2px solid #b45309;
-      color: #78350f;
-    }
-
-    /* ===== MODAIS ===== */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15,23,42,0.6);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-    }
-    .modal.show {
-      display: flex;
-    }
-    .modal-content {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 20px 18px;
-      width: 100%;
-      max-width: 460px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 24px 48px -12px rgba(0,0,0,0.3);
-      position: relative;
-      animation: modalIn 0.25s ease;
-    }
-    @keyframes modalIn {
-      from { opacity: 0; transform: scale(0.94) translateY(12px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--gray-200);
-      position: sticky;
-      top: 0;
-      background: var(--white);
-      z-index: 2;
-    }
-    .modal-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .close-modal {
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: var(--gray-500);
-      padding: 0 8px;
-      line-height: 1;
-      transition: var(--transition);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .close-modal:hover, .close-modal:active {
-      background: var(--gray-100);
-      color: var(--danger);
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 4px;
-      color: var(--gray-700);
-    }
-    .form-group select,
-    .form-group input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius-sm);
-      font-size: 1rem;
-      background: var(--white);
-      color: var(--text);
-      transition: var(--transition);
-      -webkit-appearance: none;
-      appearance: none;
-    }
-    .form-group select:focus,
-    .form-group input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid var(--gray-200);
-    }
-    .modal-actions .btn {
-      flex: 1;
-      min-width: 80px;
-      max-width: 160px;
-    }
-
-    /* ===== NOTIFICAÇÃO ===== */
-    .notification {
-      position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-120px);
-      padding: 12px 24px;
-      background: var(--success);
-      color: white;
-      border-radius: var(--radius-sm);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-      z-index: 2000;
-      max-width: 320px;
-      width: 90%;
-      font-weight: 500;
-      font-size: 0.9rem;
-      text-align: center;
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      pointer-events: none;
-    }
-    .notification.show {
-      transform: translateX(-50%) translateY(0);
-    }
-    .notification.error {
-      background: var(--danger);
-    }
-    .notification.warning {
-      background: var(--warning);
-      color: #1e293b;
-    }
-
-    /* ===== LOADING ===== */
-    .loading {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15,23,42,0.7);
-      backdrop-filter: blur(4px);
-      z-index: 999;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      color: white;
-    }
-    .loading.show { display: flex; }
-    .spinner {
-      border: 4px solid rgba(255,255,255,0.2);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      animation: spin 0.9s linear infinite;
-      margin-bottom: 14px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ===== FOOTER ===== */
-    .footer {
-      text-align: center;
-      padding: 12px 12px 10px;
-      background: var(--gray-50);
-      border-top: 1px solid var(--gray-200);
-      color: var(--gray-500);
-      font-size: 0.7rem;
-      flex-shrink: 0;
-    }
-    .footer .legenda {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-    .footer .legenda span {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .footer .legenda .badge {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    .badge-feriado { background: #fef3c7; border-color: #f59e0b; }
-    .badge-plantao { background: var(--success); }
-    .badge-folga { background: #d1fae5; }
-    .badge-conflito { background: linear-gradient(135deg, var(--danger), var(--warning)); }
-
-    /* ===== ANIMAÇÕES ===== */
-    @keyframes pulse-danger {
-      0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
-      50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
-    }
-    @keyframes bounce-warning {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-2px); }
-    }
-    @keyframes pulse-dobra {
-      0%,100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.5); }
-      50% { box-shadow: 0 0 0 6px rgba(245,158,11,0); }
-    }
-
-    /* ===== RESPONSIVO ===== */
-    @media (max-width: 640px) {
-      body { padding: 4px; }
-      .container { border-radius: var(--radius-sm); min-height: calc(100vh - 8px); }
-      header { padding: 12px 12px 10px; }
-      .main-title { font-size: 1.2rem; }
-      .main-title i { font-size: 1.2rem; }
-      .month-selector select { font-size: 0.8rem; padding: 6px 10px; min-width: 80px; }
-
-      .controls { padding: 8px 6px; gap: 4px; }
-      .btn { font-size: 0.7rem; padding: 8px 6px; min-width: 56px; max-width: 100px; }
-
-      .content { padding: 4px 2px; }
-      .editable-table { font-size: 0.65rem; min-width: 360px; }
-      .editable-table th { padding: 6px 1px; font-size: 0.6rem; }
-      .editable-table td { padding: 4px 1px; font-size: 0.6rem; }
-      .hospital-name { width: 70px; font-size: 0.6rem; padding-left: 4px; }
-
-      .plantao-cell, .folga-cell { font-size: 0.55rem; padding: 3px 1px; min-width: 18px; }
-      .day-number { font-size: 0.8rem; }
-      .day-name { font-size: 0.5rem; }
-
-      .modal-content { padding: 16px 14px; max-width: 100%; margin: 8px; }
-      .modal-title { font-size: 1rem; }
-      .form-group label { font-size: 0.8rem; }
-      .form-group select, .form-group input { padding: 10px 12px; font-size: 0.9rem; }
-
-      .notification { font-size: 0.8rem; padding: 10px 18px; max-width: 280px; top: 12px; }
-
-      .footer { font-size: 0.6rem; padding: 8px; }
-      .footer .legenda { gap: 8px; }
-    }
-
-    @media (max-width: 400px) {
-      .btn { font-size: 0.6rem; padding: 6px 4px; min-width: 48px; }
-      .editable-table { font-size: 0.55rem; min-width: 300px; }
-      .hospital-name { width: 56px; font-size: 0.55rem; }
-      .plantao-cell, .folga-cell { font-size: 0.5rem; padding: 2px 1px; }
-      .day-number { font-size: 0.7rem; }
-    }
-
-    @media (pointer: coarse) {
-      .btn, .plantao-cell, .folga-cell, .close-modal {
-        min-height: 44px;
-        min-width: 44px;
-      }
-      .plantao-cell, .folga-cell {
-        min-height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-
-    /* ===== PRINT ===== */
-    @media print {
-      .controls, .footer, .modal, .notification, .loading { display: none !important; }
-      .container { box-shadow: none; border: 1px solid #ccc; }
-      .editable-table td, .editable-table th { border: 1px solid #333 !important; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12263a">
+<title>Plantões HUSE</title>
+<style>
+:root{--ink:#12263a;--pri:#1d6fa5;--d:#f5a524;--dbg:#fde9b8;--dtx:#7a4a00;--n:#3b4cca;--nbg:#d6dcff;--ntx:#1f2a7a;--red:#d1344a;--bg:#eceff3;--mu:#64748b;--ln:#dde3ea}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+.app{max-width:560px;margin:0 auto}
+header{background:var(--ink);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px 52px;border-radius:0 0 28px 28px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.top b{font-size:.95rem;font-weight:700}.top small{display:block;font-size:.7rem;opacity:.65;font-weight:400}
+.pill{border:1px solid rgba(255,255,255,.35);background:none;color:#fff;border-radius:99px;padding:7px 14px;font-size:.78rem;font-weight:600}
+.nav{display:flex;align-items:center;gap:8px}
+.ib{width:46px;height:46px;border:0;border-radius:14px;background:rgba(255,255,255,.12);color:#fff;font-size:1.6rem;line-height:1}
+.ib:active{background:rgba(255,255,255,.28)}
+.ttl{position:relative;flex:1;text-align:center}
+.ttl h1{font-size:1.55rem;font-weight:800;letter-spacing:-.4px}
+.ttl input{position:absolute;inset:0;width:100%;height:100%;opacity:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:-34px 12px 10px;position:relative}
+.st{background:#fff;border-radius:16px;padding:10px 6px;text-align:center;box-shadow:0 2px 10px rgba(18,38,58,.08)}
+.st b{display:block;font-size:1.35rem;line-height:1.2}.st span{font-size:.68rem;color:var(--mu)}
+.st.d b{color:#c47f00}.st.n b{color:var(--n)}.st.f b{color:var(--red)}
+.card{background:#fff;border-radius:20px;margin:0 12px 12px;padding:10px;box-shadow:0 2px 10px rgba(18,38,58,.06)}
+.wd,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wd div{text-align:center;font-size:.68rem;font-weight:700;color:var(--mu);padding:4px 0}.wd div:first-child{color:var(--red)}
+.c{position:relative;min-height:64px;border:1.5px solid transparent;border-radius:11px;background:#f4f6f9;padding:4px 3px 3px;display:flex;flex-direction:column;justify-content:space-between;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.c.e{background:none;cursor:default}.c:active:not(.e){transform:scale(.95)}
+.n{font-size:.8rem;font-weight:700;padding-left:2px}.s .n{color:var(--red)}
+.t .n{background:var(--ink);color:#fff;border-radius:99px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;padding:0}
+.c.f{background:#fff4ec;border-color:#f4b98a}.c.w{border-color:var(--red)}
+.ic{position:absolute;top:3px;right:3px;font-size:.6rem;line-height:1.2;text-align:right}
+.ch{display:flex;flex-direction:column;gap:2px}
+.k{font-style:normal;font-size:.6rem;font-weight:700;text-align:center;border-radius:6px;padding:2px 0}
+.k.d{background:var(--dbg);color:var(--dtx)}.k.n{background:var(--nbg);color:var(--ntx)}
+.lg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.72rem;color:var(--mu);margin-top:10px;padding:0 4px}
+.lg i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+.fl{font-size:.82rem;line-height:1.7}.fl b{color:var(--red);margin-right:6px}.card h3{font-size:.85rem;margin-bottom:6px}
+.bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--ln);z-index:20}
+.act{flex:1;height:52px;border:1px solid var(--ln);border-radius:14px;background:#fff;color:var(--ink);font-size:.74rem;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.act span{font-size:1.15rem;line-height:1}.act.r{color:var(--red)}.act.p{background:var(--pri);border-color:var(--pri);color:#fff}.act:active{opacity:.75}
+.ov{position:fixed;inset:0;background:rgba(18,38,58,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.ov.on{display:flex}
+.sh{background:#fff;width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto;animation:up .2s ease}
+@keyframes up{from{transform:translateY(36px);opacity:0}}
+.sh h2{font-size:1.1rem;margin-bottom:4px}.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.x{border:0;background:var(--bg);width:36px;height:36px;border-radius:50%;font-size:1.2rem;color:var(--mu)}
+.fe{color:#b4531a;font-size:.85rem;font-weight:600;margin-bottom:8px}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.tg button{height:76px;border:2px solid var(--ln);border-radius:16px;background:#fff;font:inherit;font-weight:700;font-size:1rem;color:var(--mu)}
+.tg small{display:block;font-weight:500;font-size:.75rem;margin-top:2px}
+.tg .on.d{background:var(--dbg);border-color:var(--d);color:var(--dtx)}.tg .on.n{background:var(--nbg);border-color:var(--n);color:var(--ntx)}
+.al{background:#fdecef;color:#9b1c31;border-radius:10px;padding:9px 11px;font-size:.82rem;margin-top:6px}
+label{display:block;font-size:.8rem;font-weight:600;margin:10px 0 4px;color:#334155}
+select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px solid var(--ln);border-radius:12px;padding:0 12px;font:inherit;font-size:16px;background:#fff;color:var(--ink)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ok{width:100%;height:50px;margin-top:16px;border:0;border-radius:14px;background:var(--pri);color:#fff;font-size:1rem;font-weight:700}
+.tr{border:1px solid var(--ln);border-radius:14px;padding:11px;margin-bottom:10px;font-size:.85rem;line-height:1.5}
+.tr .l2{color:var(--mu);font-size:.78rem}.bt{display:flex;gap:6px;margin-top:8px}
+.bt button{flex:1;height:38px;border:1px solid var(--ln);background:#fff;border-radius:10px;font-size:.75rem;font-weight:600}.bt .del{color:var(--red)}
+.em{text-align:center;color:var(--mu);padding:20px}
+.toast{position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;transform:translate(-50%,-140%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:.88rem;z-index:99;max-width:90%;text-align:center;transition:transform .3s}
+.toast.on{transform:translate(-50%,0)}.toast.err{background:var(--red)}
+#ld{color:#fff;font-weight:600;flex-direction:column;align-items:center;justify-content:center;z-index:99}
+</style>
 </head>
 <body>
-
-<div class="container">
-
-  <header>
-    <h1 class="main-title">
-      <i class="fas fa-user-nurse"></i> Plantões HUSE
-    </h1>
-    <div class="header-content">
-      <div class="month-selector">
-        <select id="month-select"></select>
-        <select id="year-select"></select>
-      </div>
-    </div>
-  </header>
-
-  <div class="controls">
-    <button class="btn btn-primary" id="save-data"><i class="fas fa-save"></i> Salvar</button>
-    <button class="btn btn-success" id="export-pdf"><i class="fas fa-file-pdf"></i> PDF</button>
-    <button class="btn btn-warning" id="nova-troca"><i class="fas fa-exchange-alt"></i> Trocar</button>
-    <button class="btn btn-info" id="ver-trocas"><i class="fas fa-list"></i> Trocas</button>
+<div class="app">
+<header>
+  <div class="top"><div><b>Plantões HUSE</b><small>Mª de Fatima Velame · Escala 12x36</small></div><button class="pill" onclick="hoje()">Hoje</button></div>
+  <div class="nav">
+    <button class="ib" onclick="mov(-1)" aria-label="Mês anterior">‹</button>
+    <div class="ttl"><h1 id="ttl"></h1><input type="month" id="mi" aria-label="Escolher mês"></div>
+    <button class="ib" onclick="mov(1)" aria-label="Próximo mês">›</button>
   </div>
-
-  <div class="content">
-    <div class="table-container">
-      <table class="editable-table" id="escala-table">
-        <thead><tr id="table-header"></tr></thead>
-        <tbody id="table-body"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="legenda">
-      <span><span class="badge badge-feriado"></span> Feriado</span>
-      <span><span class="badge badge-plantao"></span> Plantão</span>
-      <span><span class="badge badge-folga"></span> Folga</span>
-      <span><span class="badge badge-conflito"></span> Conflito</span>
-      <span>🚗 Deslocamento</span>
-    </div>
-    <span>Escala 12x36 • Mª de Fatima Velame</span>
-  </div>
+</header>
+<div class="stats">
+  <div class="st d"><b id="sd">0</b><span>Diurnos</span></div>
+  <div class="st n"><b id="sn">0</b><span>Noturnos</span></div>
+  <div class="st f"><b id="sf">0</b><span>Feriados</span></div>
+</div>
+<div class="card" id="card">
+  <div class="wd"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div>
+  <div class="grid" id="grid"></div>
+  <div class="lg"><span><i style="background:var(--dbg)"></i>Diurno</span><span><i style="background:var(--nbg)"></i>Noturno</span><span><i style="background:#fff4ec;border:1px solid #f4b98a"></i>★ Feriado</span><span><i style="border:1.5px solid var(--red)"></i>⚠ Dobra</span><span>🚗 Deslocamento</span></div>
+</div>
+<div class="card"><h3>Feriados do mês</h3><div class="fl" id="fl"></div></div>
 </div>
 
-<!-- Modal Nova Troca -->
-<div class="modal" id="troca-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="modal-title"><i class="fas fa-exchange-alt"></i> Nova Troca</span>
-      <button class="close-modal" id="close-modal">&times;</button>
-    </div>
-    <div class="form-group">
-      <label for="origem-hospital">Plantão Origem</label>
-      <select id="origem-hospital">
-        <option value="">Selecione</option>
-        <option value="HUSE Diurno">HUSE Diurno</option>
-        <option value="HUSE Noturno">HUSE Noturno</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="origem-data">Data de Origem</label>
-      <input type="date" id="origem-data">
-    </div>
-    <div class="form-group">
-      <label for="destino-hospital">Plantão Destino</label>
-      <select id="destino-hospital">
-        <option value="">Selecione</option>
-        <option value="HUSE Diurno">HUSE Diurno</option>
-        <option value="HUSE Noturno">HUSE Noturno</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="destino-data">Data de Destino</label>
-      <input type="date" id="destino-data">
-    </div>
-    <div class="form-group">
-      <label for="nome-troca">Nome</label>
-      <input type="text" id="nome-troca" placeholder="Seu nome">
-    </div>
-    <div class="form-group">
-      <label for="obs-troca">Observação (opcional)</label>
-      <input type="text" id="obs-troca" placeholder="Motivo">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel" id="cancelar-troca">Cancelar</button>
-      <button class="btn btn-confirm" id="confirmar-troca">Confirmar</button>
-    </div>
-  </div>
+<div class="bar">
+  <button class="act" onclick="salvarTudo()"><span>✔</span>Salvar</button>
+  <button class="act r" onclick="limpar()"><span>✕</span>Limpar</button>
+  <button class="act" onclick="abrirTroca()"><span>⇄</span>Trocar</button>
+  <button class="act" onclick="verTrocas()"><span>☰</span>Trocas</button>
+  <button class="act p" onclick="pdf()"><span>⤓</span>PDF</button>
 </div>
 
-<!-- Modal Editar Troca -->
-<div class="modal" id="editar-troca-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="modal-title"><i class="fas fa-edit"></i> Editar Troca</span>
-      <button class="close-modal" id="close-editar-modal">&times;</button>
-    </div>
-    <div class="form-group">
-      <label for="editar-origem-hospital">Plantão Origem</label>
-      <select id="editar-origem-hospital">
-        <option value="">Selecione</option>
-        <option value="HUSE Diurno">HUSE Diurno</option>
-        <option value="HUSE Noturno">HUSE Noturno</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="editar-origem-data">Data de Origem</label>
-      <input type="date" id="editar-origem-data">
-    </div>
-    <div class="form-group">
-      <label for="editar-destino-hospital">Plantão Destino</label>
-      <select id="editar-destino-hospital">
-        <option value="">Selecione</option>
-        <option value="HUSE Diurno">HUSE Diurno</option>
-        <option value="HUSE Noturno">HUSE Noturno</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="editar-destino-data">Data de Destino</label>
-      <input type="date" id="editar-destino-data">
-    </div>
-    <div class="form-group">
-      <label for="editar-nome-troca">Nome</label>
-      <input type="text" id="editar-nome-troca" placeholder="Seu nome">
-    </div>
-    <div class="form-group">
-      <label for="editar-obs-troca">Observação (opcional)</label>
-      <input type="text" id="editar-obs-troca" placeholder="Motivo">
-    </div>
-    <input type="hidden" id="editar-troca-id">
-    <div class="modal-actions">
-      <button class="btn btn-cancel" id="cancelar-edicao">Cancelar</button>
-      <button class="btn btn-confirm" id="salvar-edicao">Salvar</button>
-    </div>
-  </div>
-</div>
+<div class="ov" id="sd_"><div class="sh"><div class="hd"><span></span><button class="x" onclick="fecha('sd_')">×</button></div><div id="dbody"></div></div></div>
 
-<!-- Modal Ver Trocas -->
-<div class="modal" id="trocas-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="modal-title"><i class="fas fa-list"></i> Trocas</span>
-      <button class="close-modal" id="close-trocas-modal">&times;</button>
-    </div>
-    <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-      <div class="form-group" style="flex:1; min-width:100px; margin-bottom:0;">
-        <label for="filter-month">Mês</label>
-        <select id="filter-month"></select>
-      </div>
-      <div class="form-group" style="flex:1; min-width:100px; margin-bottom:0;">
-        <label for="filter-year">Ano</label>
-        <select id="filter-year"></select>
-      </div>
-    </div>
-    <div class="table-container" style="margin:0; padding:0; max-height:300px; overflow-y:auto;">
-      <table class="editable-table" id="trocas-table" style="min-width:400px;">
-        <thead>
-          <tr>
-            <th>Hospital</th>
-            <th>Data Origem</th>
-            <th>Data Destino</th>
-            <th>Nome</th>
-            <th>Obs</th>
-            <th style="min-width:120px;">Ações</th>
-          </tr>
-        </thead>
-        <tbody id="trocas-body"></tbody>
-      </table>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel" id="fechar-trocas-modal">Fechar</button>
-    </div>
-  </div>
-</div>
+<div class="ov" id="st"><div class="sh">
+  <div class="hd"><h2 id="tt">Nova troca</h2><button class="x" onclick="fecha('st')">×</button></div>
+  <div class="row"><div><label for="oh">Plantão origem</label><select id="oh"><option value="">Selecione</option><option>HUSE Diurno</option><option>HUSE Noturno</option></select></div><div><label for="od">Data origem</label><input type="date" id="od"></div></div>
+  <div class="row"><div><label for="dh">Plantão destino</label><select id="dh"><option value="">Selecione</option><option>HUSE Diurno</option><option>HUSE Noturno</option></select></div><div><label for="dd">Data destino</label><input type="date" id="dd"></div></div>
+  <label for="nm">Nome</label><input type="text" id="nm" placeholder="Com quem trocou">
+  <label for="ob">Observação (opcional)</label><input type="text" id="ob" placeholder="Motivo">
+  <button class="ok" onclick="salvarTroca()">Salvar troca</button>
+</div></div>
 
-<div class="notification" id="notification"></div>
-<div class="loading" id="loading">
-  <div class="spinner"></div>
-  <p>Gerando PDF...</p>
-</div>
+<div class="ov" id="sl"><div class="sh">
+  <div class="hd"><h2>Trocas</h2><button class="pill" style="color:var(--pri);border-color:var(--ln)" id="ft" onclick="filtroTodas=!filtroTodas;drawTrocas()"></button><button class="x" onclick="fecha('sl')">×</button></div>
+  <div id="lb"></div>
+</div></div>
+
+<div class="ov" id="ld"><div>Gerando PDF…</div></div>
+<div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-  // ============================================================
-  // FERIADOS
-  // ============================================================
-  const Feriados = {
-    // Retorna array de {mes, dia, nome, tipo} para o ano informado
-    getFeriados(ano) {
-      // Feriados fixos (nacionais)
-      const fixos = [
-        { mes: 0, dia: 1, nome: 'Confraternização Universal', tipo: 'Nacional' },
-        { mes: 3, dia: 21, nome: 'Tiradentes', tipo: 'Nacional' },
-        { mes: 4, dia: 1, nome: 'Dia do Trabalho', tipo: 'Nacional' },
-        { mes: 8, dia: 7, nome: 'Independência do Brasil', tipo: 'Nacional' },
-        { mes: 9, dia: 12, nome: 'Nossa Senhora Aparecida', tipo: 'Nacional' },
-        { mes: 10, dia: 2, nome: 'Finados', tipo: 'Nacional' },
-        { mes: 10, dia: 15, nome: 'Proclamação da República', tipo: 'Nacional' },
-        { mes: 10, dia: 20, nome: 'Consciência Negra', tipo: 'Nacional' }, // feriado nacional desde 2024?
-        { mes: 11, dia: 25, nome: 'Natal', tipo: 'Nacional' }
-      ];
+const $=i=>document.getElementById(i),KEY='escala_huse_data',DI='HUSE Diurno',NO='HUSE Noturno',now=new Date();
+const MES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DS=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+let S={allEscalas:{},observacoes:[]},M=now.getMonth(),Y=now.getFullYear(),selDay=null,editIdx=null,filtroTodas=false,tm;
+try{const r=JSON.parse(localStorage.getItem(KEY));if(r){S.allEscalas=r.allEscalas||{};S.observacoes=r.observacoes||[]}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({...S,dataSalvamento:new Date().toISOString()}))}catch(e){toast('Não foi possível salvar','err')}};
+const dim=(m,y)=>new Date(y,m+1,0).getDate(),pad=n=>String(n).padStart(2,'0');
+const parse=s=>{if(!s)return null;const p=s.split('-');return p.length==3?new Date(+p[0],+p[1]-1,+p[2]):null};
+const br=d=>d?pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear():'--';
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const H=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const abre=i=>$(i).classList.add('on'),fecha=i=>$(i).classList.remove('on');
+function toast(m,t){const e=$('toast');e.textContent=m;e.className='toast on '+(t||'');clearTimeout(tm);tm=setTimeout(()=>e.className='toast',2800)}
 
-      // Estaduais (Sergipe)
-      const estaduais = [
-        { mes: 6, dia: 8, nome: 'Independência de Sergipe', tipo: 'Estadual' }
-      ];
+/* Feriados */
+const _fc={};
+function feriados(y){
+  if(_fc[y])return _fc[y];
+  const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;
+  const p=new Date(y,mo-1,da),mv=(n,nome)=>{const t=new Date(p);t.setDate(p.getDate()+n);return[t.getMonth(),t.getDate(),nome]};
+  const L=[[0,1,'Confraternização Universal'],[2,17,'Aniversário de Aracaju'],[3,21,'Tiradentes'],[4,1,'Dia do Trabalho'],[6,8,'Independência de Sergipe'],[8,7,'Independência do Brasil'],[9,12,'N. Sra. Aparecida'],[10,2,'Finados'],[10,15,'Proclamação da República'],[11,25,'Natal'],mv(-47,'Carnaval'),mv(-2,'Sexta-Feira Santa'),mv(60,'Corpus Christi')];
+  if(y>=2024)L.push([10,20,'Consciência Negra']);
+  const o={};L.forEach(x=>o[x[0]+'-'+x[1]]=x[2]);return _fc[y]=o;
+}
 
-      // Municipais (Aracaju)
-      const municipais = [
-        { mes: 9, dia: 24, nome: 'Aniversário de Aracaju', tipo: 'Municipal' }
-      ];
-
-      // Feriados móveis (calculados para o ano)
-      const moveis = this.calcularMoveis(ano);
-
-      // Combinar todos
-      return [...fixos, ...estaduais, ...municipais, ...moveis];
-    },
-
-    // Cálculo de Páscoa (algoritmo de Gauss)
-    calcularPascoa(ano) {
-      const a = ano % 19;
-      const b = Math.floor(ano / 100);
-      const c = ano % 100;
-      const d = Math.floor(b / 4);
-      const e = b % 4;
-      const f = Math.floor((b + 8) / 25);
-      const g = Math.floor((b - f + 1) / 3);
-      const h = (19 * a + b - d - g + 15) % 30;
-      const i = Math.floor(c / 4);
-      const k = c % 4;
-      const l = (32 + 2 * e + 2 * i - h - k) % 7;
-      const m = Math.floor((a + 11 * h + 22 * l) / 451);
-      const mes = Math.floor((h + l - 7 * m + 114) / 31);
-      const dia = ((h + l - 7 * m + 114) % 31) + 1;
-      return new Date(ano, mes - 1, dia);
-    },
-
-    calcularMoveis(ano) {
-      const pascoa = this.calcularPascoa(ano);
-      const carnaval = new Date(pascoa);
-      carnaval.setDate(pascoa.getDate() - 47); // terça-feira de carnaval
-      const sextaSanta = new Date(pascoa);
-      sextaSanta.setDate(pascoa.getDate() - 2);
-      const corpusChristi = new Date(pascoa);
-      corpusChristi.setDate(pascoa.getDate() + 60);
-
-      return [
-        { mes: carnaval.getMonth(), dia: carnaval.getDate(), nome: 'Carnaval', tipo: 'Móvel' },
-        { mes: sextaSanta.getMonth(), dia: sextaSanta.getDate(), nome: 'Sexta-Feira Santa', tipo: 'Móvel' },
-        { mes: corpusChristi.getMonth(), dia: corpusChristi.getDate(), nome: 'Corpus Christi', tipo: 'Móvel' }
-      ];
+/* Escala */
+function gerar(m,y){
+  const n=dim(m,y),r={[DI]:[],[NO]:[]};let sem=[];
+  for(let d=1;d<=n;d++){
+    sem.push(d);
+    if(new Date(y,m,d).getDay()==6||d==n){
+      const u=sem.filter(x=>{const w=new Date(y,m,x).getDay();return w>0&&w<6}).slice(0,3);
+      sem.forEach(x=>r[u.includes(x)?NO:DI].push(x));sem=[];
     }
-  };
-
-  // ============================================================
-  // STORAGE
-  // ============================================================
-  const Storage = {
-    KEY: 'escala_huse_data',
-    get() {
-      try {
-        const raw = localStorage.getItem(this.KEY);
-        return raw ? JSON.parse(raw) : { allEscalas: {}, observacoes: [], dataSalvamento: null };
-      } catch { return { allEscalas: {}, observacoes: [], dataSalvamento: null }; }
-    },
-    set(data) {
-      try {
-        data.dataSalvamento = new Date().toISOString();
-        localStorage.setItem(this.KEY, JSON.stringify(data));
-        return true;
-      } catch { return false; }
-    }
-  };
-
-  // ============================================================
-  // APP STATE
-  // ============================================================
-  const App = {
-    allEscalas: {},
-    observacoes: [],
-    currentMonth: new Date().getMonth(),
-    currentYear: new Date().getFullYear(),
-    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-    diasDaSemana: ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'],
-    hospitais: ['HUSE Diurno', 'HUSE Noturno'],
-    currentEditId: null,
-
-    load() {
-      const data = Storage.get();
-      this.allEscalas = data.allEscalas;
-      this.observacoes = data.observacoes || [];
-    },
-
-    save() {
-      return Storage.set({ allEscalas: this.allEscalas, observacoes: this.observacoes });
-    },
-
-    getEscalas(month, year) {
-      const key = `${year}_${month}`;
-      if (!this.allEscalas[key]) {
-        this.allEscalas[key] = { 'HUSE Diurno': [], 'HUSE Noturno': [] };
-      }
-      return this.allEscalas[key];
-    },
-
-    getCurrentEscalas() {
-      return this.getEscalas(this.currentMonth, this.currentYear);
-    }
-  };
-
-  // ============================================================
-  // DATE HELPERS
-  // ============================================================
-  const DateHelper = {
-    parse(str) {
-      if (!str) return null;
-      const p = str.split('-');
-      if (p.length !== 3) return null;
-      return new Date(+p[0], +p[1]-1, +p[2]);
-    },
-    formatBR(date) {
-      if (!date || isNaN(date)) return '';
-      return String(date.getDate()).padStart(2,'0')+'/'+
-             String(date.getMonth()+1).padStart(2,'0')+'/'+
-             date.getFullYear();
-    },
-    formatInput(date) {
-      return date.getFullYear()+'-'+
-             String(date.getMonth()+1).padStart(2,'0')+'-'+
-             String(date.getDate()).padStart(2,'0');
-    },
-    daysInMonth(month, year) {
-      return new Date(year, month+1, 0).getDate();
-    },
-    getDayOfWeek(year, month, day) {
-      return new Date(year, month, day).getDay();
-    }
-  };
-
-  // ============================================================
-  // UI HELPERS
-  // ============================================================
-  const UI = {
-    notify(msg, type='success') {
-      const el = document.getElementById('notification');
-      el.textContent = msg;
-      el.className = `notification ${type}`;
-      el.classList.add('show');
-      clearTimeout(this._timer);
-      this._timer = setTimeout(() => el.classList.remove('show'), 3200);
-    },
-    loading(show) {
-      document.getElementById('loading').classList.toggle('show', show);
-    },
-    openModal(id) {
-      document.getElementById(id).classList.add('show');
-    },
-    closeModal(id) {
-      document.getElementById(id).classList.remove('show');
-    }
-  };
-
-  // ============================================================
-  // DISTRIBUIÇÃO INTELIGENTE (APENAS HUSE)
-  // ============================================================
-  const Distribuicao = {
-    aplicar() {
-      const escalas = App.getCurrentEscalas();
-      const month = App.currentMonth;
-      const year = App.currentYear;
-      const days = DateHelper.daysInMonth(month, year);
-
-      App.hospitais.forEach(h => escalas[h] = []);
-
-      const semanas = [];
-      let atual = [];
-      for (let d=1; d<=days; d++) {
-        atual.push(d);
-        if (DateHelper.getDayOfWeek(year, month, d) === 6 || d === days) {
-          semanas.push([...atual]);
-          atual = [];
-        }
-      }
-
-      semanas.forEach(semana => {
-        const uteis = semana.filter(d => {
-          const w = DateHelper.getDayOfWeek(year, month, d);
-          return w >= 1 && w <= 5;
-        });
-        const noturnos = uteis.slice(0, 3);
-        noturnos.forEach(d => escalas['HUSE Noturno'].push(d));
-
-        semana.forEach(d => {
-          if (!escalas['HUSE Noturno'].includes(d)) {
-            escalas['HUSE Diurno'].push(d);
-          }
-        });
-      });
-
-      App.hospitais.forEach(h => escalas[h].sort((a,b)=>a-b));
-      App.save();
-    }
-  };
-
-  // ============================================================
-  // ESCALA SERVICE
-  // ============================================================
-  const Escala = {
-    toggle(hospital, dia) {
-      const escalas = App.getCurrentEscalas();
-      const idx = escalas[hospital].indexOf(dia);
-      if (idx === -1) {
-        escalas[hospital].push(dia);
-        escalas[hospital].sort((a,b)=>a-b);
-      } else {
-        escalas[hospital].splice(idx, 1);
-      }
-      App.save();
-    },
-
-    detectarConflitos() {
-      const escalas = App.getCurrentEscalas();
-      const conflitos = {};
-      const days = DateHelper.daysInMonth(App.currentMonth, App.currentYear);
-      for (let d=1; d<=days; d++) {
-        const ativos = App.hospitais.filter(h => escalas[h].includes(d));
-        if (ativos.length > 1) conflitos[d] = ativos;
-      }
-      return conflitos;
-    },
-
-    obterDiasTransicao() {
-      const escalas = App.getCurrentEscalas();
-      const dias = new Set();
-      const days = DateHelper.daysInMonth(App.currentMonth, App.currentYear);
-      const noturnos = ['HUSE Noturno'];
-      const diurnos = ['HUSE Diurno'];
-
-      for (let d=1; d<=days; d++) {
-        const ant = d-1;
-        if (ant>=1) {
-          const temNoturnoAnt = noturnos.some(n => escalas[n].includes(ant));
-          const temDiurnoAtual = diurnos.some(di => escalas[di].includes(d));
-          if (temNoturnoAnt && temDiurnoAtual) {
-            dias.add(ant);
-            dias.add(d);
-          }
-        }
-        const temDiurno = diurnos.some(di => escalas[di].includes(d));
-        const temNoturno = noturnos.some(n => escalas[n].includes(d));
-        if (temDiurno && temNoturno) dias.add(d);
-      }
-      return Array.from(dias);
-    },
-
-    verificarDobras() {
-      const conflitos = this.detectarConflitos();
-      const dobras = {};
-      for (const [dia, lista] of Object.entries(conflitos)) {
-        if (lista.length > 1) dobras[dia] = lista;
-      }
-      return dobras;
-    }
-  };
-
-  // ============================================================
-  // TROCA SERVICE
-  // ============================================================
-  const Troca = {
-    abrirModal() {
-      const hoje = new Date();
-      document.getElementById('origem-data').value = DateHelper.formatInput(hoje);
-      document.getElementById('destino-data').value = DateHelper.formatInput(hoje);
-      document.getElementById('origem-hospital').value = '';
-      document.getElementById('destino-hospital').value = '';
-      document.getElementById('nome-troca').value = '';
-      document.getElementById('obs-troca').value = '';
-      UI.openModal('troca-modal');
-    },
-
-    realizar() {
-      const origHosp = document.getElementById('origem-hospital').value.trim();
-      const destHosp = document.getElementById('destino-hospital').value.trim();
-      const nome = document.getElementById('nome-troca').value.trim();
-      const obs = document.getElementById('obs-troca').value.trim();
-      const origData = document.getElementById('origem-data').value;
-      const destData = document.getElementById('destino-data').value;
-
-      if (!origHosp || !destHosp || !nome || !origData || !destData) {
-        UI.notify('Preencha todos os campos!', 'error');
-        return;
-      }
-
-      const dOrig = DateHelper.parse(origData);
-      const dDest = DateHelper.parse(destData);
-      if (!dOrig || !dDest) {
-        UI.notify('Datas inválidas!', 'error');
-        return;
-      }
-
-      const mesOrig = dOrig.getMonth(), anoOrig = dOrig.getFullYear();
-      const mesDest = dDest.getMonth(), anoDest = dDest.getFullYear();
-      const diaOrig = dOrig.getDate(), diaDest = dDest.getDate();
-
-      const escOrig = App.getEscalas(mesOrig, anoOrig);
-      const escDest = App.getEscalas(mesDest, anoDest);
-
-      if (!escOrig[origHosp].includes(diaOrig)) {
-        UI.notify(`Não existe ${origHosp} em ${DateHelper.formatBR(dOrig)}`, 'error');
-        return;
-      }
-      if (escDest[destHosp].includes(diaDest)) {
-        UI.notify(`Já existe ${destHosp} em ${DateHelper.formatBR(dDest)}`, 'error');
-        return;
-      }
-
-      const idx = escOrig[origHosp].indexOf(diaOrig);
-      if (idx > -1) escOrig[origHosp].splice(idx, 1);
-      escDest[destHosp].push(diaDest);
-      escDest[destHosp].sort((a,b)=>a-b);
-
-      App.observacoes.push({
-        hospital: origHosp,
-        hospitalTroca: destHosp,
-        data: origData,
-        dataTroca: destData,
-        nome: nome,
-        observacao: obs || `${origHosp} → ${destHosp}`
-      });
-
-      UI.closeModal('troca-modal');
-      App.save();
-      Render.renderTable();
-      UI.notify(`✅ Troca ${origHosp} → ${destHosp}`);
-    }
-  };
-
-  // ============================================================
-  // TROCA MANAGEMENT
-  // ============================================================
-  const TrocaManage = {
-    abrirEdicao(idx) {
-      const t = App.observacoes[idx];
-      if (!t) { UI.notify('Troca não encontrada!', 'error'); return; }
-      App.currentEditId = idx;
-      document.getElementById('editar-origem-hospital').value = t.hospital || '';
-      document.getElementById('editar-destino-hospital').value = t.hospitalTroca || '';
-      document.getElementById('editar-origem-data').value = t.data || '';
-      document.getElementById('editar-destino-data').value = t.dataTroca || '';
-      document.getElementById('editar-nome-troca').value = t.nome || '';
-      document.getElementById('editar-obs-troca').value = t.observacao || '';
-      document.getElementById('editar-troca-id').value = idx;
-      UI.openModal('editar-troca-modal');
-    },
-
-    salvarEdicao() {
-      const idx = parseInt(document.getElementById('editar-troca-id').value, 10);
-      if (isNaN(idx) || idx >= App.observacoes.length) {
-        UI.notify('ID inválido!', 'error');
-        return;
-      }
-
-      const origHosp = document.getElementById('editar-origem-hospital').value.trim();
-      const destHosp = document.getElementById('editar-destino-hospital').value.trim();
-      const nome = document.getElementById('editar-nome-troca').value.trim();
-      const obs = document.getElementById('editar-obs-troca').value.trim();
-      const origData = document.getElementById('editar-origem-data').value;
-      const destData = document.getElementById('editar-destino-data').value;
-
-      if (!origHosp || !destHosp || !nome || !origData || !destData) {
-        UI.notify('Preencha todos os campos!', 'error');
-        return;
-      }
-
-      const dOrig = DateHelper.parse(origData);
-      const dDest = DateHelper.parse(destData);
-      if (!dOrig || !dDest) { UI.notify('Datas inválidas!', 'error'); return; }
-
-      const troca = App.observacoes[idx];
-      this._reverter(troca);
-
-      const mesOrig = dOrig.getMonth(), anoOrig = dOrig.getFullYear();
-      const mesDest = dDest.getMonth(), anoDest = dDest.getFullYear();
-      const diaOrig = dOrig.getDate(), diaDest = dDest.getDate();
-
-      const escOrig = App.getEscalas(mesOrig, anoOrig);
-      const escDest = App.getEscalas(mesDest, anoDest);
-
-      if (!escOrig[origHosp].includes(diaOrig)) {
-        UI.notify(`Não existe ${origHosp} em ${DateHelper.formatBR(dOrig)}`, 'error');
-        return;
-      }
-      if (escDest[destHosp].includes(diaDest)) {
-        UI.notify(`Já existe ${destHosp} em ${DateHelper.formatBR(dDest)}`, 'error');
-        return;
-      }
-
-      const idxOrig = escOrig[origHosp].indexOf(diaOrig);
-      if (idxOrig > -1) escOrig[origHosp].splice(idxOrig, 1);
-      escDest[destHosp].push(diaDest);
-      escDest[destHosp].sort((a,b)=>a-b);
-
-      troca.hospital = origHosp;
-      troca.hospitalTroca = destHosp;
-      troca.data = origData;
-      troca.dataTroca = destData;
-      troca.nome = nome;
-      troca.observacao = obs || `${origHosp} → ${destHosp}`;
-
-      App.save();
-      UI.closeModal('editar-troca-modal');
-      Render.renderTable();
-      Render.renderTrocasTable();
-      UI.notify('✅ Troca editada');
-    },
-
-    _reverter(troca) {
-      const dOrig = DateHelper.parse(troca.data);
-      const dDest = DateHelper.parse(troca.dataTroca);
-      if (!dOrig || !dDest) return;
-      const mesOrig = dOrig.getMonth(), anoOrig = dOrig.getFullYear();
-      const mesDest = dDest.getMonth(), anoDest = dDest.getFullYear();
-      const diaOrig = dOrig.getDate(), diaDest = dDest.getDate();
-
-      const escOrig = App.getEscalas(mesOrig, anoOrig);
-      const escDest = App.getEscalas(mesDest, anoDest);
-
-      const idxDest = escDest[troca.hospitalTroca]?.indexOf(diaDest);
-      if (idxDest > -1) escDest[troca.hospitalTroca].splice(idxDest, 1);
-      if (!escOrig[troca.hospital]?.includes(diaOrig)) {
-        escOrig[troca.hospital]?.push(diaOrig);
-        escOrig[troca.hospital]?.sort((a,b)=>a-b);
-      }
-    },
-
-    reverter(idx) {
-      const t = App.observacoes[idx];
-      if (!t) { UI.notify('Troca não encontrada!', 'error'); return; }
-      if (!confirm(`Reverter ${t.hospital} → ${t.hospitalTroca}?`)) return;
-      this._reverter(t);
-      App.observacoes.splice(idx, 1);
-      App.save();
-      Render.renderTable();
-      Render.renderTrocasTable();
-      UI.notify('✅ Revertida');
-    },
-
-    excluir(idx) {
-      const t = App.observacoes[idx];
-      if (!t) { UI.notify('Troca não encontrada!', 'error'); return; }
-      if (!confirm(`Excluir troca de ${t.hospital} → ${t.hospitalTroca}?`)) return;
-      App.observacoes.splice(idx, 1);
-      App.save();
-      Render.renderTrocasTable();
-      UI.notify('✅ Excluída');
-    }
-  };
-
-  // ============================================================
-  // RENDER
-  // ============================================================
-  const Render = {
-    renderTable() {
-      const header = document.getElementById('table-header');
-      const body = document.getElementById('table-body');
-      const escalas = App.getCurrentEscalas();
-      const days = DateHelper.daysInMonth(App.currentMonth, App.currentYear);
-      const conflitos = Escala.detectarConflitos();
-      const dobras = Escala.verificarDobras();
-      const transicao = Escala.obterDiasTransicao();
-
-      // Obter feriados do ano atual
-      const feriados = Feriados.getFeriados(App.currentYear);
-      // Mapa para lookup rápido: chave "mes-dia"
-      const feriadoMap = {};
-      feriados.forEach(f => {
-        const key = `${f.mes}-${f.dia}`;
-        feriadoMap[key] = f.nome;
-      });
-
-      // Cabeçalho
-      header.innerHTML = '<th>Hospitais</th>';
-      for (let d=1; d<=days; d++) {
-        const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, d);
-        const th = document.createElement('th');
-        if (diaSem === 0) th.className = 'sunday';
-        else if (diaSem === 6) th.className = 'weekend';
-
-        const div = document.createElement('div');
-        div.className = 'day-header';
-
-        // Ícone de deslocamento
-        if (transicao.includes(d)) {
-          const carro = document.createElement('div');
-          carro.textContent = '🚗';
-          carro.style.fontSize = '0.6rem';
-          carro.style.position = 'absolute';
-          carro.style.top = '-2px';
-          carro.style.right = '-4px';
-          div.appendChild(carro);
-        }
-
-        const num = document.createElement('div');
-        num.className = 'day-number';
-        num.textContent = d;
-        div.appendChild(num);
-
-        const nome = document.createElement('div');
-        nome.className = 'day-name';
-        nome.textContent = App.diasDaSemana[diaSem];
-        div.appendChild(nome);
-
-        // Verifica se é feriado
-        const key = `${App.currentMonth}-${d}`;
-        if (feriadoMap[key]) {
-          th.classList.add('feriado');
-          const icon = document.createElement('div');
-          icon.className = 'feriado-icon';
-          icon.textContent = '🎉';
-          icon.title = feriadoMap[key];
-          div.appendChild(icon);
-          th.title = feriadoMap[key];
-        }
-
-        th.appendChild(div);
-        th.setAttribute('data-day', d);
-        header.appendChild(th);
-      }
-
-      // Corpo
-      body.innerHTML = '';
-      App.hospitais.forEach(hosp => {
-        const tr = document.createElement('tr');
-        const tdNome = document.createElement('td');
-        tdNome.className = 'hospital-name';
-        tdNome.textContent = hosp;
-        tr.appendChild(tdNome);
-
-        for (let d=1; d<=days; d++) {
-          const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, d);
-          const td = document.createElement('td');
-          if (diaSem === 0) td.className = 'sunday';
-          else if (diaSem === 6) td.className = 'weekend';
-
-          const hasPlantao = escalas[hosp].includes(d);
-          const div = document.createElement('div');
-
-          // Verifica feriado
-          const key = `${App.currentMonth}-${d}`;
-          const isFeriado = !!feriadoMap[key];
-
-          if (hasPlantao) {
-            div.className = 'plantao-cell';
-            if (conflitos[d]?.includes(hosp)) {
-              div.classList.add('conflito-cell');
-              div.textContent = '⚠️';
-              div.title = 'Conflito!';
-            } else if (dobras[d]?.includes(hosp)) {
-              div.classList.add('dobra-cell');
-              div.textContent = 'D';
-              div.title = 'Dobra';
-            } else if (transicao.includes(d)) {
-              div.classList.add('alerta-carro-cell');
-              div.textContent = 'S🚗';
-              div.title = 'Deslocamento';
-            } else {
-              div.classList.add('plantao');
-              div.textContent = 'S';
-              div.title = 'Plantão';
-            }
-            if (isFeriado) {
-              div.classList.add('feriado-cell');
-              div.title += ` • ${feriadoMap[key]}`;
-            }
-          } else {
-            div.className = 'folga-cell';
-            div.textContent = 'F';
-            div.title = 'Folga';
-            if (isFeriado) {
-              div.classList.add('feriado-cell');
-              div.title += ` • ${feriadoMap[key]}`;
-            }
-          }
-
-          div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            Escala.toggle(hosp, d);
-            Render.renderTable();
-          });
-          td.appendChild(div);
-          tr.appendChild(td);
-        }
-        body.appendChild(tr);
-      });
-    },
-
-    renderTrocasTable() {
-      const tbody = document.getElementById('trocas-body');
-      tbody.innerHTML = '';
-
-      const filterMonth = document.getElementById('filter-month').value;
-      const filterYear = document.getElementById('filter-year').value;
-
-      let filtradas = App.observacoes;
-      if (filterMonth !== '' || filterYear !== '') {
-        filtradas = filtradas.filter(obs => {
-          const d1 = DateHelper.parse(obs.data);
-          const d2 = DateHelper.parse(obs.dataTroca);
-          const match = (d1 && (filterMonth==='' || d1.getMonth()==+filterMonth) && (filterYear==='' || d1.getFullYear()==+filterYear)) ||
-                        (d2 && (filterMonth==='' || d2.getMonth()==+filterMonth) && (filterYear==='' || d2.getFullYear()==+filterYear));
-          return match;
-        });
-      }
-
-      if (filtradas.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:16px;">Nenhuma troca</td></tr>';
-        return;
-      }
-
-      filtradas.forEach((obs) => {
-        const realIdx = App.observacoes.indexOf(obs);
-        const tr = document.createElement('tr');
-        const btnGroup = document.createElement('div');
-        btnGroup.style.display = 'flex';
-        btnGroup.style.gap = '4px';
-        btnGroup.style.flexWrap = 'wrap';
-        btnGroup.innerHTML = `
-          <button class="btn btn-warning" style="padding:4px 6px;font-size:0.6rem;flex:1;min-width:40px;" onclick="TrocaManage.abrirEdicao(${realIdx})"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-info" style="padding:4px 6px;font-size:0.6rem;flex:1;min-width:40px;" onclick="TrocaManage.reverter(${realIdx})"><i class="fas fa-undo"></i></button>
-          <button class="btn btn-danger" style="padding:4px 6px;font-size:0.6rem;flex:1;min-width:40px;" onclick="TrocaManage.excluir(${realIdx})"><i class="fas fa-trash"></i></button>
-        `;
-
-        tr.innerHTML = `
-          <td>${obs.hospital || '--'}</td>
-          <td>${DateHelper.formatBR(DateHelper.parse(obs.data)) || '--'}</td>
-          <td>${DateHelper.formatBR(DateHelper.parse(obs.dataTroca)) || '--'}</td>
-          <td>${obs.nome || '--'}</td>
-          <td>${obs.observacao || '--'}</td>
-        `;
-        const tdAcoes = document.createElement('td');
-        tdAcoes.appendChild(btnGroup);
-        tr.appendChild(tdAcoes);
-        tbody.appendChild(tr);
-      });
-    }
-  };
-
-  // ============================================================
-  // PDF SERVICE
-  // ============================================================
-  const PDF = {
-    exportar() {
-      UI.loading(true);
-      const mes = App.monthNames[App.currentMonth];
-      const ano = App.currentYear;
-
-      const container = document.createElement('div');
-      container.style.padding = '20px';
-      container.style.fontFamily = 'Arial, sans-serif';
-      container.style.width = '297mm';
-      container.style.minHeight = '420mm';
-      container.style.background = 'white';
-
-      const titulo = document.createElement('h1');
-      titulo.textContent = `ESCALA HUSE - ${mes.toUpperCase()}/${ano}`;
-      titulo.style.textAlign = 'center';
-      titulo.style.marginBottom = '14px';
-      titulo.style.fontSize = '24px';
-      titulo.style.fontWeight = 'bold';
-      titulo.style.color = '#2563eb';
-      titulo.style.borderBottom = '3px solid #2563eb';
-      titulo.style.paddingBottom = '10px';
-      container.appendChild(titulo);
-
-      const subt = document.createElement('h2');
-      subt.textContent = 'Plantões de Mª de Fatima Velame';
-      subt.style.textAlign = 'center';
-      subt.style.marginBottom = '18px';
-      subt.style.fontSize = '16px';
-      subt.style.fontWeight = '600';
-      subt.style.color = '#475569';
-      subt.style.fontStyle = 'italic';
-      container.appendChild(subt);
-
-      const dataGer = document.createElement('div');
-      dataGer.textContent = `Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})}`;
-      dataGer.style.textAlign = 'right';
-      dataGer.style.fontSize = '11px';
-      dataGer.style.color = '#64748b';
-      dataGer.style.marginBottom = '18px';
-      dataGer.style.fontStyle = 'italic';
-      container.appendChild(dataGer);
-
-      const table = document.getElementById('escala-table').cloneNode(true);
-      table.style.width = '100%';
-      table.style.borderCollapse = 'collapse';
-      table.style.boxShadow = '0 2px 4px rgba(0,0,0,0.06)';
-
-      const allCells = table.querySelectorAll('td, th');
-      allCells.forEach(cell => {
-        cell.style.padding = '5px 3px';
-        cell.style.fontSize = '9px';
-        cell.style.border = '1px solid #cbd5e1';
-        cell.style.verticalAlign = 'middle';
-      });
-
-      // Cabeçalho
-      const ths = table.querySelectorAll('thead th');
-      ths.forEach((th, idx) => {
-        if (idx === 0) return;
-        const dia = idx;
-        if (dia <= DateHelper.daysInMonth(App.currentMonth, App.currentYear)) {
-          const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, dia);
-          if (diaSem === 0) {
-            th.style.background = '#fee2e2';
-            th.style.color = '#dc2626';
-            th.style.border = '2px solid #dc2626';
-          } else if (diaSem === 6) {
-            th.style.background = '#dbeafe';
-            th.style.color = '#2563eb';
-            th.style.border = '2px solid #2563eb';
-          } else {
-            th.style.background = 'linear-gradient(135deg, #2563eb, #1e40af)';
-            th.style.color = 'white';
-            th.style.border = '1px solid #1e40af';
-          }
-          // Feriado no PDF
-          const key = `${App.currentMonth}-${dia}`;
-          const feriados = Feriados.getFeriados(App.currentYear);
-          const feriadoMap = {};
-          feriados.forEach(f => { feriadoMap[`${f.mes}-${f.dia}`] = f.nome; });
-          if (feriadoMap[key]) {
-            th.style.background = '#fef3c7';
-            th.style.color = '#b45309';
-            th.style.border = '2px solid #f59e0b';
-            const span = document.createElement('span');
-            span.textContent = ' 🎉';
-            span.style.fontSize = '8px';
-            th.appendChild(span);
-          }
-        }
-      });
-
-      const rows = table.querySelectorAll('tbody tr');
-      rows.forEach(tr => {
-        const tds = tr.querySelectorAll('td');
-        tds.forEach((td, idx) => {
-          if (idx === 0) return;
-          const dia = idx;
-          if (dia <= DateHelper.daysInMonth(App.currentMonth, App.currentYear)) {
-            const diaSem = DateHelper.getDayOfWeek(App.currentYear, App.currentMonth, dia);
-            if (diaSem === 0) {
-              td.style.background = '#fef2f2';
-              td.style.border = '2px solid #fecaca';
-            } else if (diaSem === 6) {
-              td.style.background = '#eff6ff';
-              td.style.border = '2px solid #bfdbfe';
-            }
-          }
-        });
-      });
-
-      container.appendChild(table);
-
-      // Trocas
-      const trocasMes = App.observacoes.filter(obs => {
-        const d1 = DateHelper.parse(obs.data);
-        const d2 = DateHelper.parse(obs.dataTroca);
-        return (d1 && d1.getMonth()===App.currentMonth && d1.getFullYear()===App.currentYear) ||
-               (d2 && d2.getMonth()===App.currentMonth && d2.getFullYear()===App.currentYear);
-      });
-
-      if (trocasMes.length > 0) {
-        const sec = document.createElement('div');
-        sec.style.marginTop = '32px';
-        sec.style.pageBreakInside = 'avoid';
-
-        const h2 = document.createElement('h2');
-        h2.textContent = 'TROCAS REGISTRADAS';
-        h2.style.fontSize = '16px';
-        h2.style.marginBottom = '12px';
-        h2.style.paddingBottom = '6px';
-        h2.style.borderBottom = '2px solid #2563eb';
-        h2.style.color = '#1e40af';
-        sec.appendChild(h2);
-
-        const tbl = document.createElement('table');
-        tbl.style.width = '100%';
-        tbl.style.borderCollapse = 'collapse';
-        tbl.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
-
-        const thead = document.createElement('thead');
-        thead.innerHTML = `
-          <tr style="background:linear-gradient(135deg,#2563eb,#1e40af);color:white;">
-            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Hospital</th>
-            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Origem</th>
-            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Destino</th>
-            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Nome</th>
-            <th style="padding:6px;border:1px solid #1e40af;text-align:left;font-size:9px;">Obs</th>
-          </tr>
-        `;
-        tbl.appendChild(thead);
-
-        const tbody = document.createElement('tbody');
-        trocasMes.forEach((obs, i) => {
-          const tr = document.createElement('tr');
-          tr.style.background = i%2===0 ? '#fff' : '#f8fafc';
-          tr.innerHTML = `
-            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${obs.hospital||'--'}</td>
-            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${DateHelper.formatBR(DateHelper.parse(obs.data))||'--'}</td>
-            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${DateHelper.formatBR(DateHelper.parse(obs.dataTroca))||'--'}</td>
-            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${obs.nome||'--'}</td>
-            <td style="padding:5px;border:1px solid #e2e8f0;font-size:9px;">${obs.observacao||'--'}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-        tbl.appendChild(tbody);
-        sec.appendChild(tbl);
-        container.appendChild(sec);
-      }
-
-      const footer = document.createElement('div');
-      footer.style.marginTop = '32px';
-      footer.style.paddingTop = '16px';
-      footer.style.borderTop = '1px solid #e2e8f0';
-      footer.style.fontSize = '9px';
-      footer.style.color = '#64748b';
-      footer.style.textAlign = 'center';
-      footer.innerHTML = `
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-          <div style="text-align:left;"><strong>HUSE</strong> • 12x36</div>
-          <div style="text-align:right;">Página 1/1</div>
-        </div>
-        <div style="font-style:italic;">Gerado automaticamente • Feriados destacados</div>
-      `;
-      container.appendChild(footer);
-
-      const opt = {
-        margin: [10,10,10,10],
-        filename: `escala_huse_${mes.toLowerCase()}_${ano}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false, windowWidth: 1123, windowHeight: 1587 },
-        jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a3', compress: true }
-      };
-
-      setTimeout(() => {
-        html2pdf().set(opt).from(container).save().then(() => {
-          UI.loading(false);
-          UI.notify('✅ PDF exportado');
-        }).catch(err => {
-          UI.loading(false);
-          UI.notify('❌ Erro: '+err.message, 'error');
-          console.error(err);
-        });
-      }, 400);
-    }
-  };
-
-  // ============================================================
-  // INIT
-  // ============================================================
-  function init() {
-    App.load();
-
-    // Popula selects
-    const monthSelect = document.getElementById('month-select');
-    const yearSelect = document.getElementById('year-select');
-    const filterMonth = document.getElementById('filter-month');
-    const filterYear = document.getElementById('filter-year');
-
-    App.monthNames.forEach((m,i) => {
-      const opt1 = document.createElement('option');
-      opt1.value = i; opt1.textContent = m;
-      monthSelect.appendChild(opt1);
-      const opt2 = document.createElement('option');
-      opt2.value = i; opt2.textContent = m;
-      filterMonth.appendChild(opt2);
-    });
-    monthSelect.value = App.currentMonth;
-    filterMonth.value = '';
-
-    for (let y=App.currentYear-2; y<=App.currentYear+2; y++) {
-      const opt1 = document.createElement('option');
-      opt1.value = y; opt1.textContent = y;
-      yearSelect.appendChild(opt1);
-      const opt2 = document.createElement('option');
-      opt2.value = y; opt2.textContent = y;
-      filterYear.appendChild(opt2);
-    }
-    yearSelect.value = App.currentYear;
-    filterYear.value = '';
-
-    // Se vazio, distribui
-    const escalas = App.getCurrentEscalas();
-    if (escalas['HUSE Diurno'].length === 0 && escalas['HUSE Noturno'].length === 0) {
-      Distribuicao.aplicar();
-    }
-
-    Render.renderTable();
-    bindEvents();
   }
+  return r;
+}
+function esc(m,y){
+  const k=y+'_'+m;let e=S.allEscalas[k];
+  if(!e||(!e.limpo&&!(e[DI]||[]).length&&!(e[NO]||[]).length)){e=S.allEscalas[k]=gerar(m,y);save()}
+  e[DI]=e[DI]||[];e[NO]=e[NO]||[];return e;
+}
+function aplicar(t){
+  const o=parse(t.data),d=parse(t.dataTroca);
+  if(!o||!d)return 'Datas inválidas';
+  const eo=esc(o.getMonth(),o.getFullYear()),ed=esc(d.getMonth(),d.getFullYear());
+  if(!eo[t.hospital].includes(o.getDate()))return `Não existe ${t.hospital} em ${br(o)}`;
+  if(ed[t.hospitalTroca].includes(d.getDate()))return `Já existe ${t.hospitalTroca} em ${br(d)}`;
+  eo[t.hospital].splice(eo[t.hospital].indexOf(o.getDate()),1);
+  ed[t.hospitalTroca].push(d.getDate());ed[t.hospitalTroca].sort((a,b)=>a-b);
+  return null;
+}
+function reverter(t){
+  const o=parse(t.data),d=parse(t.dataTroca);if(!o||!d)return;
+  const eo=esc(o.getMonth(),o.getFullYear()),ed=esc(d.getMonth(),d.getFullYear());
+  const i=ed[t.hospitalTroca].indexOf(d.getDate());if(i>-1)ed[t.hospitalTroca].splice(i,1);
+  if(!eo[t.hospital].includes(o.getDate())){eo[t.hospital].push(o.getDate());eo[t.hospital].sort((a,b)=>a-b)}
+}
 
-  // ============================================================
-  // BIND EVENTS
-  // ============================================================
-  function bindEvents() {
-    document.getElementById('month-select').addEventListener('change', e => {
-      App.currentMonth = parseInt(e.target.value, 10);
-      Render.renderTable();
-    });
-    document.getElementById('year-select').addEventListener('change', e => {
-      App.currentYear = parseInt(e.target.value, 10);
-      Render.renderTable();
-    });
-
-    document.getElementById('save-data').addEventListener('click', () => {
-      App.save();
-      UI.notify('✅ Dados salvos');
-    });
-
-    document.getElementById('export-pdf').addEventListener('click', PDF.exportar);
-
-    document.getElementById('nova-troca').addEventListener('click', Troca.abrirModal);
-
-    document.getElementById('ver-trocas').addEventListener('click', () => {
-      Render.renderTrocasTable();
-      UI.openModal('trocas-modal');
-    });
-
-    // Modais
-    document.getElementById('close-modal').addEventListener('click', () => UI.closeModal('troca-modal'));
-    document.getElementById('cancelar-troca').addEventListener('click', () => UI.closeModal('troca-modal'));
-    document.getElementById('confirmar-troca').addEventListener('click', Troca.realizar);
-
-    document.getElementById('close-editar-modal').addEventListener('click', () => UI.closeModal('editar-troca-modal'));
-    document.getElementById('cancelar-edicao').addEventListener('click', () => UI.closeModal('editar-troca-modal'));
-    document.getElementById('salvar-edicao').addEventListener('click', TrocaManage.salvarEdicao);
-
-    document.getElementById('close-trocas-modal').addEventListener('click', () => UI.closeModal('trocas-modal'));
-    document.getElementById('fechar-trocas-modal').addEventListener('click', () => UI.closeModal('trocas-modal'));
-
-    document.getElementById('filter-month').addEventListener('change', Render.renderTrocasTable);
-    document.getElementById('filter-year').addEventListener('change', Render.renderTrocasTable);
+/* Calendário */
+function render(){
+  const e=esc(M,Y),n=dim(M,Y),f=feriados(Y),first=new Date(Y,M,1).getDay();
+  $('ttl').textContent=MES[M]+' '+Y;$('mi').value=Y+'-'+pad(M+1);
+  let h='',nf=[];
+  for(let i=0;i<first;i++)h+='<div class="c e"></div>';
+  for(let d=1;d<=n;d++){
+    const D=e[DI].includes(d),N=e[NO].includes(d),fe=f[M+'-'+d],dob=D&&N,des=D&&e[NO].includes(d-1);
+    if(fe)nf.push(d);
+    const isT=d==now.getDate()&&M==now.getMonth()&&Y==now.getFullYear();
+    h+=`<button class="c${fe?' f':''}${dob?' w':''}${isT?' t':''}${(first+d-1)%7==0?' s':''}" onclick="openDia(${d})"><span class="n">${d}</span><span class="ic">${fe?'★':''}${dob?'⚠':''}${des?'🚗':''}</span><span class="ch">${D?'<i class="k d">Dia</i>':''}${N?'<i class="k n">Noite</i>':''}</span></button>`;
   }
+  $('grid').innerHTML=h;
+  $('sd').textContent=e[DI].length;$('sn').textContent=e[NO].length;$('sf').textContent=nf.length;
+  $('fl').innerHTML=nf.length?nf.map(d=>`<div><b>${pad(d)}/${pad(M+1)}</b>${f[M+'-'+d]}</div>`).join(''):'Sem feriados neste mês';
+}
+function mov(x){M+=x;if(M<0){M=11;Y--}if(M>11){M=0;Y++}render()}
+function hoje(){M=now.getMonth();Y=now.getFullYear();render()}
+$('mi').addEventListener('change',function(){const v=this.value.split('-');if(v.length==2){Y=+v[0];M=+v[1]-1;render()}});
+$('mi').addEventListener('click',function(){try{this.showPicker()}catch(e){}});
+let tx=null;const cd=$('card');
+cd.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+cd.addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>70)mov(dx<0?1:-1)},{passive:true});
 
-  document.addEventListener('DOMContentLoaded', init);
+/* Dia */
+function openDia(d){selDay=d;drawDia();abre('sd_')}
+function drawDia(){
+  const d=selDay,e=esc(M,Y),dt=new Date(Y,M,d),fe=feriados(Y)[M+'-'+d],D=e[DI].includes(d),N=e[NO].includes(d);
+  let al='';
+  if(D&&N)al+='<p class="al">⚠ Dobra: Diurno e Noturno no mesmo dia.</p>';
+  if(D&&e[NO].includes(d-1))al+='<p class="al">🚗 Noturno ontem e Diurno hoje: atenção ao deslocamento.</p>';
+  $('dbody').innerHTML=`<h2>${DS[dt.getDay()]}, ${d} de ${MES[M]}</h2>${fe?`<p class="fe">★ ${fe}</p>`:''}<div class="tg"><button class="${D?'on d':''}" onclick="tg('${DI}')">☀ Diurno<small>${D?'Plantão':'Folga'}</small></button><button class="${N?'on n':''}" onclick="tg('${NO}')">☾ Noturno<small>${N?'Plantão':'Folga'}</small></button></div>${al}`;
+}
+function tg(h){const e=esc(M,Y),i=e[h].indexOf(selDay);if(i<0){e[h].push(selDay);e[h].sort((a,b)=>a-b)}else e[h].splice(i,1);e.limpo=true;save();render();drawDia()}
+function salvarTudo(){save();toast('Dados salvos')}
+function limpar(){
+  if(!confirm(`Limpar todos os plantões de ${MES[M]} ${Y}?\nOs registros de trocas não são apagados.`))return;
+  S.allEscalas[Y+'_'+M]={[DI]:[],[NO]:[],limpo:true};save();render();toast(MES[M]+' limpo')
+}
+
+/* Trocas */
+function abrirTroca(i){
+  editIdx=i==null?null:i;const t=editIdx!=null?S.observacoes[editIdx]:null;
+  $('tt').textContent=t?'Editar troca':'Nova troca';
+  $('oh').value=t?t.hospital:'';$('od').value=t?t.data:iso(now);
+  $('dh').value=t?t.hospitalTroca:'';$('dd').value=t?t.dataTroca:iso(now);
+  $('nm').value=t?t.nome:'';$('ob').value=t?(t.observacao||''):'';
+  abre('st');
+}
+function salvarTroca(){
+  const t={hospital:$('oh').value,hospitalTroca:$('dh').value,data:$('od').value,dataTroca:$('dd').value,nome:$('nm').value.trim(),observacao:$('ob').value.trim()};
+  if(!t.hospital||!t.hospitalTroca||!t.data||!t.dataTroca||!t.nome)return toast('Preencha todos os campos','err');
+  const old=editIdx!=null?S.observacoes[editIdx]:null;
+  if(old)reverter(old);
+  const er=aplicar(t);
+  if(er){if(old)aplicar(old);return toast(er,'err')}
+  if(old)S.observacoes[editIdx]=t;else S.observacoes.push(t);
+  save();fecha('st');render();if($('sl').classList.contains('on'))drawTrocas();toast('Troca salva');
+}
+const trocasDoMes=()=>S.observacoes.map((t,i)=>({t,i})).filter(({t})=>[t.data,t.dataTroca].some(s=>{const d=parse(s);return d&&d.getMonth()==M&&d.getFullYear()==Y}));
+function verTrocas(){drawTrocas();abre('sl')}
+function drawTrocas(){
+  const L=filtroTodas?S.observacoes.map((t,i)=>({t,i})):trocasDoMes();
+  $('ft').textContent=filtroTodas?'Ver só este mês':'Ver todas';
+  $('lb').innerHTML=L.length?L.map(({t,i})=>`<div class="tr"><div><b>${H(t.hospital)}</b> ${br(parse(t.data))} → <b>${H(t.hospitalTroca)}</b> ${br(parse(t.dataTroca))}</div><div class="l2">${H(t.nome)}${t.observacao?' · '+H(t.observacao):''}</div><div class="bt"><button onclick="abrirTroca(${i})">Editar</button><button onclick="revTroca(${i})">Reverter</button><button class="del" onclick="delTroca(${i})">Excluir</button></div></div>`).join(''):'<p class="em">Nenhuma troca '+(filtroTodas?'registrada':'em '+MES[M])+'</p>';
+}
+function revTroca(i){if(!confirm('Reverter esta troca e restaurar os plantões originais?'))return;reverter(S.observacoes[i]);S.observacoes.splice(i,1);save();render();drawTrocas();toast('Troca revertida')}
+function delTroca(i){if(!confirm('Excluir só o registro? Os plantões continuam como estão.'))return;S.observacoes.splice(i,1);save();drawTrocas();toast('Registro excluído')}
+document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',ev=>{if(ev.target==o&&o.id!='ld')o.classList.remove('on')}));
+
+/* PDF: página única A4 retrato com o mês inteiro */
+function pdf(){
+  if(typeof html2pdf==='undefined')return toast('PDF precisa de internet para carregar a biblioteca','err');
+  const e=esc(M,Y),n=dim(M,Y),f=feriados(Y),first=new Date(Y,M,1).getDay(),rows=Math.ceil((first+n)/7);
+  let tb='',nf=0;
+  for(let r=0;r<rows;r++){tb+='<tr>';for(let c=0;c<7;c++){
+    const d=r*7+c-first+1;
+    if(d<1||d>n){tb+='<td class="z"></td>';continue}
+    const D=e[DI].includes(d),N=e[NO].includes(d),fe=f[M+'-'+d];if(fe)nf++;
+    tb+=`<td class="${fe?'f':''}${D&&N?' w':''}"><div class="dn${c==0?' s':''}">${d}${fe?' ★':''}</div>${fe?`<div class="fn">${fe}</div>`:''}${D?'<div class="p d">Diurno</div>':''}${N?'<div class="p n">Noturno</div>':''}</td>`;
+  }tb+='</tr>'}
+  const T=trocasDoMes().map(({t})=>`<tr><td>${H(t.hospital)}</td><td>${br(parse(t.data))}</td><td>${H(t.hospitalTroca)}</td><td>${br(parse(t.dataTroca))}</td><td>${H(t.nome)}</td><td>${H(t.observacao)}</td></tr>`).join('');
+  const el=document.createElement('div');
+  el.style.cssText='width:720px;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#12263a;padding:4px';
+  el.innerHTML=`<style>
+    h1{font-size:22px;text-align:center;color:#12263a;margin:0 0 4px}.sb{text-align:center;font-size:12px;color:#64748b;margin-bottom:12px}
+    .sm{display:flex;gap:8px;margin-bottom:12px}.sm div{flex:1;border:1px solid #cbd5e1;border-radius:6px;padding:6px;text-align:center;font-size:11px;color:#64748b}.sm b{display:block;font-size:17px;color:#12263a}
+    table{width:100%;border-collapse:collapse;table-layout:fixed}
+    th{background:#12263a;color:#fff;font-size:11px;padding:6px 0;border:1px solid #12263a}
+    .cal td{border:1px solid #cbd5e1;height:92px;vertical-align:top;padding:4px}
+    .z{background:#f1f5f9}.f{background:#fff4ec}.w{outline:2px solid #d1344a;outline-offset:-2px}
+    .dn{font-size:13px;font-weight:700}.s{color:#d1344a}.fn{font-size:8px;color:#b4531a;line-height:1.2;margin:1px 0 3px}
+    .p{font-size:10px;font-weight:700;text-align:center;border-radius:4px;padding:3px 0;margin-top:3px}.p.d{background:#fde9b8;color:#7a4a00}.p.n{background:#d6dcff;color:#1f2a7a}
+    .lg{font-size:10px;color:#64748b;margin:8px 0 14px}
+    h2{font-size:13px;margin:0 0 6px;color:#12263a}.tt td,.tt th{border:1px solid #cbd5e1;font-size:10px;padding:5px;text-align:left}.tt th{background:#12263a;color:#fff}
+    tr{page-break-inside:avoid}
+  </style>
+  <h1>ESCALA HUSE — ${MES[M].toUpperCase()}/${Y}</h1>
+  <div class="sb">Plantões de Mª de Fatima Velame · Escala 12x36 · Gerado em ${new Date().toLocaleDateString('pt-BR')}</div>
+  <div class="sm"><div><b>${e[DI].length}</b>Diurnos</div><div><b>${e[NO].length}</b>Noturnos</div><div><b>${e[DI].length+e[NO].length}</b>Total</div><div><b>${nf}</b>Feriados</div></div>
+  <table class="cal"><thead><tr>${['DOM','SEG','TER','QUA','QUI','SEX','SÁB'].map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${tb}</tbody></table>
+  <div class="lg">★ Feriado · Contorno vermelho: dobra (Diurno e Noturno no mesmo dia)</div>
+  ${T?`<h2>Trocas registradas</h2><table class="tt"><thead><tr><th>Origem</th><th>Data</th><th>Destino</th><th>Data</th><th>Nome</th><th>Obs</th></tr></thead><tbody>${T}</tbody></table>`:''}`;
+  abre('ld');
+  setTimeout(()=>{
+    html2pdf().set({margin:8,filename:`escala_huse_${MES[M].toLowerCase()}_${Y}.pdf`,image:{type:'jpeg',quality:.96},html2canvas:{scale:2,useCORS:true,windowWidth:730,backgroundColor:'#fff'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy']}}).from(el).save()
+      .then(()=>{fecha('ld');toast('PDF gerado')}).catch(er=>{fecha('ld');toast('Erro ao gerar PDF','err');console.error(er)});
+  },300);
+}
+
+render();
 </script>
 </body>
 </html>
