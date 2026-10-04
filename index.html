@@ -41,7 +41,10 @@ header{background:var(--ink);color:#fff;padding:calc(14px + env(safe-area-inset-
 .fl{font-size:.82rem;line-height:1.7}.fl b{color:var(--red);margin-right:6px}.card h3{font-size:.85rem;margin-bottom:6px}
 .bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--ln);z-index:20}
 .act{flex:1;height:52px;border:1px solid var(--ln);border-radius:14px;background:#fff;color:var(--ink);font-size:.74rem;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
-.act span{font-size:1.15rem;line-height:1}.act.r{color:var(--red)}.act.p{background:var(--pri);border-color:var(--pri);color:#fff}.act:active{opacity:.75}
+.act span{font-size:1.15rem;line-height:1}.sync{font-size:.62rem;width:9px;height:9px;border-radius:50%;background:#64748b;display:inline-block}
+.sync.off{background:#94a3b8}.sync.sy{background:#f5a524;animation:pulseS 1s infinite}.sync.ok{background:#2fcf7a}.sync.err{background:#d1344a}
+@keyframes pulseS{50%{opacity:.3}}
+.act.r{color:var(--red)}.act.p{background:var(--pri);border-color:var(--pri);color:#fff}.act:active{opacity:.75}
 .ov{position:fixed;inset:0;background:rgba(18,38,58,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}
 .ov.on{display:flex}
 .sh{background:#fff;width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto;animation:up .2s ease}
@@ -70,7 +73,7 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
 <body>
 <div class="app">
 <header>
-  <div class="top"><div><b>Plantões HUSE</b><small>Mª de Fatima Velame · Escala 12x36</small></div><button class="pill" onclick="hoje()">Hoje</button></div>
+  <div class="top"><div><b>Plantões HUSE</b><small>Mª de Fatima Velame · Escala 12x36</small></div><div style="display:flex;align-items:center;gap:10px"><span class="sync off" id="sync">●</span><button class="pill" onclick="hoje()">Hoje</button></div></div>
   <div class="nav">
     <button class="ib" onclick="mov(-1)" aria-label="Mês anterior">‹</button>
     <div class="ttl"><h1 id="ttl"></h1><input type="month" id="mi" aria-label="Escolher mês"></div>
@@ -124,7 +127,34 @@ const MES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto
 const DS=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 let S={allEscalas:{},observacoes:[]},M=now.getMonth(),Y=now.getFullYear(),selDay=null,editIdx=null,filtroTodas=false,tm;
 try{const r=JSON.parse(localStorage.getItem(KEY));if(r){S.allEscalas=r.allEscalas||{};S.observacoes=r.observacoes||[]}}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({...S,dataSalvamento:new Date().toISOString()}))}catch(e){toast('Não foi possível salvar','err')}};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({...S,dataSalvamento:new Date().toISOString()}))}catch(e){toast('Não foi possível salvar neste navegador','err')}queueCloudSave()};
+
+/* Sincronização na nuvem (conta Claude) — independe do navegador/Safari */
+let cloudDb=null,cloudUser=null,cloudRef=null,cloudOn=false,cloudBusy=false,cloudPending=false,cloudTimer=null;
+function setSync(st){const el=$('sync');if(!el)return;el.className='sync '+st;el.title={off:'Salvando só neste navegador',sy:'Sincronizando…',ok:'Sincronizado com sua conta Claude',err:'Falha ao sincronizar — tentando de novo'}[st]}
+async function initCloud(){
+  try{cloudDb=await window.claude.use('db');cloudUser=await window.claude.use('user')}catch(e){return}
+  if(!cloudDb||!cloudUser)return;
+  let uid=null;try{uid=await cloudUser.id()}catch(e){}
+  if(!uid)return;
+  cloudRef=cloudDb.doc('data/users/'+uid+'/escala');
+  setSync('sy');
+  try{
+    const snap=await cloudRef.get();
+    if(snap.exists){const d=snap.data()||{};S.allEscalas=d.allEscalas||{};S.observacoes=d.observacoes||[];render();if($('sl').classList.contains('on'))drawTrocas()}
+    else await cloudRef.set({allEscalas:S.allEscalas,observacoes:S.observacoes});
+    cloudOn=true;setSync('ok');
+  }catch(e){setSync('err')}
+}
+function queueCloudSave(){if(!cloudOn)return;setSync('sy');clearTimeout(cloudTimer);cloudTimer=setTimeout(doCloudSave,700)}
+async function doCloudSave(){
+  if(!cloudOn||!cloudRef)return;
+  if(cloudBusy){cloudPending=true;return}
+  cloudBusy=true;
+  try{await cloudRef.set({allEscalas:S.allEscalas,observacoes:S.observacoes});setSync('ok')}catch(e){setSync('err')}
+  cloudBusy=false;
+  if(cloudPending){cloudPending=false;doCloudSave()}
+}
 const dim=(m,y)=>new Date(y,m+1,0).getDate(),pad=n=>String(n).padStart(2,'0');
 const parse=s=>{if(!s)return null;const p=s.split('-');return p.length==3?new Date(+p[0],+p[1]-1,+p[2]):null};
 const br=d=>d?pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear():'--';
@@ -212,7 +242,7 @@ function drawDia(){
   $('dbody').innerHTML=`<h2>${DS[dt.getDay()]}, ${d} de ${MES[M]}</h2>${fe?`<p class="fe">★ ${fe}</p>`:''}<div class="tg"><button class="${D?'on d':''}" onclick="tg('${DI}')">☀ Diurno<small>${D?'Plantão':'Folga'}</small></button><button class="${N?'on n':''}" onclick="tg('${NO}')">☾ Noturno<small>${N?'Plantão':'Folga'}</small></button></div>${al}`;
 }
 function tg(h){const e=esc(M,Y),i=e[h].indexOf(selDay);if(i<0){e[h].push(selDay);e[h].sort((a,b)=>a-b)}else e[h].splice(i,1);e.limpo=true;save();render();drawDia()}
-function salvarTudo(){save();toast('Dados salvos')}
+async function salvarTudo(){save();if(cloudOn){clearTimeout(cloudTimer);await doCloudSave()}toast('Dados salvos')}
 function limpar(){
   if(!confirm(`Limpar todos os plantões de ${MES[M]} ${Y}?\nOs registros de trocas não são apagados.`))return;
   S.allEscalas[Y+'_'+M]={[DI]:[],[NO]:[],limpo:true};save();render();toast(MES[M]+' limpo')
@@ -248,39 +278,47 @@ function revTroca(i){if(!confirm('Reverter esta troca e restaurar os plantões o
 function delTroca(i){if(!confirm('Excluir só o registro? Os plantões continuam como estão.'))return;S.observacoes.splice(i,1);save();drawTrocas();toast('Registro excluído')}
 document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',ev=>{if(ev.target==o&&o.id!='ld')o.classList.remove('on')}));
 
-/* PDF: página única A4 retrato com o mês inteiro */
+/* PDF: A4 retrato com calendário completo, feriados e trocas do mês */
 function pdf(){
   if(typeof html2pdf==='undefined')return toast('PDF precisa de internet para carregar a biblioteca','err');
   const e=esc(M,Y),n=dim(M,Y),f=feriados(Y),first=new Date(Y,M,1).getDay(),rows=Math.ceil((first+n)/7);
-  let tb='',nf=0;
+  let tb='',fer=[];
   for(let r=0;r<rows;r++){tb+='<tr>';for(let c=0;c<7;c++){
     const d=r*7+c-first+1;
     if(d<1||d>n){tb+='<td class="z"></td>';continue}
-    const D=e[DI].includes(d),N=e[NO].includes(d),fe=f[M+'-'+d];if(fe)nf++;
+    const D=e[DI].includes(d),N=e[NO].includes(d),fe=f[M+'-'+d];if(fe)fer.push(d);
     tb+=`<td class="${fe?'f':''}${D&&N?' w':''}"><div class="dn${c==0?' s':''}">${d}${fe?' ★':''}</div>${fe?`<div class="fn">${fe}</div>`:''}${D?'<div class="p d">Diurno</div>':''}${N?'<div class="p n">Noturno</div>':''}</td>`;
   }tb+='</tr>'}
-  const T=trocasDoMes().map(({t})=>`<tr><td>${H(t.hospital)}</td><td>${br(parse(t.data))}</td><td>${H(t.hospitalTroca)}</td><td>${br(parse(t.dataTroca))}</td><td>${H(t.nome)}</td><td>${H(t.observacao)}</td></tr>`).join('');
+  const FL=fer.length?fer.map(d=>`<div class="li"><b>${pad(d)}/${pad(M+1)}</b><span>${DS[new Date(Y,M,d).getDay()].split('-')[0]}</span>${f[M+'-'+d]}</div>`).join(''):'<div class="em">Nenhum feriado neste mês</div>';
+  const TL=trocasDoMes();
+  const T=TL.length?`<table class="tt"><thead><tr><th>Plantão de origem</th><th>Plantão de destino</th><th>Nome</th><th>Observação</th></tr></thead><tbody>${TL.map(({t})=>`<tr><td><b>${H(t.hospital)}</b><br>${br(parse(t.data))}</td><td><b>${H(t.hospitalTroca)}</b><br>${br(parse(t.dataTroca))}</td><td>${H(t.nome)}</td><td>${H(t.observacao)||'—'}</td></tr>`).join('')}</tbody></table>`:'<div class="em">Nenhuma troca registrada neste mês</div>';
   const el=document.createElement('div');
   el.style.cssText='width:720px;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#12263a;padding:4px';
   el.innerHTML=`<style>
-    h1{font-size:22px;text-align:center;color:#12263a;margin:0 0 4px}.sb{text-align:center;font-size:12px;color:#64748b;margin-bottom:12px}
-    .sm{display:flex;gap:8px;margin-bottom:12px}.sm div{flex:1;border:1px solid #cbd5e1;border-radius:6px;padding:6px;text-align:center;font-size:11px;color:#64748b}.sm b{display:block;font-size:17px;color:#12263a}
-    table{width:100%;border-collapse:collapse;table-layout:fixed}
-    th{background:#12263a;color:#fff;font-size:11px;padding:6px 0;border:1px solid #12263a}
-    .cal td{border:1px solid #cbd5e1;height:92px;vertical-align:top;padding:4px}
-    .z{background:#f1f5f9}.f{background:#fff4ec}.w{outline:2px solid #d1344a;outline-offset:-2px}
-    .dn{font-size:13px;font-weight:700}.s{color:#d1344a}.fn{font-size:8px;color:#b4531a;line-height:1.2;margin:1px 0 3px}
-    .p{font-size:10px;font-weight:700;text-align:center;border-radius:4px;padding:3px 0;margin-top:3px}.p.d{background:#fde9b8;color:#7a4a00}.p.n{background:#d6dcff;color:#1f2a7a}
-    .lg{font-size:10px;color:#64748b;margin:8px 0 14px}
-    h2{font-size:13px;margin:0 0 6px;color:#12263a}.tt td,.tt th{border:1px solid #cbd5e1;font-size:10px;padding:5px;text-align:left}.tt th{background:#12263a;color:#fff}
+    .hd{background:#12263a;color:#fff;border-radius:12px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .hd .a{font-size:11px;opacity:.7}.hd h1{font-size:28px;margin:3px 0 0;font-weight:700}.hd .r{text-align:right;font-size:11px;line-height:1.6;opacity:.9}
+    .sm{display:flex;gap:8px;margin-bottom:12px}.sm div{flex:1;background:#f4f6f9;border:1px solid #e2e8f0;border-radius:10px;padding:8px;text-align:center;font-size:10px;color:#64748b}.sm b{display:block;font-size:20px;margin-bottom:1px}
+    .cal{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;margin:0 -4px}
+    .cal th{background:#1d6fa5;color:#fff;font-size:10px;padding:6px 0;border-radius:6px}.cal th.s{background:#d1344a}
+    .cal td{height:80px;vertical-align:top;padding:5px;background:#f4f6f9;border:1px solid #e2e8f0;border-radius:8px}
+    .cal td.z{background:#fafbfc;border-color:#f1f5f9}.cal td.f{background:#fff4ec;border-color:#f4b98a}.cal td.w{border:2px solid #d1344a}
+    .dn{font-size:13px;font-weight:700}.s{color:#d1344a}.fn{font-size:8px;color:#b4531a;line-height:1.2;margin:1px 0 2px}
+    .p{font-size:10px;font-weight:700;text-align:center;border-radius:5px;padding:3px 0;margin-top:3px}.p.d{background:#fde9b8;color:#7a4a00}.p.n{background:#d6dcff;color:#1f2a7a}
+    .bx{margin-top:14px;page-break-inside:avoid}
+    h2{font-size:13px;margin:0 0 8px;border-left:4px solid #1d6fa5;padding-left:8px}
+    .li{font-size:11px;padding:6px 8px;border-bottom:1px solid #e2e8f0}.li b{color:#b4531a;display:inline-block;width:42px}.li span{display:inline-block;width:70px;color:#64748b}
+    .em{font-size:11px;color:#94a3b8;padding:8px}
+    .tt{width:100%;border-collapse:collapse}.tt th{background:#12263a;color:#fff;font-size:10px;padding:6px 8px;text-align:left}
+    .tt td{font-size:10px;padding:6px 8px;border-bottom:1px solid #e2e8f0;line-height:1.5}
     tr{page-break-inside:avoid}
+    .ft{margin-top:14px;padding-top:8px;border-top:1px solid #e2e8f0;font-size:9px;color:#94a3b8;display:flex;justify-content:space-between}
   </style>
-  <h1>ESCALA HUSE — ${MES[M].toUpperCase()}/${Y}</h1>
-  <div class="sb">Plantões de Mª de Fatima Velame · Escala 12x36 · Gerado em ${new Date().toLocaleDateString('pt-BR')}</div>
-  <div class="sm"><div><b>${e[DI].length}</b>Diurnos</div><div><b>${e[NO].length}</b>Noturnos</div><div><b>${e[DI].length+e[NO].length}</b>Total</div><div><b>${nf}</b>Feriados</div></div>
-  <table class="cal"><thead><tr>${['DOM','SEG','TER','QUA','QUI','SEX','SÁB'].map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${tb}</tbody></table>
-  <div class="lg">★ Feriado · Contorno vermelho: dobra (Diurno e Noturno no mesmo dia)</div>
-  ${T?`<h2>Trocas registradas</h2><table class="tt"><thead><tr><th>Origem</th><th>Data</th><th>Destino</th><th>Data</th><th>Nome</th><th>Obs</th></tr></thead><tbody>${T}</tbody></table>`:''}`;
+  <div class="hd"><div><div class="a">Escala de plantões · HUSE 12x36</div><h1>${MES[M]} ${Y}</h1></div><div class="r"><b>Mª de Fatima Velame</b><br>Gerado em ${new Date().toLocaleDateString('pt-BR')}</div></div>
+  <div class="sm"><div><b>${e[DI].length}</b>Diurnos</div><div><b>${e[NO].length}</b>Noturnos</div><div><b>${e[DI].length+e[NO].length}</b>Total de plantões</div><div><b>${fer.length}</b>Feriados</div></div>
+  <table class="cal"><thead><tr>${['DOM','SEG','TER','QUA','QUI','SEX','SÁB'].map((x,i)=>`<th class="${i==0?'s':''}">${x}</th>`).join('')}</tr></thead><tbody>${tb}</tbody></table>
+  <div class="bx"><h2>Feriados do mês</h2>${FL}</div>
+  <div class="bx"><h2>Trocas do mês</h2>${T}</div>
+  <div class="ft"><span>★ Feriado · Contorno vermelho: dobra (Diurno e Noturno no mesmo dia)</span><span>HUSE · Escala 12x36</span></div>`;
   abre('ld');
   setTimeout(()=>{
     html2pdf().set({margin:8,filename:`escala_huse_${MES[M].toLowerCase()}_${Y}.pdf`,image:{type:'jpeg',quality:.96},html2canvas:{scale:2,useCORS:true,windowWidth:730,backgroundColor:'#fff'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy']}}).from(el).save()
@@ -289,6 +327,7 @@ function pdf(){
 }
 
 render();
+initCloud();
 </script>
 </body>
 </html>
