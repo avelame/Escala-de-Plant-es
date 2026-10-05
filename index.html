@@ -41,10 +41,7 @@ header{background:var(--ink);color:#fff;padding:calc(14px + env(safe-area-inset-
 .fl{font-size:.82rem;line-height:1.7}.fl b{color:var(--red);margin-right:6px}.card h3{font-size:.85rem;margin-bottom:6px}
 .bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--ln);z-index:20}
 .act{flex:1;height:52px;border:1px solid var(--ln);border-radius:14px;background:#fff;color:var(--ink);font-size:.74rem;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
-.act span{font-size:1.15rem;line-height:1}.sync{font-size:.62rem;width:9px;height:9px;border-radius:50%;background:#64748b;display:inline-block}
-.sync.off{background:#94a3b8}.sync.sy{background:#f5a524;animation:pulseS 1s infinite}.sync.ok{background:#2fcf7a}.sync.err{background:#d1344a}
-@keyframes pulseS{50%{opacity:.3}}
-.act.r{color:var(--red)}.act.p{background:var(--pri);border-color:var(--pri);color:#fff}.act:active{opacity:.75}
+.act span{font-size:1.15rem;line-height:1}.act.r{color:var(--red)}.act.p{background:var(--pri);border-color:var(--pri);color:#fff}.act:active{opacity:.75}
 .ov{position:fixed;inset:0;background:rgba(18,38,58,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}
 .ov.on{display:flex}
 .sh{background:#fff;width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto;animation:up .2s ease}
@@ -73,7 +70,7 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
 <body>
 <div class="app">
 <header>
-  <div class="top"><div><b>Plantões HUSE</b><small>Mª de Fatima Velame · Escala 12x36</small></div><div style="display:flex;align-items:center;gap:10px"><span class="sync off" id="sync">●</span><button class="pill" onclick="hoje()">Hoje</button></div></div>
+  <div class="top"><div><b>Plantões HUSE</b><small>Mª de Fatima Velame · Escala 12x36</small></div><div style="display:flex;align-items:center;gap:8px"><button class="ib" style="width:42px;height:42px;font-size:1.15rem" onclick="abre('sb')" aria-label="Backup">💾</button><button class="pill" onclick="hoje()">Hoje</button></div></div>
   <div class="nav">
     <button class="ib" onclick="mov(-1)" aria-label="Mês anterior">‹</button>
     <div class="ttl"><h1 id="ttl"></h1><input type="month" id="mi" aria-label="Escolher mês"></div>
@@ -117,6 +114,15 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
   <div id="lb"></div>
 </div></div>
 
+<div class="ov" id="sb"><div class="sh">
+  <div class="hd"><h2>Backup</h2><button class="x" onclick="fecha('sb')">×</button></div>
+  <p style="font-size:.83rem;color:var(--mu);line-height:1.5;margin-bottom:14px">O app salva sozinho neste navegador. Para não perder nada — ou para passar os dados para outro aparelho — baixe um backup de vez em quando e guarde no iCloud ou no e-mail.</p>
+  <button class="ok" onclick="exportar()" style="margin-top:0">⤓ Baixar backup (.json)</button>
+  <label for="imp" style="margin-top:16px">Restaurar backup</label>
+  <input type="file" id="imp" accept="application/json,.json">
+  <button class="ok" style="background:var(--n);margin-top:10px" onclick="importar()">⤒ Restaurar deste arquivo</button>
+</div></div>
+
 <div class="ov" id="ld"><div>Gerando PDF…</div></div>
 <div class="toast" id="toast"></div>
 
@@ -127,33 +133,31 @@ const MES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto
 const DS=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 let S={allEscalas:{},observacoes:[]},M=now.getMonth(),Y=now.getFullYear(),selDay=null,editIdx=null,filtroTodas=false,tm;
 try{const r=JSON.parse(localStorage.getItem(KEY));if(r){S.allEscalas=r.allEscalas||{};S.observacoes=r.observacoes||[]}}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({...S,dataSalvamento:new Date().toISOString()}))}catch(e){toast('Não foi possível salvar neste navegador','err')}queueCloudSave()};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({...S,dataSalvamento:new Date().toISOString()}))}catch(e){toast('Não foi possível salvar neste navegador','err')}};
 
-/* Sincronização na nuvem (conta Claude) — independe do navegador/Safari */
-let cloudDb=null,cloudUser=null,cloudRef=null,cloudOn=false,cloudBusy=false,cloudPending=false,cloudTimer=null;
-function setSync(st){const el=$('sync');if(!el)return;el.className='sync '+st;el.title={off:'Salvando só neste navegador',sy:'Sincronizando…',ok:'Sincronizado com sua conta Claude',err:'Falha ao sincronizar — tentando de novo'}[st]}
-async function initCloud(){
-  try{cloudDb=await window.claude.use('db');cloudUser=await window.claude.use('user')}catch(e){return}
-  if(!cloudDb||!cloudUser)return;
-  let uid=null;try{uid=await cloudUser.id()}catch(e){}
-  if(!uid)return;
-  cloudRef=cloudDb.doc('data/users/'+uid+'/escala');
-  setSync('sy');
-  try{
-    const snap=await cloudRef.get();
-    if(snap.exists){const d=snap.data()||{};S.allEscalas=d.allEscalas||{};S.observacoes=d.observacoes||[];render();if($('sl').classList.contains('on'))drawTrocas()}
-    else await cloudRef.set({allEscalas:S.allEscalas,observacoes:S.observacoes});
-    cloudOn=true;setSync('ok');
-  }catch(e){setSync('err')}
+/* Backup manual (.json) — funciona em qualquer hospedagem, sem internet */
+function exportar(){
+  const blob=new Blob([JSON.stringify({allEscalas:S.allEscalas,observacoes:S.observacoes},null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='plantoes_huse_'+iso(now)+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+  toast('Backup baixado');
 }
-function queueCloudSave(){if(!cloudOn)return;setSync('sy');clearTimeout(cloudTimer);cloudTimer=setTimeout(doCloudSave,700)}
-async function doCloudSave(){
-  if(!cloudOn||!cloudRef)return;
-  if(cloudBusy){cloudPending=true;return}
-  cloudBusy=true;
-  try{await cloudRef.set({allEscalas:S.allEscalas,observacoes:S.observacoes});setSync('ok')}catch(e){setSync('err')}
-  cloudBusy=false;
-  if(cloudPending){cloudPending=false;doCloudSave()}
+function importar(){
+  const f=$('imp').files[0];
+  if(!f)return toast('Escolha um arquivo primeiro','err');
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(!d||typeof d!=='object'||!d.allEscalas)throw 0;
+      if(!confirm('Isso substitui os dados atuais pelos do backup. Continuar?'))return;
+      S.allEscalas=d.allEscalas||{};S.observacoes=d.observacoes||[];
+      save();render();fecha('sb');toast('Backup restaurado');
+    }catch(e){toast('Arquivo inválido','err')}
+  };
+  r.readAsText(f);
 }
 const dim=(m,y)=>new Date(y,m+1,0).getDate(),pad=n=>String(n).padStart(2,'0');
 const parse=s=>{if(!s)return null;const p=s.split('-');return p.length==3?new Date(+p[0],+p[1]-1,+p[2]):null};
@@ -242,7 +246,7 @@ function drawDia(){
   $('dbody').innerHTML=`<h2>${DS[dt.getDay()]}, ${d} de ${MES[M]}</h2>${fe?`<p class="fe">★ ${fe}</p>`:''}<div class="tg"><button class="${D?'on d':''}" onclick="tg('${DI}')">☀ Diurno<small>${D?'Plantão':'Folga'}</small></button><button class="${N?'on n':''}" onclick="tg('${NO}')">☾ Noturno<small>${N?'Plantão':'Folga'}</small></button></div>${al}`;
 }
 function tg(h){const e=esc(M,Y),i=e[h].indexOf(selDay);if(i<0){e[h].push(selDay);e[h].sort((a,b)=>a-b)}else e[h].splice(i,1);e.limpo=true;save();render();drawDia()}
-async function salvarTudo(){save();if(cloudOn){clearTimeout(cloudTimer);await doCloudSave()}toast('Dados salvos')}
+function salvarTudo(){save();toast('Dados salvos')}
 function limpar(){
   if(!confirm(`Limpar todos os plantões de ${MES[M]} ${Y}?\nOs registros de trocas não são apagados.`))return;
   S.allEscalas[Y+'_'+M]={[DI]:[],[NO]:[],limpo:true};save();render();toast(MES[M]+' limpo')
@@ -327,7 +331,6 @@ function pdf(){
 }
 
 render();
-initCloud();
 </script>
 </body>
 </html>
