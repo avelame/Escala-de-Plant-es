@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#12263a">
-<title>Plantões HUSE</title>
+<title>PLANTÕES</title>
 <style>
 :root{--ink:#12263a;--pri:#1d6fa5;--d:#f5a524;--dbg:#fde9b8;--dtx:#7a4a00;--n:#3b4cca;--nbg:#d6dcff;--ntx:#1f2a7a;--red:#d1344a;--bg:#eceff3;--mu:#64748b;--ln:#dde3ea}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -20,10 +20,10 @@ header{background:var(--ink);color:#fff;padding:calc(14px + env(safe-area-inset-
 .ttl{position:relative;flex:1;text-align:center}
 .ttl h1{font-size:1.55rem;font-weight:800;letter-spacing:-.4px}
 .ttl input{position:absolute;inset:0;width:100%;height:100%;opacity:0}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:-34px 12px 10px;position:relative}
-.st{background:#fff;border-radius:16px;padding:10px 6px;text-align:center;box-shadow:0 2px 10px rgba(18,38,58,.08)}
-.st b{display:block;font-size:1.35rem;line-height:1.2}.st span{font-size:.68rem;color:var(--mu)}
-.st.d b{color:#c47f00}.st.n b{color:var(--n)}.st.f b{color:var(--red)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:-34px 12px 10px;position:relative}
+.st{background:#fff;border-radius:16px;padding:9px 2px;text-align:center;box-shadow:0 2px 10px rgba(18,38,58,.08)}
+.st b{display:block;font-size:1.2rem;line-height:1.2}.st span{font-size:.6rem;color:var(--mu)}
+.st.d b{color:#c47f00}.st.n b{color:var(--n)}.st.f b{color:var(--red)}.st.a b{color:#3f8a1f}.st.b b{color:#0f7f72}
 .card{background:#fff;border-radius:20px;margin:0 12px 12px;padding:10px;box-shadow:0 2px 10px rgba(18,38,58,.06)}
 .wd,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .wd div{text-align:center;font-size:.68rem;font-weight:700;color:var(--mu);padding:4px 0}.wd div:first-child{color:var(--red)}
@@ -35,13 +35,19 @@ header{background:var(--ink);color:#fff;padding:calc(14px + env(safe-area-inset-
 .ic{position:absolute;top:3px;right:3px;font-size:.6rem;line-height:1.2;text-align:right}
 .ch{display:flex;flex-direction:column;gap:2px}
 .k{font-style:normal;font-size:.6rem;font-weight:700;text-align:center;border-radius:6px;padding:2px 0}
-.k.d{background:var(--dbg);color:var(--dtx)}.k.n{background:var(--nbg);color:var(--ntx)}
+.k.d{background:var(--dbg);color:var(--dtx)}.k.n{background:var(--nbg);color:var(--ntx)}.k.a{background:#d8f3c9;color:#2f6b12}.k.b{background:#c9eee8;color:#0b4f47}
 .lg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.72rem;color:var(--mu);margin-top:10px;padding:0 4px}
 .lg i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:4px}
-.fl{font-size:.82rem;line-height:1.7}.fl b{color:var(--red);margin-right:6px}.card h3{font-size:.85rem;margin-bottom:6px}
-.bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--ln);z-index:20}
-.act{flex:1;height:52px;border:1px solid var(--ln);border-radius:14px;background:#fff;color:var(--ink);font-size:.74rem;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.fl{font-size:.76rem;line-height:1.4}.fl div{margin-bottom:5px}.fl b{color:var(--red);margin-right:6px}.card h3{font-size:.85rem;margin-bottom:6px}
+.bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;display:flex;gap:6px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--ln);z-index:20}
+.act{flex:1;min-width:0;height:52px;border:1px solid var(--ln);border-radius:14px;background:#fff;color:var(--ink);font-size:.68rem;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 .act span{font-size:1.15rem;line-height:1}.act.r{color:var(--red)}.act.p{background:var(--pri);border-color:var(--pri);color:#fff}.act:active{opacity:.75}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 12px 12px}.two .card{margin:0;min-width:0;padding:12px}
+.gt{font-size:1.15rem;font-weight:800;margin-bottom:8px}
+.stk{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--ln);margin-bottom:10px}.stk i{display:block;height:100%}
+.gr{display:flex;justify-content:space-between;gap:4px;font-size:.72rem;padding:3px 0}.gr span{color:var(--mu)}.gr u{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.gr b{white-space:nowrap}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg button{height:46px;border:2px solid var(--ln);border-radius:12px;background:#fff;font:inherit;font-size:.8rem;font-weight:700;color:var(--mu)}.seg .on{color:#fff}
+.gi{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--ln);font-size:.85rem}.gi small{display:block;color:var(--mu);font-size:.74rem}
 .ov{position:fixed;inset:0;background:rgba(18,38,58,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}
 .ov.on{display:flex}
 .sh{background:#fff;width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto;animation:up .2s ease}
@@ -49,10 +55,10 @@ header{background:var(--ink);color:#fff;padding:calc(14px + env(safe-area-inset-
 .sh h2{font-size:1.1rem;margin-bottom:4px}.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .x{border:0;background:var(--bg);width:36px;height:36px;border-radius:50%;font-size:1.2rem;color:var(--mu)}
 .fe{color:#b4531a;font-size:.85rem;font-weight:600;margin-bottom:8px}
-.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-.tg button{height:76px;border:2px solid var(--ln);border-radius:16px;background:#fff;font:inherit;font-weight:700;font-size:1rem;color:var(--mu)}
-.tg small{display:block;font-weight:500;font-size:.75rem;margin-top:2px}
-.tg .on.d{background:var(--dbg);border-color:var(--d);color:var(--dtx)}.tg .on.n{background:var(--nbg);border-color:var(--n);color:var(--ntx)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.tg button{height:76px;border:2px solid var(--ln);border-radius:16px;background:#fff;font:inherit;font-weight:700;font-size:.88rem;color:var(--mu)}
+.tg small{display:block;font-weight:500;font-size:.68rem;margin-top:2px}
+.tg .on.d{background:var(--dbg);border-color:var(--d);color:var(--dtx)}.tg .on.n{background:var(--nbg);border-color:var(--n);color:var(--ntx)}.tg .on.a{background:#d8f3c9;border-color:#5fb83d;color:#2f6b12}.tg .on.b{background:#c9eee8;border-color:#14a58a;color:#0b4f47}
 .al{background:#fdecef;color:#9b1c31;border-radius:10px;padding:9px 11px;font-size:.82rem;margin-top:6px}
 label{display:block;font-size:.8rem;font-weight:600;margin:10px 0 4px;color:#334155}
 select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px solid var(--ln);border-radius:12px;padding:0 12px;font:inherit;font-size:16px;background:#fff;color:var(--ink)}
@@ -70,7 +76,7 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
 <body>
 <div class="app">
 <header>
-  <div class="top"><div><b>Plantões HUSE</b><small>Mª de Fatima Velame · Escala 12x36</small></div><div style="display:flex;align-items:center;gap:8px"><button class="ib" style="width:42px;height:42px;font-size:1.15rem" onclick="abre('sb')" aria-label="Backup">💾</button><button class="pill" onclick="hoje()">Hoje</button></div></div>
+  <div class="top"><div><b>PLANTÕES</b><small>Mª de Fatima Velame · Escala 12x36</small></div><div style="display:flex;align-items:center;gap:8px"><button class="ib" style="width:42px;height:42px;font-size:1.15rem" onclick="abre('sb')" aria-label="Backup">💾</button><button class="pill" onclick="hoje()">Hoje</button></div></div>
   <div class="nav">
     <button class="ib" onclick="mov(-1)" aria-label="Mês anterior">‹</button>
     <div class="ttl"><h1 id="ttl"></h1><input type="month" id="mi" aria-label="Escolher mês"></div>
@@ -78,16 +84,18 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
   </div>
 </header>
 <div class="stats">
-  <div class="st d"><b id="sd">0</b><span>Diurnos</span></div>
-  <div class="st n"><b id="sn">0</b><span>Noturnos</span></div>
+  <div class="st d"><b id="sd">0</b><span>HUSE Dia</span></div>
+  <div class="st n"><b id="sn">0</b><span>HUSE Noite</span></div>
+  <div class="st a"><b id="sa">0</b><span>Prim. Dia</span></div>
+  <div class="st b"><b id="sb">0</b><span>Prim. Noite</span></div>
   <div class="st f"><b id="sf">0</b><span>Feriados</span></div>
 </div>
 <div class="card" id="card">
   <div class="wd"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div>
   <div class="grid" id="grid"></div>
-  <div class="lg"><span><i style="background:var(--dbg)"></i>Diurno</span><span><i style="background:var(--nbg)"></i>Noturno</span><span><i style="background:#fff4ec;border:1px solid #f4b98a"></i>★ Feriado</span><span><i style="border:1.5px solid var(--red)"></i>⚠ Dobra</span><span>🚗 Deslocamento</span></div>
+  <div class="lg"><span><i style="background:var(--dbg)"></i>HUSE Dia</span><span><i style="background:var(--nbg)"></i>HUSE Noite</span><span><i style="background:#d8f3c9"></i>Primavera Dia</span><span><i style="background:#c9eee8"></i>Primavera Noite</span><span><i style="background:#fff4ec;border:1px solid #f4b98a"></i>★ Feriado</span><span><i style="border:1.5px solid var(--red)"></i>⚠ Dobra</span><span>🚗 Deslocamento</span></div>
 </div>
-<div class="card"><h3>Feriados do mês</h3><div class="fl" id="fl"></div></div>
+<div class="two"><div class="card"><h3>Feriados do mês</h3><div class="fl" id="fl"></div></div><div class="card"><h3>Gastos do mês</h3><div id="gc"></div></div></div>
 </div>
 
 <div class="bar">
@@ -95,6 +103,7 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
   <button class="act r" onclick="limpar()"><span>✕</span>Limpar</button>
   <button class="act" onclick="abrirTroca()"><span>⇄</span>Trocar</button>
   <button class="act" onclick="verTrocas()"><span>☰</span>Trocas</button>
+  <button class="act" onclick="abrirGastos()"><span>R$</span>Gastos</button>
   <button class="act p" onclick="pdf()"><span>⤓</span>PDF</button>
 </div>
 
@@ -102,8 +111,8 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
 
 <div class="ov" id="st"><div class="sh">
   <div class="hd"><h2 id="tt">Nova troca</h2><button class="x" onclick="fecha('st')">×</button></div>
-  <div class="row"><div><label for="oh">Plantão origem</label><select id="oh"><option value="">Selecione</option><option>HUSE Diurno</option><option>HUSE Noturno</option></select></div><div><label for="od">Data origem</label><input type="date" id="od"></div></div>
-  <div class="row"><div><label for="dh">Plantão destino</label><select id="dh"><option value="">Selecione</option><option>HUSE Diurno</option><option>HUSE Noturno</option></select></div><div><label for="dd">Data destino</label><input type="date" id="dd"></div></div>
+  <div class="row"><div><label for="oh">Plantão origem</label><select id="oh"><option value="">Selecione</option><option>HUSE Diurno</option><option>HUSE Noturno</option><option>Primavera Diurno</option><option>Primavera Noturno</option></select></div><div><label for="od">Data origem</label><input type="date" id="od"></div></div>
+  <div class="row"><div><label for="dh">Plantão destino</label><select id="dh"><option value="">Selecione</option><option>HUSE Diurno</option><option>HUSE Noturno</option><option>Primavera Diurno</option><option>Primavera Noturno</option></select></div><div><label for="dd">Data destino</label><input type="date" id="dd"></div></div>
   <label for="nm">Nome</label><input type="text" id="nm" placeholder="Com quem trocou">
   <label for="ob">Observação (opcional)</label><input type="text" id="ob" placeholder="Motivo">
   <button class="ok" onclick="salvarTroca()">Salvar troca</button>
@@ -112,6 +121,15 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
 <div class="ov" id="sl"><div class="sh">
   <div class="hd"><h2>Trocas</h2><button class="pill" style="color:var(--pri);border-color:var(--ln)" id="ft" onclick="filtroTodas=!filtroTodas;drawTrocas()"></button><button class="x" onclick="fecha('sl')">×</button></div>
   <div id="lb"></div>
+</div></div>
+
+<div class="ov" id="sg"><div class="sh">
+  <div class="hd"><h2>Gastos</h2><button class="x" onclick="fecha('sg')">×</button></div>
+  <label>Hospital / plantão</label><div class="seg" id="gh"></div>
+  <div class="row"><div><label for="gv">Valor (R$)</label><input type="text" id="gv" inputmode="decimal" placeholder="0,00"></div><div><label for="gd">Data</label><input type="date" id="gd"></div></div>
+  <label for="gn">Descrição (opcional)</label><input type="text" id="gn" placeholder="Ex.: combustível, alimentação">
+  <button class="ok" onclick="addGasto()">Adicionar gasto</button>
+  <h3 style="font-size:.85rem;margin:18px 0 4px">Lançamentos de <span id="gm"></span></h3><div id="gli"></div>
 </div></div>
 
 <div class="ov" id="sb"><div class="sh">
@@ -128,16 +146,24 @@ select,input[type=text],input[type=date]{width:100%;height:48px;border:1.5px sol
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-const $=i=>document.getElementById(i),KEY='escala_huse_data',DI='HUSE Diurno',NO='HUSE Noturno',now=new Date();
+const $=i=>document.getElementById(i),KEY='escala_huse_data',DI='HUSE Diurno',NO='HUSE Noturno',PD='Primavera Diurno',PN='Primavera Noturno',HOSP=[DI,NO,PD,PN],now=new Date();
 const MES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const DS=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-let S={allEscalas:{},observacoes:[]},M=now.getMonth(),Y=now.getFullYear(),selDay=null,editIdx=null,filtroTodas=false,tm;
-try{const r=JSON.parse(localStorage.getItem(KEY));if(r){S.allEscalas=r.allEscalas||{};S.observacoes=r.observacoes||[]}}catch(e){}
+let S={allEscalas:{},observacoes:[],gastos:[]},gsel='HUSE',M=now.getMonth(),Y=now.getFullYear(),selDay=null,editIdx=null,filtroTodas=false,tm;
+try{const r=JSON.parse(localStorage.getItem(KEY));if(r){S.allEscalas=r.allEscalas||{};S.observacoes=r.observacoes||[];S.gastos=r.gastos||[]}}catch(e){}
+/* Migra dados da versão anterior (Primavera era um plantão único; gastos eram por plantão) */
+function migrar(){
+  const O='Hospital Primavera';
+  Object.values(S.allEscalas).forEach(e=>{if(e[O]){e[PD]=[...new Set([...(e[PD]||[]),...e[O]])].sort((a,b)=>a-b);delete e[O]}});
+  S.observacoes.forEach(t=>{if(t.hospital==O)t.hospital=PD;if(t.hospitalTroca==O)t.hospitalTroca=PD});
+  S.gastos.forEach(g=>{if(g.hospital==DI||g.hospital==NO)g.hospital='HUSE'});
+}
+migrar();
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({...S,dataSalvamento:new Date().toISOString()}))}catch(e){toast('Não foi possível salvar neste navegador','err')}};
 
 /* Backup manual (.json) — funciona em qualquer hospedagem, sem internet */
 function exportar(){
-  const blob=new Blob([JSON.stringify({allEscalas:S.allEscalas,observacoes:S.observacoes},null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({allEscalas:S.allEscalas,observacoes:S.observacoes,gastos:S.gastos},null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download='plantoes_huse_'+iso(now)+'.json';
@@ -153,7 +179,7 @@ function importar(){
       const d=JSON.parse(r.result);
       if(!d||typeof d!=='object'||!d.allEscalas)throw 0;
       if(!confirm('Isso substitui os dados atuais pelos do backup. Continuar?'))return;
-      S.allEscalas=d.allEscalas||{};S.observacoes=d.observacoes||[];
+      S.allEscalas=d.allEscalas||{};S.observacoes=d.observacoes||[];S.gastos=d.gastos||[];migrar();
       save();render();fecha('sb');toast('Backup restaurado');
     }catch(e){toast('Arquivo inválido','err')}
   };
@@ -180,7 +206,7 @@ function feriados(y){
 
 /* Escala */
 function gerar(m,y){
-  const n=dim(m,y),r={[DI]:[],[NO]:[]};let sem=[];
+  const n=dim(m,y),r={[DI]:[],[NO]:[],[PD]:[],[PN]:[]};let sem=[];
   for(let d=1;d<=n;d++){
     sem.push(d);
     if(new Date(y,m,d).getDay()==6||d==n){
@@ -193,7 +219,7 @@ function gerar(m,y){
 function esc(m,y){
   const k=y+'_'+m;let e=S.allEscalas[k];
   if(!e||(!e.limpo&&!(e[DI]||[]).length&&!(e[NO]||[]).length)){e=S.allEscalas[k]=gerar(m,y);save()}
-  e[DI]=e[DI]||[];e[NO]=e[NO]||[];return e;
+  e[DI]=e[DI]||[];e[NO]=e[NO]||[];e[PD]=e[PD]||[];e[PN]=e[PN]||[];return e;
 }
 function aplicar(t){
   const o=parse(t.data),d=parse(t.dataTroca);
@@ -219,13 +245,13 @@ function render(){
   let h='',nf=[];
   for(let i=0;i<first;i++)h+='<div class="c e"></div>';
   for(let d=1;d<=n;d++){
-    const D=e[DI].includes(d),N=e[NO].includes(d),fe=f[M+'-'+d],dob=D&&N,des=D&&e[NO].includes(d-1);
+    const D=e[DI].includes(d),N=e[NO].includes(d),A=e[PD].includes(d),B=e[PN].includes(d),fe=f[M+'-'+d],dob=D+N+A+B>1,des=(D||A)&&(e[NO].includes(d-1)||e[PN].includes(d-1));
     if(fe)nf.push(d);
     const isT=d==now.getDate()&&M==now.getMonth()&&Y==now.getFullYear();
-    h+=`<button class="c${fe?' f':''}${dob?' w':''}${isT?' t':''}${(first+d-1)%7==0?' s':''}" onclick="openDia(${d})"><span class="n">${d}</span><span class="ic">${fe?'★':''}${dob?'⚠':''}${des?'🚗':''}</span><span class="ch">${D?'<i class="k d">Dia</i>':''}${N?'<i class="k n">Noite</i>':''}</span></button>`;
+    h+=`<button class="c${fe?' f':''}${dob?' w':''}${isT?' t':''}${(first+d-1)%7==0?' s':''}" onclick="openDia(${d})"><span class="n">${d}</span><span class="ic">${fe?'★':''}${dob?'⚠':''}${des?'🚗':''}</span><span class="ch">${D?'<i class="k d">Dia</i>':''}${N?'<i class="k n">Noite</i>':''}${A?'<i class="k a">P·Dia</i>':''}${B?'<i class="k b">P·Noite</i>':''}</span></button>`;
   }
   $('grid').innerHTML=h;
-  $('sd').textContent=e[DI].length;$('sn').textContent=e[NO].length;$('sf').textContent=nf.length;
+  $('sd').textContent=e[DI].length;$('sn').textContent=e[NO].length;$('sa').textContent=e[PD].length;$('sb').textContent=e[PN].length;$('sf').textContent=nf.length;$('gc').innerHTML=gastosHtml();
   $('fl').innerHTML=nf.length?nf.map(d=>`<div><b>${pad(d)}/${pad(M+1)}</b>${f[M+'-'+d]}</div>`).join(''):'Sem feriados neste mês';
 }
 function mov(x){M+=x;if(M<0){M=11;Y--}if(M>11){M=0;Y++}render()}
@@ -239,18 +265,43 @@ cd.addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[
 /* Dia */
 function openDia(d){selDay=d;drawDia();abre('sd_')}
 function drawDia(){
-  const d=selDay,e=esc(M,Y),dt=new Date(Y,M,d),fe=feriados(Y)[M+'-'+d],D=e[DI].includes(d),N=e[NO].includes(d);
+  const d=selDay,e=esc(M,Y),dt=new Date(Y,M,d),fe=feriados(Y)[M+'-'+d],D=e[DI].includes(d),N=e[NO].includes(d),A=e[PD].includes(d),B=e[PN].includes(d);
   let al='';
-  if(D&&N)al+='<p class="al">⚠ Dobra: Diurno e Noturno no mesmo dia.</p>';
-  if(D&&e[NO].includes(d-1))al+='<p class="al">🚗 Noturno ontem e Diurno hoje: atenção ao deslocamento.</p>';
-  $('dbody').innerHTML=`<h2>${DS[dt.getDay()]}, ${d} de ${MES[M]}</h2>${fe?`<p class="fe">★ ${fe}</p>`:''}<div class="tg"><button class="${D?'on d':''}" onclick="tg('${DI}')">☀ Diurno<small>${D?'Plantão':'Folga'}</small></button><button class="${N?'on n':''}" onclick="tg('${NO}')">☾ Noturno<small>${N?'Plantão':'Folga'}</small></button></div>${al}`;
+  if(D+N+A+B>1)al+='<p class="al">⚠ Dobra: mais de um plantão no mesmo dia.</p>';
+  if((D||A)&&(e[NO].includes(d-1)||e[PN].includes(d-1)))al+='<p class="al">🚗 Noturno ontem e plantão hoje: atenção ao deslocamento.</p>';
+  $('dbody').innerHTML=`<h2>${DS[dt.getDay()]}, ${d} de ${MES[M]}</h2>${fe?`<p class="fe">★ ${fe}</p>`:''}<div class="tg"><button class="${D?'on d':''}" onclick="tg('${DI}')">☀ HUSE Diurno<small>${D?'Plantão':'Folga'}</small></button><button class="${N?'on n':''}" onclick="tg('${NO}')">☾ HUSE Noturno<small>${N?'Plantão':'Folga'}</small></button><button class="${A?'on a':''}" onclick="tg('${PD}')">☀ Primavera Diurno<small>${A?'Plantão':'Folga'}</small></button><button class="${B?'on b':''}" onclick="tg('${PN}')">☾ Primavera Noturno<small>${B?'Plantão':'Folga'}</small></button></div>${al}`;
 }
 function tg(h){const e=esc(M,Y),i=e[h].indexOf(selDay);if(i<0){e[h].push(selDay);e[h].sort((a,b)=>a-b)}else e[h].splice(i,1);e.limpo=true;save();render();drawDia()}
 function salvarTudo(){save();toast('Dados salvos')}
 function limpar(){
-  if(!confirm(`Limpar todos os plantões de ${MES[M]} ${Y}?\nOs registros de trocas não são apagados.`))return;
-  S.allEscalas[Y+'_'+M]={[DI]:[],[NO]:[],limpo:true};save();render();toast(MES[M]+' limpo')
+  if(!confirm(`Limpar todos os plantões de ${MES[M]} ${Y}?\nTrocas e gastos não são apagados.`))return;
+  S.allEscalas[Y+'_'+M]={[DI]:[],[NO]:[],[PD]:[],[PN]:[],limpo:true};save();render();toast(MES[M]+' limpo')
 }
+
+/* Gastos */
+const GH=['HUSE','Hospital Primavera'],GN={'HUSE':'HUSE','Hospital Primavera':'Primavera'},GC={'HUSE':'#1d6fa5','Hospital Primavera':'#14a58a'};
+const BRL=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const gastosMes=()=>S.gastos.map((g,i)=>({g,i})).filter(({g})=>{const d=parse(g.data);return d&&d.getMonth()==M&&d.getFullYear()==Y});
+const totGastos=()=>gastosMes().reduce((a,{g})=>a+g.valor,0);
+function gastosHtml(){
+  const L=gastosMes(),by={},tot=totGastos();
+  GH.forEach(h=>by[h]=0);L.forEach(({g})=>{if(g.hospital in by)by[g.hospital]+=g.valor});
+  return `<div class="gt">${BRL(tot)}</div><div class="stk">${GH.filter(h=>by[h]>0).map(h=>`<i style="width:${by[h]/tot*100}%;background:${GC[h]}"></i>`).join('')}</div>`+GH.map(h=>`<div class="gr"><span><u style="background:${GC[h]}"></u>${GN[h]}</span><b>${BRL(by[h])}</b></div>`).join('')+(L.length?'':'<div class="em" style="padding:8px 0 0">Nenhum gasto lançado</div>');
+}
+function abrirGastos(){$('gd').value=iso(now.getMonth()==M&&now.getFullYear()==Y?now:new Date(Y,M,1));drawGastos();abre('sg')}
+function drawGastos(){
+  $('gh').innerHTML=GH.map(h=>`<button style="${h==gsel?`background:${GC[h]};border-color:${GC[h]}`:''}" class="${h==gsel?'on':''}" onclick="gsel='${h}';drawGastos()">${GN[h]}</button>`).join('');
+  $('gm').textContent=MES[M]+' '+Y;
+  const L=gastosMes();
+  $('gli').innerHTML=L.length?L.map(({g,i})=>`<div class="gi"><div><b>${BRL(g.valor)}</b> · ${GN[g.hospital]||H(g.hospital)}<small>${br(parse(g.data))}${g.desc?' · '+H(g.desc):''}</small></div><button class="x" onclick="delGasto(${i})">×</button></div>`).join(''):'<p class="em">Nenhum gasto neste mês</p>';
+}
+function addGasto(){
+  const raw=$('gv').value.replace(/[^\d,.]/g,''),v=parseFloat(raw.includes(',')||/^\d{1,3}(\.\d{3})+$/.test(raw)?raw.replace(/\./g,'').replace(',','.'):raw),d=$('gd').value;
+  if(!(v>0)||!d)return toast('Informe o valor e a data','err');
+  S.gastos.push({hospital:gsel,valor:Math.round(v*100)/100,data:d,desc:$('gn').value.trim()});
+  save();$('gv').value='';$('gn').value='';render();drawGastos();toast('Gasto adicionado');
+}
+function delGasto(i){if(!confirm('Excluir este gasto?'))return;S.gastos.splice(i,1);save();render();drawGastos()}
 
 /* Trocas */
 function abrirTroca(i){
@@ -290,8 +341,8 @@ function pdf(){
   for(let r=0;r<rows;r++){tb+='<tr>';for(let c=0;c<7;c++){
     const d=r*7+c-first+1;
     if(d<1||d>n){tb+='<td class="z"></td>';continue}
-    const D=e[DI].includes(d),N=e[NO].includes(d),fe=f[M+'-'+d];if(fe)fer.push(d);
-    tb+=`<td class="${fe?'f':''}${D&&N?' w':''}"><div class="dn${c==0?' s':''}">${d}${fe?' ★':''}</div>${fe?`<div class="fn">${fe}</div>`:''}${D?'<div class="p d">Diurno</div>':''}${N?'<div class="p n">Noturno</div>':''}</td>`;
+    const D=e[DI].includes(d),N=e[NO].includes(d),A=e[PD].includes(d),B=e[PN].includes(d),fe=f[M+'-'+d];if(fe)fer.push(d);
+    tb+=`<td class="${fe?'f':''}${D+N+A+B>1?' w':''}"><div class="dn${c==0?' s':''}">${d}${fe?' ★':''}</div>${fe?`<div class="fn">${fe}</div>`:''}${D?'<div class="p d">HUSE Dia</div>':''}${N?'<div class="p n">HUSE Noite</div>':''}${A?'<div class="p a">Prim. Dia</div>':''}${B?'<div class="p b">Prim. Noite</div>':''}</td>`;
   }tb+='</tr>'}
   const FL=fer.length?fer.map(d=>`<div class="li"><b>${pad(d)}/${pad(M+1)}</b><span>${DS[new Date(Y,M,d).getDay()].split('-')[0]}</span>${f[M+'-'+d]}</div>`).join(''):'<div class="em">Nenhum feriado neste mês</div>';
   const TL=trocasDoMes();
@@ -307,7 +358,7 @@ function pdf(){
     .cal td{height:80px;vertical-align:top;padding:5px;background:#f4f6f9;border:1px solid #e2e8f0;border-radius:8px}
     .cal td.z{background:#fafbfc;border-color:#f1f5f9}.cal td.f{background:#fff4ec;border-color:#f4b98a}.cal td.w{border:2px solid #d1344a}
     .dn{font-size:13px;font-weight:700}.s{color:#d1344a}.fn{font-size:8px;color:#b4531a;line-height:1.2;margin:1px 0 2px}
-    .p{font-size:10px;font-weight:700;text-align:center;border-radius:5px;padding:3px 0;margin-top:3px}.p.d{background:#fde9b8;color:#7a4a00}.p.n{background:#d6dcff;color:#1f2a7a}
+    .p{font-size:10px;font-weight:700;text-align:center;border-radius:5px;padding:3px 0;margin-top:3px}.p.d{background:#fde9b8;color:#7a4a00}.p.n{background:#d6dcff;color:#1f2a7a}.p.a{background:#d8f3c9;color:#2f6b12}.p.b{background:#c9eee8;color:#0b4f47}
     .bx{margin-top:14px;page-break-inside:avoid}
     h2{font-size:13px;margin:0 0 8px;border-left:4px solid #1d6fa5;padding-left:8px}
     .li{font-size:11px;padding:6px 8px;border-bottom:1px solid #e2e8f0}.li b{color:#b4531a;display:inline-block;width:42px}.li span{display:inline-block;width:70px;color:#64748b}
@@ -317,15 +368,15 @@ function pdf(){
     tr{page-break-inside:avoid}
     .ft{margin-top:14px;padding-top:8px;border-top:1px solid #e2e8f0;font-size:9px;color:#94a3b8;display:flex;justify-content:space-between}
   </style>
-  <div class="hd"><div><div class="a">Escala de plantões · HUSE 12x36</div><h1>${MES[M]} ${Y}</h1></div><div class="r"><b>Mª de Fatima Velame</b><br>Gerado em ${new Date().toLocaleDateString('pt-BR')}</div></div>
-  <div class="sm"><div><b>${e[DI].length}</b>Diurnos</div><div><b>${e[NO].length}</b>Noturnos</div><div><b>${e[DI].length+e[NO].length}</b>Total de plantões</div><div><b>${fer.length}</b>Feriados</div></div>
+  <div class="hd"><div><div class="a">Escala de plantões · 12x36</div><h1>${MES[M]} ${Y}</h1></div><div class="r"><b>Mª de Fatima Velame</b><br>Gerado em ${new Date().toLocaleDateString('pt-BR')}</div></div>
+  <div class="sm"><div><b>${e[DI].length}</b>HUSE Dia</div><div><b>${e[NO].length}</b>HUSE Noite</div><div><b>${e[PD].length}</b>Prim. Dia</div><div><b>${e[PN].length}</b>Prim. Noite</div><div><b>${e[DI].length+e[NO].length+e[PD].length+e[PN].length}</b>Total</div><div><b style="font-size:15px;padding:3px 0">${BRL(totGastos())}</b>Gastos</div></div>
   <table class="cal"><thead><tr>${['DOM','SEG','TER','QUA','QUI','SEX','SÁB'].map((x,i)=>`<th class="${i==0?'s':''}">${x}</th>`).join('')}</tr></thead><tbody>${tb}</tbody></table>
-  <div class="bx"><h2>Feriados do mês</h2>${FL}</div>
+  <div class="bx" style="display:flex;gap:18px"><div style="flex:1"><h2>Feriados do mês</h2>${FL}</div><div style="flex:1"><h2>Gastos do mês</h2>${gastosHtml()}</div></div>
   <div class="bx"><h2>Trocas do mês</h2>${T}</div>
-  <div class="ft"><span>★ Feriado · Contorno vermelho: dobra (Diurno e Noturno no mesmo dia)</span><span>HUSE · Escala 12x36</span></div>`;
+  <div class="ft"><span>★ Feriado · Contorno vermelho: dobra (mais de um plantão no mesmo dia)</span><span>Escala 12x36</span></div>`;
   abre('ld');
   setTimeout(()=>{
-    html2pdf().set({margin:8,filename:`escala_huse_${MES[M].toLowerCase()}_${Y}.pdf`,image:{type:'jpeg',quality:.96},html2canvas:{scale:2,useCORS:true,windowWidth:730,backgroundColor:'#fff'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy']}}).from(el).save()
+    html2pdf().set({margin:8,filename:`plantoes_${MES[M].toLowerCase()}_${Y}.pdf`,image:{type:'jpeg',quality:.96},html2canvas:{scale:2,useCORS:true,windowWidth:730,backgroundColor:'#fff'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy']}}).from(el).save()
       .then(()=>{fecha('ld');toast('PDF gerado')}).catch(er=>{fecha('ld');toast('Erro ao gerar PDF','err');console.error(er)});
   },300);
 }
